@@ -280,6 +280,11 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
 </div>
 
 ---
+
 <div align="center">
-<sub>Le Common Core est la base commune à tous les étudiants de 42</sub>
+
+*Made with ❤️ from 42 Paris*
+
+<sub>*Part of my journey at École 42 - Exploring the depths of C programming*</sub>
+
 </div>
