@@ -21,7 +21,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
 <details>
 <summary><strong>Projets du Cercle 0</strong></summary>
 
-- [**libft**](https://github.com/42School/libft)
+- [**libft**](https://github.com/Xxzer042xX/42-Common-Core/tree/main/libft)
   - Recréation des fonctions essentielles de la libc
   - Premier projet en C du cursus
   - Fondamentaux de la programmation en C
@@ -37,7 +37,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
 <details>
 <summary><strong>Projets du Cercle 1</strong></summary>
 
-- [**get_next_line**](https://github.com/42School/get_next_line)
+- [**get_next_line**](https://github.com/Xxzer042xX/42-Common-Core/tree/main/get_next_line)
   - Lecture de fichier ligne par ligne
   - Gestion avancée des file descriptors
   - Allocation dynamique optimisée
@@ -70,7 +70,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
 <details>
 <summary><strong>Projets du Cercle 2</strong></summary>
 
-- [**push_swap**](https://github.com/42School/push_swap)
+- [**push_swap**](https://github.com/Xxzer042xX/42-Common-Core/tree/main/push_swap)
   - Implémentation d'algorithmes de tri efficaces
   - Optimisation avec un nombre limité d'opérations
   - Manipulation de deux piles avec règles spécifiques
