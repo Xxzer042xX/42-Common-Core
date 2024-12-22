@@ -168,6 +168,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
 
 - **Choix:**
   - [**cub3d**](https://github.com/42School/cub3d)
+    
     - Moteur de raycasting comme Wolfenstein 3D
     - Rendu 3D temps réel
     - Textures sur les murs
@@ -178,6 +179,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
     - Minimap et éléments d'interface
   - *ou*
   - [**miniRT**](https://github.com/42School/miniRT)
+    
     - Moteur de raytracing complet
     - Calculs vectoriels avancés
     - Multiples objets géométriques
