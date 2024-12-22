@@ -4,7 +4,7 @@
 ---
 <br>
 
-[![42 School](https://img.shields.io/badge/42-School-00babc?logo=42)](https://42.fr/)
+[![42 School](https://img.shields.io/badge/42-School-00babc?logo=42)](https://42lausanne.ch/)
 [![CommonCore](https://img.shields.io/badge/Cursus-CommonCore-success)](LIEN_CURSUS)
 [![GitHub](https://img.shields.io/badge/Projects-Source_Code-181717?logo=github)](VOTRE_GITHUB)
 <br>
