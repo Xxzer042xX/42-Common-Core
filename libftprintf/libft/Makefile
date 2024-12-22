@@ -6,10 +6,12 @@ CFLAGS = -Wall -Wextra -Werror -I.
 SRCS = ft_atoi.c \
 	   ft_bzero.c \
 	   ft_calloc.c \
+	   ft_intlen.c \
 	   ft_isalnum.c \
 	   ft_isalpha.c \
 	   ft_isascii.c \
 	   ft_isdigit.c \
+	   ft_isflags.c \
 	   ft_islower.c \
 	   ft_isprint.c \
 	   ft_isspace.c \
@@ -20,7 +22,6 @@ SRCS = ft_atoi.c \
 	   ft_memcpy.c \
 	   ft_memmove.c \
 	   ft_memset.c \
-	   ft_numlen.c \
 	   ft_putchar_fd.c \
 	   ft_putendl_fd.c \
 	   ft_putnbr_fd.c \
@@ -43,6 +44,10 @@ SRCS = ft_atoi.c \
 	   ft_tolower.c \
 	   ft_toupper.c \
 	   ft_itoa_base.c \
+	   ft_ulltoa.c \
+	   ft_ulllen.c \
+	   ft_putstr_check_ret.c \
+	   ft_putchar_check_ret.c \
 	   
 SRCS_BONUS = ft_lstnew_bonus.c \
 			 ft_lstadd_front_bonus.c \
@@ -59,22 +64,22 @@ OBJS = $(SRCS:.c=.o)
 OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 
 $(NAME): $(OBJS)
-	ar rcs $(NAME) $(OBJS)
+	@ar rcs $(NAME) $(OBJS)
 
 %.o: %.c libft.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(NAME)
 
 clean:
-	rm -f $(OBJS) $(OBJS_BONUS)
+	@rm -f $(OBJS) $(OBJS_BONUS)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all
 
 bonus: $(OBJS) $(OBJS_BONUS)
-	ar rcs $(NAME) $(OBJS) $(OBJS_BONUS)
+	@ar rcs $(NAME) $(OBJS) $(OBJS_BONUS)
 
 .PHONY: all clean fclean re bonus

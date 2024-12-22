@@ -17,6 +17,9 @@
 # include <stdlib.h>
 # include <stddef.h>
 
+//alias for ULL
+typedef unsigned long long	t_ull;
+
 /* ************************************************************************** */
 /*                     Fonctions de Manipulation de Chaines                   */
 /* ************************************************************************** */
@@ -45,8 +48,10 @@ char	*ft_itoa(int n);
 int		ft_tolower(int c);
 int		ft_toupper(int c);
 //vip
-int		ft_numlen(int n);
 char	*ft_itoa_base(unsigned long long value, int base, int is_upper);
+char	*ft_ulltoa(unsigned long long n);
+t_ull	ft_ulllen(unsigned long long n);
+int		ft_intlen(int n);
 
 /* ************************************************************************** */
 /*                       Fonctions de Gestion de Mémoire                      */
@@ -66,6 +71,9 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
+//vip
+int		ft_putstr_check_ret(char *str);
+int		ft_putchar_check_ret(char c);
 
 /* ************************************************************************** */
 /*                         Fonctions de Vérification                          */
@@ -79,6 +87,7 @@ int		ft_isprint(int c);
 int		ft_isspace(int c);
 int		ft_isupper(int c);
 int		ft_islower(int c);
+int		ft_isflags(int c);
 
 /* ************************************************************************** */
 /*                        Structures et Fonctions Bonus                       */

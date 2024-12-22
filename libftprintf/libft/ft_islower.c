@@ -1,26 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_numlen.c                                        :+:      :+:    :+:   */
+/*   ft_islower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdelmeni <eljok87@gmail.com>               +#+  +:+       +#+        */
+/*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/15 19:13:43 by mdelmeni          #+#    #+#             */
-/*   Updated: 2024/09/15 19:13:43 by mdelmeni         ###   ########.fr       */
+/*   Created: 2024/10/08 07:26:52 by madelmen          #+#    #+#             */
+/*   Updated: 2024/10/08 07:26:52 by madelmen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-int	ft_numlen(int nb)
+int	ft_islower(int c)
 {
-	int	len;
-
-	len = (nb <= 0);
-	while (nb != 0)
-	{
-		nb /= 10;
-		len += 1;
-	}
-	return (len);
+	return (c >= 97 && c <= 122);
 }
