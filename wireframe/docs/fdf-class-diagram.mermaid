@@ -1,0 +1,204 @@
+classDiagram
+    class e_shift_dir {
+        <<enumeration>>
+        SHIFT_UP
+        SHIFT_DOWN
+        SHIFT_LEFT
+        SHIFT_RIGHT
+    }
+
+    class e_rot_dir {
+        <<enumeration>>
+        ROT_LEFT
+        ROT_RIGHT
+    }
+
+    class e_scale {
+        <<enumeration>>
+        SCALE_INCREASE
+        SCALE_DECREASE
+    }
+
+    class e_view_mode {
+        <<enumeration>>
+        VIEW_ISO
+        VIEW_TOP
+        VIEW_SIDE
+    }
+
+    class e_error {
+        <<enumeration>>
+        SUCCESS
+        ERR_ARGS
+        ERR_MALLOC
+        ERR_DATA
+        ERR_FILE
+        ERR_FORMAT
+        ERR_MLX
+        DEBUG
+    }
+
+    class e_app_state {
+        <<enumeration>>
+        STATE_KILL
+        STATE_INIT
+        STATE_RUNNING
+    }
+
+    class s_control_pair {
+        +char* key
+        +char* value
+    }
+
+    class u_rgba {
+        <<union>>
+        +int hex
+        +unsigned char b
+        +unsigned char g
+        +unsigned char r
+        +unsigned char a
+    }
+
+    class s_sidebar {
+        +t_control_pair* ctrl_pairs
+        +t_rgba color
+        +char* title
+        +int x_pos
+        +int x_offset
+        +int y_offset
+        +int y_pos
+        +int y_space_title
+        +int y_space_ctrl
+        +int ctrl_count
+        +int width
+        +int height
+        +int color_mode
+    }
+
+    class u_coord {
+        <<union>>
+        +int coords[3]
+        +int x
+        +int y
+        +int z
+    }
+
+    class s_color {
+        +int ref
+        +int is_parsed
+    }
+
+    class s_rot_point {
+        +double x
+        +double y
+    }
+
+    class s_point {
+        +t_rot_point rot
+        +t_coord original_pos
+        +t_coord pos
+        +t_color color
+        +float elevation
+    }
+
+    class s_win {
+        +void* mlx
+        +void* win
+        +void* img
+        +void* addr
+        +int w_scr
+        +int h_scr
+        +int w_win
+        +int h_win
+        +int bbp
+        +int line_len
+        +int endian
+        +int mouse_x
+        +int mouse_y
+        +int mouse_pressed
+    }
+
+    class s_map {
+        +t_point** points
+        +e_view_mode view_mode
+        +float z_min
+        +float z_max
+        +float z_range
+        +float z_scale
+        +float center_x
+        +float center_y
+        +int color_mode
+        +int w_map
+        +int h_map
+    }
+
+    class s_matrix {
+        +float angle_x
+        +float angle_y
+        +float angle_z
+        +float scale
+        +float shift_x
+        +float shift_y
+        +float zoom
+        +float space
+        +float iso_angle
+        +float center_x
+        +float center_y
+        +float altitude_factor
+        +int auto_rot
+    }
+
+    class s_app {
+        +t_map map
+        +t_win win
+        +t_matrix matrix
+        +t_sidebar sidebar
+        +e_app_state state
+        +e_shift_dir shift_dir
+        +e_rot_dir rot_dir
+        +e_scale scale
+        +int needs_update
+    }
+
+    s_app *-- s_map
+    s_app *-- s_win
+    s_app *-- s_matrix
+    s_app *-- s_sidebar
+    s_app *-- e_app_state
+    s_app *-- e_shift_dir
+    s_app *-- e_rot_dir
+    s_app *-- e_scale
+    
+    s_map *-- s_point
+    s_map *-- e_view_mode
+    
+    s_point *-- s_rot_point
+    s_point *-- u_coord
+    s_point *-- s_color
+    
+    s_sidebar *-- s_control_pair
+    s_sidebar *-- u_rgba
+
+    note for s_app "Main application structure
+    Handles:
+    - State management
+    - Event processing
+    - View updates"
+
+    note for s_map "Map representation
+    Handles:
+    - Point management
+    - View modes
+    - Scaling"
+
+    note for s_matrix "Transform matrix
+    Handles:
+    - Rotation
+    - Scaling
+    - Translation"
+
+    note for s_sidebar "UI sidebar
+    Handles:
+    - Controls display
+    - Color themes
+    - Information"
