@@ -89,6 +89,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
     - Support Unicode et caractères spéciaux
   - *ou*
   - [**pipex**](https://github.com/42School/pipex)
+    
     - Reproduction du comportement des pipes shell
     - Gestion des processus fils et père
     - Redirection des entrées/sorties
@@ -98,6 +99,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
 
 - **Second choix:**
   - [**so_long**](https://github.com/42School/so_long)
+    
     - Création d'un jeu 2D avec MinilibX
     - Gestion complète des événements
     - Parsing de fichier map
