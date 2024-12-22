@@ -17,6 +17,8 @@
 ## 📘 Le Common Core
 Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours intensif où chaque étudiant développe des compétences fondamentales en programmation, principalement en C. La formation est basée sur le peer-learning et la pratique intensive du code.
 
+<br>
+
 ## 🎯 Projets du Common Core
 
 ### 🔰 Cercle 0 - *Les bases de la programmation en C*
