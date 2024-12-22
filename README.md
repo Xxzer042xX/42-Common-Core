@@ -22,6 +22,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
 <summary><strong>Projets du Cercle 0</strong></summary>
 
 - [**libft**](https://github.com/Xxzer042xX/42-Common-Core/tree/main/libft)
+  
   - Recréation des fonctions essentielles de la libc
   - Premier projet en C du cursus
   - Fondamentaux de la programmation en C
