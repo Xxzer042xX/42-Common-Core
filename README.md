@@ -244,6 +244,8 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
   - Gestion des bans et kicks
 </details>
 
+<br>
+
 ## ⭐ Système d'Évaluation
 - Évaluation par les pairs (3 évaluations minimum)
 - Validation binaire (succès/échec)
@@ -258,6 +260,8 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
 
 `C` • `C++` • `Shell` • `Unix` • `Algorithmique` • `Git` • `Docker` • `Réseau` • `Systèmes` • `POO`
 </div>
+
+<br>
 
 ## 📊 Progression
 - Chaque projet réussi débloque les suivants
