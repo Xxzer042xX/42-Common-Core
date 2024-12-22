@@ -274,6 +274,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
 <div align="center">
 
 `C` | `C++` | `Shell` | `Unix` | `Algorithmique` | `Git` | `Docker` | `Réseau` | `Systèmes` | `POO`
+
 <br>
 
 </div>
