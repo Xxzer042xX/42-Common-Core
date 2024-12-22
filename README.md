@@ -4,10 +4,10 @@
 ---
 <br>
 
-[![42 School](https://img.shields.io/badge/42-School-00babc?logo=42)](https://42lausanne.ch/)
-[![CommonCore](https://img.shields.io/badge/Cursus-CommonCore-success)](https://github.com/Xxzer042xX/42-Common-Core/tree/main?tab=readme-ov-file)
-[![GitHub](https://img.shields.io/badge/Projects-Source_Code-181717?logo=github)](https://github.com/Xxzer042xX/42-Common-Core/blob/main/README.md)
-<br>
+[![Source](https://img.shields.io/badge/Source-Code_Projects-181717?logo=github&logoColor=white)](https://github.com/Xxzer042xX/42-Piscine/tree/master)
+[![Profile](https://img.shields.io/badge/Main-Profile-purple?logo=github&logoColor=white)](https://github.com/Xxzer042xX)
+[![Readme](https://img.shields.io/badge/Readme-Project-181717?logo=github&logoColor=white)](https://github.com/Xxzer042xX/42-Common-Core/blob/main/README.md)
+
 
 *Le tronc commun de l'École 42*
 </div>
