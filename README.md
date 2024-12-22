@@ -6,7 +6,7 @@
 
 [![42 School](https://img.shields.io/badge/42-School-00babc?logo=42)](https://42lausanne.ch/)
 [![CommonCore](https://img.shields.io/badge/Cursus-CommonCore-success)](LIEN_CURSUS)
-[![GitHub](https://img.shields.io/badge/Projects-Source_Code-181717?logo=github)]([VOTRE_GITHUB](https://github.com/Xxzer042xX/42-Common-Core/blob/main/README.md)
+[![GitHub](https://img.shields.io/badge/Projects-Source_Code-181717?logo=github)](https://github.com/Xxzer042xX/42-Common-Core/blob/main/README.md)
 <br>
 
 *Le tronc commun de l'École 42*
