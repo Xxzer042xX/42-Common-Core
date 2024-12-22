@@ -51,7 +51,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
   - Utilisation des variables statiques
   - Optimisation des performances de lecture
 
-- [**ft_printf**](https://github.com/42School/ft_printf)
+- [**ft_printf**](https://github.com/Xxzer042xX/42-Common-Core/tree/main/libftprintf)
   - Reproduction complète de printf
   - Gestion des fonctions variadiques
   - Parsing complexe de format
