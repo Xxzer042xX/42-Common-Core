@@ -8,9 +8,11 @@
 [![Profile](https://img.shields.io/badge/Main-Profile-purple?logo=github&logoColor=white)](https://github.com/Xxzer042xX)
 [![Readme](https://img.shields.io/badge/Readme-Project-181717?logo=github&logoColor=white)](https://github.com/Xxzer042xX/42-Common-Core/blob/main/README.md)
 
+<br>
 
 *Le tronc commun de l'École 42*
 </div>
+<br>
 
 ## 📘 Le Common Core
 Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours intensif où chaque étudiant développe des compétences fondamentales en programmation, principalement en C. La formation est basée sur le peer-learning et la pratique intensive du code.
