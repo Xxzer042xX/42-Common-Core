@@ -255,12 +255,6 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
 - Tests automatiques et manuels
 - Règles de notation strictes
 
-## 🛠️ Compétences Acquises
-<div align="center">
-
-`C` • `C++` • `Shell` • `Unix` • `Algorithmique` • `Git` • `Docker` • `Réseau` • `Systèmes` • `POO`
-</div>
-
 <br>
 
 ## 📊 Progression
@@ -271,6 +265,14 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
 - Temps limité pour certains projets
 - Bonus disponibles sur certains projets
 - Projets avancés débloqués par le niveau
+
+<br>
+
+## 🛠️ Compétences Acquises
+<div align="center">
+
+`C` • `C++` • `Shell` • `Unix` • `Algorithmique` • `Git` • `Docker` • `Réseau` • `Systèmes` • `POO`
+</div>
 
 ---
 <div align="center">
