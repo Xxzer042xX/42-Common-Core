@@ -29,30 +29,15 @@ LIBFT = $(LIBFT_DIR)/libftprintf.a
 #                              SOURCE FILES                                    #
 ################################################################################
 
-CONTROLS_SRC = $(wildcard $(SRC_DIR)/controls/*.c)
+OPERATIONS_SRC = $(wildcard $(SRC_DIR)/operations/*.c)
 
-CORE_SRC = $(wildcard $(SRC_DIR)/core/*.c)
-
-DRAWER_SRC = $(wildcard $(SRC_DIR)/drawer/*.c) \
-			 $(wildcard $(SRC_DIR)/drawer/map/*.c) \
-			 $(wildcard $(SRC_DIR)/drawer/sidebar/*.c)
-
-EVENTS_SRC = $(wildcard $(SRC_DIR)/events/*.c)
-
-PARSER_SRC = $(wildcard $(SRC_DIR)/parser/*.c)
-
-PRINTER_SRC = $(wildcard $(SRC_DIR)/printer/*.c)
-
-RENDER_SRC = $(wildcard $(SRC_DIR)/render/*.c)
-
-TRANSFORM_SRC = $(wildcard $(SRC_DIR)/transform/*.c)
+ALGORITHMS_SRC = $(wildcard $(SRC_DIR)/algorithms/*.c)
 
 UTILS_SRC = $(wildcard $(SRC_DIR)/utils/*.c)
 
-MAIN_SRC = $(SRC_DIR)/fdf.c
+MAIN_SRC = $(SRC_DIR)/push_swap.c
 
-SRC = $(RENDER_SRC) $(EVENTS_SRC) $(CORE_SRC) $(PARSER_SRC) $(UTILS_SRC) \
-	  $(CONTROLS_SRC) $(TRANSFORM_SRC) $(MAIN_SRC) $(DRAWER_SRC) $(PRINTER_SRC)
+SRC = $(OPERATION_SRC) $(ALGORITHMS_SRC) $(UTILS_SRC) $(MAIN_SRC)
 
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
@@ -91,19 +76,9 @@ all: init $(LIBFT) $(NAME)
 
 init:
 	@mkdir -p $(BIN_DIR)
-	@mkdir -p $(OBJ_DIR)/core
-	@mkdir -p $(OBJ_DIR)/drawer
-	@mkdir -p $(OBJ_DIR)/drawer/map
-	@mkdir -p $(OBJ_DIR)/drawer/sidebar
-	@mkdir -p $(OBJ_DIR)/parser/
-	@mkdir -p $(OBJ_DIR)/printer
-
+	@mkdir -p $(OBJ_DIR)/operations
+	@mkdir -p $(OBJ_DIR)/algorithms
 	@mkdir -p $(OBJ_DIR)/utils
-	@mkdir -p $(OBJ_DIR)/events
-	@mkdir -p $(OBJ_DIR)/controls
-	@mkdir -p $(OBJ_DIR)/transform
-	@mkdir -p $(OBJ_DIR)/render
-
 	@echo "$(GREEN)Project structure initialized$(RESET)"
 
 $(LIBFT):
