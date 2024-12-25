@@ -1,32 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/24 22:15:40 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/24 22:15:40 by madelmen         ###   ########.fr       */
+/*   Created: 2024/12/25 13:07:06 by madelmen          #+#    #+#             */
+/*   Updated: 2024/12/25 13:07:06 by madelmen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/push_swap.h"
+#include "../../include/push_swap.h"
 
-int	main(int ac, char **av)
+void	free_stack(t_stack *stack)
 {
-	t_stack	*a;
-	t_stack	*b;
+	t_node	*current;
+	t_node	*next;
 
-	if (ac < 2)
-		return (error_exit(ERR_ARGS));
-	a = parse_args(ac, av);
-	if (!a)
-		return (error_exit(ERR_ARGS));
-	b = init_stack('b');
-	if (!b)
-		return (free_stack(a), error_exit(ERR_MALLOC));
-	if (!is_sorted(a))
-		choose_algo(a, b);
-	cleanup_app(a, b);
-	return (0);
+	if (!stack)
+		return ;
+	current = stack->head;
+	while (current)
+	{
+		next = current->next;
+		free(current);
+		current = next;
+	}
+	free(stack);
+}
+
+void	cleanup_app(t_stack *a, t_stack *b)
+{
+	free_stack(a);
+	free_stack(b);
 }

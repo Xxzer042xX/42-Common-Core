@@ -1,32 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   sort_three.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/24 22:15:40 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/24 22:15:40 by madelmen         ###   ########.fr       */
+/*   Created: 2024/12/25 13:08:41 by madelmen          #+#    #+#             */
+/*   Updated: 2024/12/25 13:08:41 by madelmen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/push_swap.h"
+#include "../../include/push_swap.h"
 
-int	main(int ac, char **av)
+
+void	sort_three(t_stack *a)
 {
-	t_stack	*a;
-	t_stack	*b;
+	int	min;
 
-	if (ac < 2)
-		return (error_exit(ERR_ARGS));
-	a = parse_args(ac, av);
-	if (!a)
-		return (error_exit(ERR_ARGS));
-	b = init_stack('b');
-	if (!b)
-		return (free_stack(a), error_exit(ERR_MALLOC));
-	if (!is_sorted(a))
-		choose_algo(a, b);
-	cleanup_app(a, b);
-	return (0);
+	min = get_min(a);
+	if (a->head->value == min)
+	{
+		if (a->head->next->value > a->head->next->next->value)
+			sa(a);
+	}
+	else if (a->head->next->value == min)
+	{
+		if (a->head->value > a->head->next->next->value)
+			ra(a);
+		else
+			sa(a);
+	}
+	else
+	{
+		if (a->head->value > a->head->next->value)
+			rra(a);
+		else
+			ra(a);
+	}
 }

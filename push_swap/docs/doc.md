@@ -294,3 +294,92 @@ int read_and_execute_instructions(t_stack *a, t_stack *b)
     }
     return (1);
 }
+
+
+
+// check_duplicate.c
+
+static void	error_free_array(int *array, int size)
+{
+    if (array)
+        free(array);
+    write(2, "Error\n", 6);
+    exit(1);
+}
+
+static void	quick_sort(int *array, int start, int end)
+{
+    int	pivot;
+    int	i;
+    int	j;
+    int	temp;
+
+    if (start >= end)
+        return ;
+    pivot = array[end];
+    i = start - 1;
+    j = start;
+    while (j < end)
+    {
+        if (array[j] <= pivot)
+        {
+            i++;
+            temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        j++;
+    }
+    temp = array[i + 1];
+    array[i + 1] = array[end];
+    array[end] = temp;
+    quick_sort(array, start, i);
+    quick_sort(array, i + 2, end);
+}
+
+int	check_duplicates(int argc, char **argv)
+{
+    int	*array;
+    int	i;
+    int	j;
+    long num;
+
+    array = malloc(sizeof(int) * (argc - 1));
+    if (!array)
+        error_free_array(array, argc - 1);
+    i = 1;
+    while (i < argc)
+    {
+        // Vérifie si c'est un nombre valide
+        j = 0;
+        while (argv[i][j])
+        {
+            if (j == 0 && (argv[i][j] == '-' || argv[i][j] == '+'))
+                j++;
+            if (!ft_isdigit(argv[i][j]))
+                error_free_array(array, argc - 1);
+            j++;
+        }
+        // Convertit et vérifie l'overflow
+        num = ft_atol(argv[i]);
+        if (num > INT_MAX || num < INT_MIN)
+            error_free_array(array, argc - 1);
+        array[i - 1] = (int)num;
+        i++;
+    }
+    // Trie le tableau pour faciliter la détection des doublons
+    quick_sort(array, 0, argc - 2);
+    // Vérifie les doublons dans le tableau trié
+    i = 0;
+    while (i < argc - 2)
+    {
+        if (array[i] == array[i + 1])
+        {
+            free(array);
+            return (1);
+        }
+        i++;
+    }
+    free(array);
+    return (0);
+}

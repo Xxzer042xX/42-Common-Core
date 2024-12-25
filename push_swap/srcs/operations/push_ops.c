@@ -1,24 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   push_ops.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/24 22:32:22 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/24 22:32:22 by madelmen         ###   ########.fr       */
+/*   Created: 2024/12/25 13:09:57 by madelmen          #+#    #+#             */
+/*   Updated: 2024/12/25 13:09:57 by madelmen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../../include/push_swap.h"
 
-int	error_exit(int error)
+void	pa(t_stack *a, t_stack *b)
 {
-	ft_putstr_fd("Error: ", 2);
-	if (error == ERR_ARGS)
-		ft_putstr_fd("Invalide arguments\n", 2);
-	else if (error == ERR_MALLOC)
-		ft_putstr_fd("Memory allocation failed\n", 2);
-	else if (error == DEBUG)
-		ft_putstr_fd("et ben faut bosser tes examens\n", 2);
-	return (error);
+	t_node	*tmp;
+
+	if (!b || !b->head)
+		return ;
+	tmp = b->head;
+	b->head = tmp->next;
+	tmp->next = a->head;
+	a->head = tmp;
+	a->size++;
+	b->size--;
+	write(1, "pa\n", 3);
+}
+
+void	pb(t_stack *a, t_stack *b)
+{
+	t_node	*tmp;
+
+	if (!a || !a->head)
+		return ;
+	tmp = a->head;
+	a->head = a->head->next;
+	tmp->next = b->head;
+	b->head = tmp;
+	b->size++;
+	a->size--;
+	write(1, "pb\n", 3);
 }

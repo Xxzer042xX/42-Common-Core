@@ -64,6 +64,7 @@ char	*ft_itoa_base(unsigned long long value, int base, int is_upper);
 char	*ft_ulltoa(unsigned long long n);
 t_ull	ft_ulllen(unsigned long long n);
 int		ft_intlen(int n);
+long	ft_atol(const char *str);
 
 /* ************************************************************************** */
 /*                       Fonctions de Gestion de Mémoire                      */

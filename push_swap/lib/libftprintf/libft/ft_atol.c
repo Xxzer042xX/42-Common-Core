@@ -1,32 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   ft_atol.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/24 22:15:40 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/24 22:15:40 by madelmen         ###   ########.fr       */
+/*   Created: 2024/12/25 20:37:26 by madelmen          #+#    #+#             */
+/*   Updated: 2024/12/25 20:37:26 by madelmen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/push_swap.h"
+#include "libft.h"
 
-int	main(int ac, char **av)
+long	ft_atol(const char *str)
 {
-	t_stack	*a;
-	t_stack	*b;
+	long	result;
+	int		sign;
 
-	if (ac < 2)
-		return (error_exit(ERR_ARGS));
-	a = parse_args(ac, av);
-	if (!a)
-		return (error_exit(ERR_ARGS));
-	b = init_stack('b');
-	if (!b)
-		return (free_stack(a), error_exit(ERR_MALLOC));
-	if (!is_sorted(a))
-		choose_algo(a, b);
-	cleanup_app(a, b);
-	return (0);
+	result = 0;
+	sign = 1;
+	while (ft_isspace(*str))
+		str++;
+	if (*str == '-' || *str == '+')
+	{
+		if (*str == '-')
+			sign = -1;
+		str++;
+	}
+	while (ft_isdigit(*str))
+	{
+		result = result * 10 + (*str - '0');
+		str++;
+	}
+	return (result * sign);
 }

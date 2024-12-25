@@ -31,13 +31,13 @@ LIBFT = $(LIBFT_DIR)/libftprintf.a
 
 OPERATIONS_SRC = $(wildcard $(SRC_DIR)/operations/*.c)
 
-ALGORITHMS_SRC = $(wildcard $(SRC_DIR)/algorithms/*.c)
+SORT_SRC = $(wildcard $(SRC_DIR)/sort/*.c)
 
 UTILS_SRC = $(wildcard $(SRC_DIR)/utils/*.c)
 
 MAIN_SRC = $(SRC_DIR)/push_swap.c
 
-SRC = $(OPERATION_SRC) $(ALGORITHMS_SRC) $(UTILS_SRC) $(MAIN_SRC)
+SRC = $(OPERATIONS_SRC) $(SORT_SRC) $(UTILS_SRC) $(MAIN_SRC)
 
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
