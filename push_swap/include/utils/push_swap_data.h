@@ -6,7 +6,7 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 21:20:09 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/24 21:20:09 by madelmen         ###   ########.fr       */
+/*   Updated: 2024/12/26 00:03:10 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,6 @@
 # define COST_ROTATE    1
 # define COST_SWAP      1
 # define COST_PUSH      1
-
-/* ************************************************************************** */
-/*                              OWN LIB                                       */
-/* ************************************************************************** */
-# include "../lib/libftprintf/include/ft_printf.h"
-# include "../lib/libftprintf/libft/libft.h"
-
 
 /* ************************************************************************** */
 /*                                      ENUM ERROR                            */
