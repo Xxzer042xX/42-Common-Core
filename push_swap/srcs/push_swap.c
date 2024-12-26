@@ -12,6 +12,16 @@
 
 #include "../include/push_swap.h"
 
+/******************************************************************************/
+/*                              MAIN FUNCTION                                 */
+/*																			  */
+/*		1. Parse arguments and create stack a.								  */
+/*		2. Create stack b.												      */
+/*		3. Check if stack a is sorted.										  */
+/*		4. Choose algorithm based on stack size.							  */
+/*		5. Cleanup and exit.												  */
+/*																			  */
+/******************************************************************************/
 int	main(int ac, char **av)
 {
 	t_stack	*a;

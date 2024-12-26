@@ -66,6 +66,10 @@ static void	add_to_stack(t_stack *stack, int num)
 	stack->size++;
 }
 
+/******************************************************************************/
+/*																			  */
+/*		1. Parse arguments and create stack a.								  */
+
 t_stack	*parse_args(int ac, char **av)
 {
 	t_stack	*stack;
