@@ -6,7 +6,7 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 21:20:09 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/26 00:03:10 by madelmen         ###   LAUSANNE.ch       */
+/*   Updated: 2024/12/27 11:32:45 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,6 @@
 /* ************************************************************************** */
 /*                              DEFAULT VALUES                                */
 /* ************************************************************************** */
-// Stack limits for sort selection
-# define SMALL_SORT    3
-# define MID_SORT      5
-# define BIG_SORT      100
-
 // Integer limits
 # define MAX_INT       2147483647
 # define MIN_INT       -2147483648

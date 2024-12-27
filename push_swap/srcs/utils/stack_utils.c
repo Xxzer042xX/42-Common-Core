@@ -6,12 +6,12 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 19:42:57 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/25 19:42:57 by madelmen         ###   ########.fr       */
+/*   Updated: 2024/12/27 16:20:49 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // utils/stack_utils.c
-#include "../include/push_swap.h"
+#include "../../include/push_swap.h"
 
 int	is_sorted(t_stack *stack)
 {

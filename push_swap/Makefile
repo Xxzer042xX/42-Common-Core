@@ -32,11 +32,15 @@ OPERATIONS_SRC = $(wildcard $(SRC_DIR)/operations/*.c)
 
 SORT_SRC = $(wildcard $(SRC_DIR)/sort/*.c)
 
+PARSER_SRC = $(wildcard $(SRC_DIR)/parser/*.c)
+
 UTILS_SRC = $(wildcard $(SRC_DIR)/utils/*.c)
+
+CORE_SRC = $(wildcard $(SRC_DIR)/core/*.c)
 
 MAIN_SRC = $(SRC_DIR)/push_swap.c
 
-SRC = $(OPERATIONS_SRC) $(SORT_SRC) $(UTILS_SRC) $(MAIN_SRC)
+SRC = $(OPERATIONS_SRC) $(SORT_SRC) $(PARSER_SRC) $(UTILS_SRC) $(MAIN_SRC) $(CORE_SRC)
 
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
@@ -75,9 +79,11 @@ all: init $(LIBFT) $(NAME)
 
 init:
 	@mkdir -p $(BIN_DIR)
+	@mkdir -p $(OBJ_DIR)/parser
 	@mkdir -p $(OBJ_DIR)/operations
-	@mkdir -p $(OBJ_DIR)/algorithms
 	@mkdir -p $(OBJ_DIR)/utils
+	@mkdir -p $(OBJ_DIR)/core
+	@mkdir -p $(OBJ_DIR)/sort
 	@echo "$(GREEN)Project structure initialized$(RESET)"
 
 $(LIBFT):

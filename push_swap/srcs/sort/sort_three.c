@@ -6,12 +6,11 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 13:08:41 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/25 13:08:41 by madelmen         ###   ########.fr       */
+/*   Updated: 2024/12/27 16:20:58 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/push_swap.h"
-
 
 void	sort_three(t_stack *a)
 {

@@ -6,11 +6,41 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 19:40:14 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/25 19:40:14 by madelmen         ###   ########.fr       */
+/*   Updated: 2024/12/27 17:33:56 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/push_swap.h"
+
+static int	is_valid_number(char *str);
+static int	check_duplicate(t_stack *stack, int num);
+static void	add_to_stack(t_stack *stack, int num);
+
+t_stack	*parse_args(int ac, char **av)
+{
+	t_stack	*stack;
+	long	num;
+	int		i;
+
+	stack = init_stack('a');
+	if (!stack)
+		return (NULL);
+	i = 0;
+	while (i < ac)
+	{
+		ft_printf("%s\n", av[i]);
+		if (!is_valid_number(av[i]))
+			return (free_stack(stack), NULL);
+		num = ft_atol(av[i]);
+		if (num > MAX_INT || num < MIN_INT)
+			return (free_stack(stack), NULL);
+		if (check_duplicate(stack, (int)num))
+			return (free_stack(stack), NULL);
+		add_to_stack(stack, (int)num);
+		i++;
+	}
+	return (stack);
+}
 
 static int	is_valid_number(char *str)
 {
@@ -64,33 +94,4 @@ static void	add_to_stack(t_stack *stack, int num)
 		stack->tail = new;
 	}
 	stack->size++;
-}
-
-/******************************************************************************/
-/*																			  */
-/*		1. Parse arguments and create stack a.								  */
-
-t_stack	*parse_args(int ac, char **av)
-{
-	t_stack	*stack;
-	long	num;
-	int		i;
-
-	stack = init_stack('a');
-	if (!stack)
-		return (NULL);
-	i = 1;
-	while (i < ac)
-	{
-		if (!is_valid_number(av[i]))
-			return (free_stack(stack), NULL);
-		num = ft_atol(av[i]);
-		if (num > MAX_INT || num < MIN_INT)
-			return (free_stack(stack), NULL);
-		if (check_duplicate(stack, (int)num))
-			return (free_stack(stack), NULL);
-		add_to_stack(stack, (int)num);
-		i++;
-	}
-	return (stack);
 }
