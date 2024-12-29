@@ -29,7 +29,7 @@ static void	radix_sort(t_stack *a, t_stack *b)
 		j = 0;
 		while (j < size)
 		{
-			if ((a->head->value >> i) & 1)
+			if ((a->first_node->value >> i) & 1)
 				ra(a);
 			else
 				pb(a, b);
@@ -45,33 +45,25 @@ static void	radix_sort(t_stack *a, t_stack *b)
 static void	normalize_stack(t_stack *a)
 {
 	t_node	*current;
-	int		i;
-	int		*array;
+	t_node	*compare;
 	int		rank;
 
-	array = malloc(sizeof(int) * a->size);
-	if (!array)
+	if (!a || !a->first_node)
 		return ;
-	current = a->head;
-	i = 0;
+	current = a->first_node;
 	while (current)
 	{
-		array[i++] = current->value;
-		current = current->next;
-	}
-	current = a->head;
-	while (current)
-	{
-		while (i < a->size)
+		rank = 0;
+		compare = a->first_node;
+		while (compare)
 		{
-			if (array[i] < current->value)
+			if (compare->value < current->value)
 				rank++;
-			i++;
+			compare = compare->next;
 		}
 		current->value = rank;
 		current = current->next;
 	}
-	free(array);
 }
 
 void	sort_big(t_stack *a, t_stack *b)

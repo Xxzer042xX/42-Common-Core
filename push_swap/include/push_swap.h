@@ -48,8 +48,8 @@ void	rrr(t_stack *a, t_stack *b);
 /* ************************************************************************** */
 /*                              UTILS                                         */
 /* ************************************************************************** */
-t_stack	*init_stack(char id);
-t_stack	*parse_args(int ac, char **av);
+int		init_stack(char id, t_stack **stack);
+int		parse_args(int ac, char **av, t_stack *a);
 void	free_stack(t_stack *stack);
 int		error_exit(int error);
 void	cleanup_app(t_stack *a, t_stack *b);
@@ -60,6 +60,7 @@ void	cleanup_app(t_stack *a, t_stack *b);
 void	sort_three(t_stack *a);
 void	sort_five(t_stack *a, t_stack *b);
 void	sort_big(t_stack *a, t_stack *b);
+void	sort_four(t_stack *a, t_stack *b);
 int		is_sorted(t_stack *stack);
 void	choose_algo(t_stack *a, t_stack *b);
 int		get_min(t_stack *stack);

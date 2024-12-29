@@ -14,26 +14,27 @@
 
 void	sort_three(t_stack *a)
 {
-	int	min;
+	int	first;
+	int	second;
+	int	third;
 
-	min = get_min(a);
-	if (a->head->value == min)
+	first = a->first_node->value;
+	second = a->first_node->next->value;
+	third = a->last_node->value;
+	if (first > second && second < third && first < third)
+		sa(a);
+	else if (first > second && second > third)
 	{
-		if (a->head->next->value > a->head->next->next->value)
-			sa(a);
+		sa(a);
+		rra(a);
 	}
-	else if (a->head->next->value == min)
+	else if (first > second && second < third && first > third)
+		ra(a);
+	else if (first < second && second > third && first > third)
+		rra(a);
+	else if (first < second && second > third && first < third)
 	{
-		if (a->head->value > a->head->next->next->value)
-			ra(a);
-		else
-			sa(a);
-	}
-	else
-	{
-		if (a->head->value > a->head->next->value)
-			rra(a);
-		else
-			ra(a);
+		sa(a);
+		ra(a);
 	}
 }

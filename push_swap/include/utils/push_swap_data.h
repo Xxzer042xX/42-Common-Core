@@ -25,6 +25,9 @@
 # define COST_SWAP      1
 # define COST_PUSH      1
 
+//sorted status
+# define SORTED         1
+# define UNSORTED       0
 /* ************************************************************************** */
 /*                                      ENUM ERROR                            */
 /* ************************************************************************** */
@@ -34,9 +37,8 @@ enum e_error
 	SUCCESS,
 	ERR_ARGS,
 	ERR_MALLOC,
-	ERR_DATA,
-	ERR_FILE,
-	ERR_FORMAT,
+	ERR_IS_EMPTY,
+	ERR_DUP,
 	DEBUG
 };
 
@@ -46,25 +48,27 @@ enum e_error
 // Node structure for linked list
 typedef struct s_node
 {
-	int				value;
 	struct s_node	*next;
+	struct s_node	*prev;
+	int				value;
+	int				index;
 }	t_node;
 
 // Stack structure with metadata
 typedef struct s_stack
 {
-	t_node	*head;
-	t_node	*tail;
+	t_node	*first_node;
+	t_node	*last_node;
 	int		size;
-	char	id;    // 'a' or 'b' for debugging
+	char	id_stack;
 }	t_stack;
 
 // Move calculation structure
 typedef struct s_move
 {
-	int	cost;      // Total cost of operation
-	int	target;    // Target value to move
-	int	steps;     // Number of steps needed
+	int	cost_moove;
+	int	target_value;
+	int	n_steps;
 }	t_move;
 
 #endif

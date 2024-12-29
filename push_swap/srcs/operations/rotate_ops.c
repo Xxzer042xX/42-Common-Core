@@ -15,34 +15,32 @@
 void	ra(t_stack *a)
 {
 	t_node	*first;
-	t_node	*current;
 
-	if (!a || !a->head || !a->head->next)
+	if (!a || !a->first_node || !a->first_node->next)
 		return ;
-	first = a->head;
-	a->head = first->next;
-	current = a->head;
-	while (current->next)
-		current = current->next;
-	current->next = first;
+	first = a->first_node;
+	a->first_node = first->next;
+	a->first_node->prev = NULL;
 	first->next = NULL;
+	first->prev = a->last_node;
+	a->last_node->next = first;
+	a->last_node = first;
 	write(1, "ra\n", 3);
 }
 
 void	rb(t_stack *b)
 {
 	t_node	*first;
-	t_node	*current;
 
-	if (!b || !b->head || !b->head->next)
+	if (!b || !b->first_node || !b->first_node->next)
 		return ;
-	first = b->head;
-	b->head = first->next;
-	current = b->head;
-	while (current->next)
-		current = current->next;
-	current->next = first;
+	first = b->first_node;
+	b->first_node = first->next;
+	b->first_node->prev = NULL;
 	first->next = NULL;
+	first->prev = b->last_node;
+	b->last_node->next = first;
+	b->last_node = first;
 	write(1, "rb\n", 3);
 }
 
@@ -56,34 +54,32 @@ void	rr(t_stack *a, t_stack *b)
 void	rra(t_stack *a)
 {
 	t_node	*last;
-	t_node	*current;
 
-	if (!a || !a->head || !a->head->next)
+	if (!a || !a->first_node || !a->first_node->next)
 		return ;
-	current = a->head;
-	while (current->next->next)
-		current = current->next;
-	last = current->next;
-	current->next = NULL;
-	last->next = a->head;
-	a->head = last;
+	last = a->last_node;
+	a->last_node = last->prev;
+	a->last_node->next = NULL;
+	last->prev = NULL;
+	last->next = a->first_node;
+	a->first_node->prev = last;
+	a->first_node = last;
 	write(1, "rra\n", 4);
 }
 
 void	rrb(t_stack *b)
 {
 	t_node	*last;
-	t_node	*current;
 
-	if (!b || !b->head || !b->head->next)
+	if (!b || !b->first_node || !b->first_node->next)
 		return ;
-	current = b->head;
-	while (current->next->next)
-		current = current->next;
-	last = current->next;
-	current->next = NULL;
-	last->next = b->head;
-	b->head = last;
+	last = b->last_node;
+	b->last_node = last->prev;
+	b->last_node->next = NULL;
+	last->prev = NULL;
+	last->next = b->first_node;
+	b->first_node->prev = last;
+	b->first_node = last;
 	write(1, "rrb\n", 4);
 }
 

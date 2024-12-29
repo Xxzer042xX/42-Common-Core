@@ -19,7 +19,7 @@ void	free_stack(t_stack *stack)
 
 	if (!stack)
 		return ;
-	current = stack->head;
+	current = stack->first_node;
 	while (current)
 	{
 		next = current->next;
@@ -27,10 +27,4 @@ void	free_stack(t_stack *stack)
 		current = next;
 	}
 	free(stack);
-}
-
-void	cleanup_app(t_stack *a, t_stack *b)
-{
-	free_stack(a);
-	free_stack(b);
 }

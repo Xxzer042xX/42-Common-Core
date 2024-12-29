@@ -26,22 +26,21 @@ int	main(int ac, char **av)
 {
 	t_stack	*a;
 	t_stack	*b;
+	int		status;
 
+	a = NULL;
+	b = NULL;
 	if (ac < 2)
 		return (error_exit(ERR_ARGS));
-	a = parse_args(ac - 1, ++av);
-	if (!a)
-		return (error_exit(ERR_ARGS));
-	b = init_stack('b');
-	if (!b)
+	if (init_stack('a', &a) != SUCCESS)
+		return (error_exit(ERR_MALLOC));
+	if (init_stack('b', &b) != SUCCESS)
 		return (free_stack(a), error_exit(ERR_MALLOC));
-	if (!is_sorted(a))
-		choose_algo(a, b);
-	while (a->head->next)
-	{
-		ft_printf("%i\n", a->head->value);
-		a->head->next++;
-	}
-	cleanup_app(a, b);
-	return (0);
+	if (parse_args(ac - 1, ++av, a) != SUCCESS)
+		return (free_stack(a), free_stack(b), error_exit(ERR_ARGS));
+	status = is_sorted(a);
+	if (status == SORTED)
+		return (free_stack(a), free_stack(b), SUCCESS);
+	choose_algo(a, b);
+	return (free_stack(a), free_stack(b), SUCCESS);
 }

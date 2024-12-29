@@ -17,13 +17,19 @@ void	sa(t_stack *a)
 	t_node	*first;
 	t_node	*second;
 
-	if (!a || !a->head || !a->head->next)
+	if (!a || !a->first_node || !a->first_node->next)
 		return ;
-	first = a->head;
+	first = a->first_node;
 	second = first->next;
 	first->next = second->next;
+	if (second->next)
+		second->next->prev = first;
 	second->next = first;
-	a->head = second;
+	second->prev = NULL;
+	first->prev = second;
+	a->first_node = second;
+	if (first->next == NULL)
+		a->last_node = first;
 	write(1, "sa\n", 3);
 }
 
@@ -32,13 +38,19 @@ void	sb(t_stack *b)
 	t_node	*first;
 	t_node	*second;
 
-	if (!b || !b->head || !b->head->next)
+	if (!b || !b->first_node || !b->first_node->next)
 		return ;
-	first = b->head;
+	first = b->first_node;
 	second = first->next;
 	first->next = second->next;
+	if (second->next)
+		second->next->prev = first;
 	second->next = first;
-	b->head = second;
+	second->prev = NULL;
+	first->prev = second;
+	b->first_node = second;
+	if (first->next == NULL)
+		b->last_node = first;
 	write(1, "sb\n", 3);
 }
 
