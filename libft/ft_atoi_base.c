@@ -12,64 +12,60 @@
 
 #include "libft.h"
 
-static int	ft_get_digit_value(const char c, int base);
-static int	ft_atoi_base_process(const char *nptr, int base);
-
-int	ft_atoi_base(const char *nptr, int base)
+int	ft_get_digit_value(char c, int base)
 {
-	int	sign;
-	int	result;
+	char	*charset;
+	int		i;
 
-	if (!nptr || base < 2 || base > 16)
-		return (0);
-	result = 0;
-	sign = 1;
-	while (ft_isspace(*nptr))
-		nptr++;
-	if (*nptr == '-' || *nptr == '+')
-	{
-		if (*nptr == '-')
-			sign = -1;
-		nptr++;
-	}
-	if (base == 16 && nptr[0] == '0' && (nptr[1] == 'x' || nptr[1] == 'X'))
-		nptr += 2;
-	result = ft_atoi_base_process(nptr, base);
-	if (result == -1)
+	charset = "0123456789abcdefABCDEF";
+	i = 0;
+	while (charset[i] && charset[i] != c)
+		i++;
+	if (i >= 16)
+		i -= 6;
+	if (i >= base)
 		return (-1);
-	return (sign * result);
+	return (i);
 }
 
-static int	ft_atoi_base_process(const char *nptr, int base)
+int	ft_atoi_base_process(const char *str, int base)
 {
 	int	digit;
 	int	result;
 
 	result = 0;
-	while (*nptr)
+	while (*str)
 	{
-		digit = ft_get_digit_value(*nptr, base);
+		digit = ft_get_digit_value(*str, base);
 		if (digit == -1)
 			break ;
 		result = (result * base) + digit;
-		nptr++;
+		str++;
 	}
 	return (result);
 }
 
-static int	ft_get_digit_value(const char c, int base)
+int	ft_atoi_base(const char *str, int base)
 {
-	int	digit;
+	int	result;
+	int	sign;
 
-	if (c >= '0' && c <= '9')
-		digit = c - '0';
-	else if (c >= 'a' && c <= 'f')
-		digit = c - 'a' + 10;
-	else if (c >= 'A' && c <= 'F')
-		digit = c - 'A' + 10;
-	else
-		return (-1);
-	if (digit >= base)
-		return (-1);
-	return (digit);
+	result = 0;
+	sign = 1;
+
+	if (!str || base < 2 || base > 16)
+		return (0);
+	while (ft_isspace(*str))
+		str++;
+	if (*str == '-' || *str == '+')
+	{
+		if (*str == '-')
+			sign = -1;
+		str++;
+	}
+	if (base == 16 && *str == '0' && (*(str + 1) == 'x' || *(str + 1) == 'X'))
+		str += 2;
+	result = ft_atoi_base_process(str, base);
+	return (sign * result);
 }
+

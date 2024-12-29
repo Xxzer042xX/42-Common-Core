@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_str_bonus.c                               :+:      :+:    :+:   */
+/*   ft_print_str.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/ft_printf_bonus.h"
+#include "../include/ft_printf.h"
 #include "../libft/libft.h"
 
 static int	ft_print_str_sub(t_flags *flags, char *str);
@@ -42,9 +42,10 @@ static int	ft_is_null(t_flags *flags)
 		str = flags->join;
 	else
 		str = "(null)";
+	flags->is_null = 1;
 	str_len = ft_strlen(str);
 	if (flags->dot && flags->prec < str_len)
-		printed_len = 0;
+		printed_len = flags->prec;
 	else
 		printed_len = str_len;
 	if (flags->width > printed_len)

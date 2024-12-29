@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/ft_printf_bonus.h"
+#include "../include/ft_printf.h"
 
 static int	ft_proces(t_flags *flags, int printed_len, int total_width);
 
@@ -20,7 +20,10 @@ int	ft_print_char(va_list args, t_flags *flags)
 	int		printed_len;
 	int		total_width;
 
-	c = (char)va_arg(args, int);
+	if (flags->join)
+		c = flags->join[0];
+	else
+		c = (char)va_arg(args, int);
 	printed_len = 1;
 	if (flags->width > printed_len)
 		total_width = flags->width;

@@ -1,35 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_str_prec_bonus.c                     :+:      :+:    :+:   */
+/*   ft_ishexa.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/26 21:39:48 by madelmen          #+#    #+#             */
-/*   Updated: 2024/10/28 20:36:58 by madelmen         ###   LAUSANNE.ch       */
+/*   Created: 2024/12/08 12:02:17 by madelmen          #+#    #+#             */
+/*   Updated: 2024/12/08 15:31:37 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/ft_printf_bonus.h"
+#include "libft.h"
 
-/*
- Prints up to 'prec' characters of the given string.
- Iterates through the string, printing each character until 'prec' characters
- are printed.
- */
-int	ft_print_str_prec(char *str, int prec)
+int	ft_ishexa(const char *str)
 {
 	int	i;
-	int	char_count;
 
 	i = 0;
-	char_count = 0;
-	while (i < prec)
+	if (!str)
+		return (0);
+	if (str[0] == '0' && (str[1] == 'x' || str[1] == 'X'))
+		i = 2;
+	if (!str[i])
+		return (0);
+	while (str[i])
 	{
-		if (write(1, &str[i], 1) == -1)
-			return (-1);
-		char_count++;
+		if (!((ft_isdigit(str[i]) || (str[i] >= 'a' && str[i] <= 'f') || \
+			(str[i] >= 'A' && str[i] <= 'F'))))
+			return (0);
 		i++;
 	}
-	return (char_count);
+	return (1);
 }

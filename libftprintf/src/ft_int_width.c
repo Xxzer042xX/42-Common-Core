@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_int_width_bonus.c                               :+:      :+:    :+:   */
+/*   ft_int_width.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/ft_printf_bonus.h"
+#include "../include/ft_printf.h"
 
 static int	ft_width_prec_dot(t_flags *flags, int to_print, int *n);
 static int	ft_width_dot(t_flags *flags, int to_print, int *n);
@@ -74,6 +74,8 @@ static int	ft_width_dot(t_flags *flags, int to_print, int *n)
 	{
 		if (flags->join[0] == '0' && !flags->prec)
 			res = ft_pad_int(flags->width, ' ');
+		else if (flags->space)
+			res = ft_pad_int(1, ' ');
 		else
 			res = ft_pad_int(flags->width - to_print - flags->is_nega, ' ');
 	}

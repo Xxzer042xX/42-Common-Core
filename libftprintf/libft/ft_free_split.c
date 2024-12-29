@@ -1,28 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_uint.c                                    :+:      :+:    :+:   */
+/*   ft_free_split.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/15 09:32:20 by madelmen          #+#    #+#             */
-/*   Updated: 2024/11/04 20:33:42 by madelmen         ###   LAUSANNE.ch       */
+/*   Created: 2024/12/06 15:58:50 by madelmen          #+#    #+#             */
+/*   Updated: 2024/12/06 15:58:50 by madelmen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/ft_printf.h"
-#include "../libft/libft.h"
+#include "libft.h"
 
-int	ft_print_uint(va_list args, t_flags *flags)
+void	ft_free_split(char **split, int i)
 {
-	unsigned int	n;
-	char			*str;
-
-	n = va_arg(args, unsigned int);
-	str = ft_ulltoa((unsigned long long)n);
-	if (!str)
-		return (-1);
-	flags->join = str;
-	flags->is_uintx = 1;
-	return (ft_print_int(args, flags));
+	while (i >= 0)
+		free(split[i--]);
+	free(split);
 }

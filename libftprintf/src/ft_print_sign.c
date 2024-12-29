@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_sign_bonus.c                              :+:      :+:    :+:   */
+/*   ft_print_sign.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/ft_printf_bonus.h"
+#include "../include/ft_printf.h"
 
 int	ft_print_sign(t_flags *flags, int *count)
 {
@@ -24,9 +24,12 @@ int	ft_print_sign(t_flags *flags, int *count)
 	}
 	else if (!flags->is_nega && flags->space)
 	{
-		if (write(1, " ", 1) == -1)
-			return (-1);
-		*count += 1;
+		if (!flags->dot || flags->prec >= flags->width)
+		{
+			if (write(1, " ", 1) == -1)
+				return (-1);
+			*count += 1;
+		}
 	}
 	else if (flags->is_nega == 1)
 	{

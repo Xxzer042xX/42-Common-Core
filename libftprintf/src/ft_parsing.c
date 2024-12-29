@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/ft_printf_bonus.h"
+#include "../include/ft_printf.h"
 #include "../libft/libft.h"
 
 static int	ft_dispatch_format(char format, va_list args, t_flags *flags);
@@ -86,5 +86,10 @@ static int	ft_dispatch_format(char format, va_list args, t_flags *flags)
 		return (ft_print_hex(args, flags, format));
 	else if (format == 'p')
 		return (ft_print_pointer(args, flags));
-	return (write(1, &format, 1));
+	else if (format == '%')
+	{
+		flags->join = &format;
+		return (ft_print_char(args, flags));
+	}
+	return (0);
 }
