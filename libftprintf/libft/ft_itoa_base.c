@@ -38,7 +38,7 @@ char	*ft_itoa_base(unsigned long long value, int base, int is_upper)
 	else
 		digits = "0123456789abcdef";
 	len = ft_numlen_b(value, base);
-	str = (char *)malloc(len + 1);
+	str = (char *)malloc(sizeof(char) * len + 1);
 	if (!str)
 		return (NULL);
 	str[len] = '\0';

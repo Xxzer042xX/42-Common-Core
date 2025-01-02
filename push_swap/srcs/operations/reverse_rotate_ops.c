@@ -1,47 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rotate_ops.c                                       :+:      :+:    :+:   */
+/*   reverse_rotate_ops.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/25 13:10:11 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/25 13:10:11 by madelmen         ###   ########.fr       */
+/*   Created: 2024/12/31 22:02:37 by madelmen          #+#    #+#             */
+/*   Updated: 2024/12/31 22:02:37 by madelmen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/push_swap.h"
 
-static void	rotate(t_stack *stack)
+static void	reverse_rotate(t_stack *stack)
 {
-	t_node	*first;
+	t_node	*last;
 
 	if (!stack || !stack->first_node || !stack->first_node->next)
 		return ;
-	first = stack->first_node;
-	stack->first_node = stack->first_node->next;
-	stack->first_node->prev = NULL;
-	stack->last_node->next = first;
-	first->prev = stack->last_node;
-	first->next = NULL;
-	stack->last_node = first;
+	last = stack->last_node;
+	stack->last_node = stack->last_node->prev;
+	stack->last_node->next = NULL;
+	last->next = stack->first_node;
+	last->prev = NULL;
+	stack->first_node->prev = last;
+	stack->first_node = last;
 }
 
-void	ra(t_stack *a)
+void	rra(t_stack *a)
 {
-	rotate(a);
-	ft_printf("ra\n");
+	reverse_rotate(a);
+	ft_printf("rra\n");
 }
 
-void	rb(t_stack *b)
+void	rrb(t_stack *b)
 {
-	rotate(b);
-	ft_printf("rb\n");
+	reverse_rotate(b);
+	ft_printf("rrb\n");
 }
 
-void	rr(t_stack *a, t_stack *b)
+void	rrr(t_stack *a, t_stack *b)
 {
-	rotate(a);
-	rotate(b);
-	ft_printf("rr\n");
+	reverse_rotate(a);
+	reverse_rotate(b);
+	ft_printf("rrr\n");
 }

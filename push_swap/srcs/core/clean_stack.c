@@ -1,18 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleanup.c                                          :+:      :+:    :+:   */
+/*   clean_stack.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/25 13:07:06 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/25 13:07:06 by madelmen         ###   ########.fr       */
+/*   Created: 2025/01/01 19:34:03 by madelmen          #+#    #+#             */
+/*   Updated: 2025/01/01 19:34:03 by madelmen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/push_swap.h"
+#include "../include/push_swap.h"
 
-void	free_stack(t_stack *stack)
+static void	free_stack(t_stack *stack);
+
+void	cleanup(t_stack *a, t_stack *b, int status)
+{
+	if (a)
+		free_stack(a);
+	if (b)
+		free_stack(b);
+	if (status != SUCCESS)
+		print_error(status);
+}
+
+static void	free_stack(t_stack *stack)
 {
 	t_node	*current;
 	t_node	*next;

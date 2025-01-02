@@ -10,13 +10,70 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// utils/stack_utils.c
+// src/utils/stack_utils.c
+
 #include "../../include/push_swap.h"
+
+int check_duplicate(t_stack *stack, int num)
+{
+    t_node  *current;
+
+    if (!stack)
+        return (ERR_ARGS);
+
+    current = stack->first_node;
+    while (current)
+    {
+        if (current->value == num)
+            return (ERR_DUP);
+        current = current->next;
+    }
+    return (SUCCESS);
+}
+
+int add_to_stack(t_stack *stack, int num)
+{
+    t_node  *new;
+
+    // Vérification du pointeur stack
+    if (!stack)
+        return (ERR_ARGS);
+
+    new = malloc(sizeof(t_node));
+    if (!new)
+        return (ERR_MALLOC);
+
+    // Initialisation complète du nouveau node
+    new->value = num;
+    new->next = NULL;
+    new->prev = NULL;
+    new->index = 0;  // Si vous utilisez l'index
+
+    // Cas où la stack est vide
+    if (!stack->first_node)
+    {
+        stack->first_node = new;
+        stack->last_node = new;
+    }
+    // Cas où la stack a déjà des éléments
+    else
+    {
+        // Mise à jour des liens
+        new->prev = stack->last_node;
+        if (stack->last_node)  // Protection supplémentaire
+            stack->last_node->next = new;
+        stack->last_node = new;
+    }
+    stack->size++;
+    return (SUCCESS);
+}
 
 int	is_sorted(t_stack *stack)
 {
 	t_node	*current;
 
+	if (!stack || !stack->first_node)
+		return (SORTED);
 	current = stack->first_node;
 	while (current->next)
 	{
@@ -25,54 +82,4 @@ int	is_sorted(t_stack *stack)
 		current = current->next;
 	}
 	return (SORTED);
-}
-
-void	choose_algo(t_stack *a, t_stack *b)
-{
-	ft_printf("%d\n", a->size);
-	if (a->size == 2)
-	{
-		if (a->first_node->value > a->last_node->value)
-			sa(a);
-	}
-	else if (a->size == 3)
-		sort_three(a);
-	else if (a->size == 4)
-		sort_four(a, b);
-	else if (a->size == 5)
-		sort_five(a, b);
-	else
-		sort_big(a, b);
-}
-
-int	get_min(t_stack *stack)
-{
-	t_node	*current;
-	int		min;
-
-	current = stack->first_node;
-	min = current->value;
-	while (current)
-	{
-		if (current->value < min)
-			min = current->value;
-		current = current->next;
-	}
-	return (min);
-}
-
-int	get_max(t_stack *stack)
-{
-	t_node	*current;
-	int		max;
-
-	current = stack->first_node;
-	max = current->value;
-	while (current)
-	{
-		if (current->value > max)
-			max = current->value;
-		current = current->next;
-	}
-	return (max);
 }

@@ -31,7 +31,14 @@
 # include <unistd.h>
 
 /* ************************************************************************** */
-/*                              CORE                                          */
+/*                             CORE FUNCTIONS                                 */
+/* ************************************************************************** */
+int		init_stack(char id, t_stack **stack);
+void	print_error(int error);
+void	cleanup(t_stack *a, t_stack *b, int status);
+
+/* ************************************************************************** */
+/*                              STACK OPERATIONS                              */
 /* ************************************************************************** */
 void	sa(t_stack *a);
 void	sb(t_stack *b);
@@ -46,24 +53,41 @@ void	rrb(t_stack *b);
 void	rrr(t_stack *a, t_stack *b);
 
 /* ************************************************************************** */
-/*                              UTILS                                         */
+/*                             STACK UTILS                                    */
 /* ************************************************************************** */
-int		init_stack(char id, t_stack **stack);
-int		parse_args(int ac, char **av, t_stack *a);
-void	free_stack(t_stack *stack);
-int		error_exit(int error);
-void	cleanup_app(t_stack *a, t_stack *b);
+int		is_sorted(t_stack *stack);
+int		check_duplicate(t_stack *stack, int num);
+int		add_to_stack(t_stack *stack, int num);
 
 /* ************************************************************************** */
-/*                               ALGORITHMS                                   */
+/*                                 PARSING                                    */
+/* ************************************************************************** */
+int		parse_args(int ac, char **av, t_stack *a);
+int		handle_numbers(t_stack *stack, char **numbers);
+int		process_number(t_stack *stack, const char *str);
+
+/* ************************************************************************** */
+/*                                   SORT                                     */
 /* ************************************************************************** */
 void	sort_three(t_stack *a);
+void	sort_four(t_stack *a, t_stack *b);
 void	sort_five(t_stack *a, t_stack *b);
 void	sort_big(t_stack *a, t_stack *b);
-void	sort_four(t_stack *a, t_stack *b);
-int		is_sorted(t_stack *stack);
-void	choose_algo(t_stack *a, t_stack *b);
-int		get_min(t_stack *stack);
-int		get_max(t_stack *stack);
+
+/* ************************************************************************** */
+/*                         OPTIMIZATION   POSITION                            */
+/* ************************************************************************** */
+int		find_position(t_stack *stack, int value);
+int		find_min_pos(t_stack *stack);
+int		find_max_position(t_stack *stack);
+int		find_insert_position(t_stack *a, int value);
+void    get_min_max(t_stack *stack, int *min, int *max);
+
+/* ************************************************************************** */
+/*                                CALCULAT COST                               */
+/* ************************************************************************** */
+int		calculate_cost(t_stack *stack, int pos);
+void	update_cost(t_cost *cost, t_stack *a, t_stack *b, int pos_a);
+void 	execute_move(t_stack *a, t_stack *b, t_cost *cost);
 
 #endif

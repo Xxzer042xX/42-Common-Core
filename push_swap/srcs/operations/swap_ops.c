@@ -12,51 +12,32 @@
 
 #include "../../include/push_swap.h"
 
+static void	swap(t_stack *stack)
+{
+	int	temp;
+
+	if (!stack || !stack->first_node || !stack->first_node->next)
+		return ;
+	temp = stack->first_node->value;
+	stack->first_node->value = stack->first_node->next->value;
+	stack->first_node->next->value = temp;
+}
+
 void	sa(t_stack *a)
 {
-	t_node	*first;
-	t_node	*second;
-
-	if (!a || !a->first_node || !a->first_node->next)
-		return ;
-	first = a->first_node;
-	second = first->next;
-	first->next = second->next;
-	if (second->next)
-		second->next->prev = first;
-	second->next = first;
-	second->prev = NULL;
-	first->prev = second;
-	a->first_node = second;
-	if (first->next == NULL)
-		a->last_node = first;
-	write(1, "sa\n", 3);
+	swap(a);
+	ft_printf("sa\n");
 }
 
 void	sb(t_stack *b)
 {
-	t_node	*first;
-	t_node	*second;
-
-	if (!b || !b->first_node || !b->first_node->next)
-		return ;
-	first = b->first_node;
-	second = first->next;
-	first->next = second->next;
-	if (second->next)
-		second->next->prev = first;
-	second->next = first;
-	second->prev = NULL;
-	first->prev = second;
-	b->first_node = second;
-	if (first->next == NULL)
-		b->last_node = first;
-	write(1, "sb\n", 3);
+	swap(b);
+	ft_printf("sb\n");
 }
 
 void	ss(t_stack *a, t_stack *b)
 {
-	sa(a);
-	sb(b);
-	write(1, "ss\n", 3);
+	swap(a);
+	swap(b);
+	ft_printf("ss\n");
 }

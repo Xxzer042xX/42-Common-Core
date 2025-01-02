@@ -12,16 +12,8 @@
 
 #include "../include/push_swap.h"
 
-/******************************************************************************/
-/*                              MAIN FUNCTION                                 */
-/*																			  */
-/*		1. Parse arguments and create stack a.								  */
-/*		2. Create stack b.												      */
-/*		3. Check if stack a is sorted.										  */
-/*		4. Choose algorithm based on stack size.							  */
-/*		5. Cleanup and exit.												  */
-/*																			  */
-/******************************************************************************/
+static void	choose_algo(t_stack *a, t_stack *b);
+
 int	main(int ac, char **av)
 {
 	t_stack	*a;
@@ -31,16 +23,30 @@ int	main(int ac, char **av)
 	a = NULL;
 	b = NULL;
 	if (ac < 2)
-		return (error_exit(ERR_ARGS));
-	if (init_stack('a', &a) != SUCCESS)
-		return (error_exit(ERR_MALLOC));
-	if (init_stack('b', &b) != SUCCESS)
-		return (free_stack(a), error_exit(ERR_MALLOC));
-	if (parse_args(ac - 1, ++av, a) != SUCCESS)
-		return (free_stack(a), free_stack(b), error_exit(ERR_ARGS));
-	status = is_sorted(a);
-	if (status == SORTED)
-		return (free_stack(a), free_stack(b), SUCCESS);
+		return (print_error(ERR_ARGS), ERR_ARGS);
+	if (init_stack('a', &a) != SUCCESS || init_stack('b', &b) != SUCCESS)
+		return (cleanup(a, NULL, ERR_MALLOC), ERR_MALLOC);
+	status = parse_args(ac - 1, ++av, a);
+	if (status != SUCCESS)
+		return (cleanup(a, b, status), status);
+	if (is_sorted(a) == SORTED)
+		return (cleanup(a, b, SUCCESS), SUCCESS);
 	choose_algo(a, b);
-	return (free_stack(a), free_stack(b), SUCCESS);
+	return (cleanup(a, b, SUCCESS), SUCCESS);
+}
+
+static void	choose_algo(t_stack *a, t_stack *b)
+{
+	if (!a || !b)
+		return ;
+	if (a->size == 2 && a->first_node->value > a->last_node->value)
+		sa(a);
+	else if (a->size == 3)
+		sort_three(a);
+	else if (a->size == 4)
+		sort_four(a, b);
+	else if (a->size == 5)
+		sort_five(a, b);
+	else if (a->size > 5)
+		sort_big(a, b);
 }

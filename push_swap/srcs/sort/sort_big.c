@@ -12,62 +12,107 @@
 
 #include "../../include/push_swap.h"
 
-static void	radix_sort(t_stack *a, t_stack *b)
+static void	calculate_best_move(t_stack *a, t_stack *b, t_cost *cost)
 {
-	int	max_bits;
-	int	size;
-	int	i;
-	int	j;
+    t_node	*current;
+    t_cost	temp_cost;
+    int		pos_b;
+    int		pos_a;
+    
+    if (!a || !b || !cost || !b->first_node)
+        return ;
+        
+    current = b->first_node;
+    pos_b = 0;
+    cost->total_cost = MAX_INT;
+    
+    while (current)
+    {
+        pos_a = find_insert_position(a, current->value);
+        ft_memset(&temp_cost, 0, sizeof(t_cost));
+        temp_cost.value = current->value;
+        update_cost(&temp_cost, a, b, pos_a);
+        
+        if (temp_cost.total_cost < cost->total_cost)
+        {
+            cost->moves_a = temp_cost.moves_a;
+            cost->moves_b = temp_cost.moves_b;
+            cost->total_cost = temp_cost.total_cost;
+            cost->value = temp_cost.value;
+            cost->target_pos = pos_a;
+        }
+        current = current->next;
+        pos_b++;
+    }
+}
 
-	size = a->size;
-	max_bits = 0;
-	while ((size - 1) >> max_bits)
-		max_bits++;
-	i = 0;
-	while (i < max_bits)
+static int	get_chunks_count(int size)
+{
+	if (size <= 100)
+		return (5);
+	return (11);
+}
+
+static void	push_to_b_in_chunks(t_stack *a, t_stack *b)
+{
+	int	min;
+	int	max;
+	int	chunk_size;
+	int	chunks;
+	int	current_limit;
+
+	get_min_max(a, &min, &max);
+	chunks = get_chunks_count(a->size);
+	chunk_size = (max - min) / chunks;
+	current_limit = min + chunk_size;
+	while (a->size > 3)
 	{
-		j = 0;
-		while (j < size)
+		if (a->first_node->value <= current_limit)
 		{
-			if ((a->first_node->value >> i) & 1)
-				ra(a);
-			else
-				pb(a, b);
-			j++;
+			pb(a, b);
+			if (b->size > 1 && b->first_node->value < b->first_node->next->value)
+				rb(b);
 		}
-		while (b->size)
-			pa(a, b);
-		i++;
+		else if (current_limit < max)
+			current_limit += chunk_size;
+		else
+			ra(a);
 	}
 }
 
-
-static void	normalize_stack(t_stack *a)
+static void	move_back_to_a(t_stack *a, t_stack *b)
 {
-	t_node	*current;
-	t_node	*compare;
-	int		rank;
+	t_cost	cost;
 
-	if (!a || !a->first_node)
-		return ;
-	current = a->first_node;
-	while (current)
+	while (b->size > 0)
 	{
-		rank = 0;
-		compare = a->first_node;
-		while (compare)
-		{
-			if (compare->value < current->value)
-				rank++;
-			compare = compare->next;
-		}
-		current->value = rank;
-		current = current->next;
+		ft_memset(&cost, 0, sizeof(t_cost));
+		calculate_best_move(a, b, &cost);
+		execute_move(a, b, &cost);
 	}
 }
 
 void	sort_big(t_stack *a, t_stack *b)
 {
-	normalize_stack(a);
-	radix_sort(a, b);
+	int	min_pos;
+
+	if (!a || !b || a->size <= 5)
+		return ;
+	push_to_b_in_chunks(a, b);
+	sort_three(a);
+	move_back_to_a(a, b);
+	min_pos = find_min_pos(a);
+	while (min_pos > 0)
+	{
+		if (min_pos <= a->size / 2)
+		{
+			ra(a);
+			min_pos--;
+		}
+		else
+		{
+			rra(a);
+			min_pos = (min_pos + 1) % a->size;
+		}
+	}
 }

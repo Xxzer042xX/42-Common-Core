@@ -12,50 +12,37 @@
 
 #include "../../include/push_swap.h"
 
+static void	push(t_stack *src, t_stack *dst)
+{
+	t_node	*temp;
+
+	if (!src || !src->first_node)
+		return ;
+	temp = src->first_node;
+	src->first_node = src->first_node->next;
+	if (src->first_node)
+		src->first_node->prev = NULL;
+	else
+		src->last_node = NULL;
+	src->size--;
+
+	temp->next = dst->first_node;
+	if (dst->first_node)
+		dst->first_node->prev = temp;
+	dst->first_node = temp;
+	if (!dst->last_node)
+		dst->last_node = temp;
+	dst->size++;
+}
+
 void	pa(t_stack *a, t_stack *b)
 {
-	t_node	*tmp;
-
-	if (!b || !b->first_node)
-		return ;
-	tmp = b->first_node;
-	b->first_node = tmp->next;
-	if (b->first_node)
-		b->first_node->prev = NULL;
-	tmp->next = a->first_node;
-	tmp->prev = NULL;
-	if (a->first_node)
-		a->first_node->prev = tmp;
-	a->first_node = tmp;
-	a->size++;
-	b->size--;
-	if (b->size == 0)
-		b->last_node = NULL;
-	if (a->size == 1)
-		a->last_node = tmp;
-	write(1, "pa\n", 3);
+	push(b, a);
+	ft_printf("pa\n");
 }
 
 void	pb(t_stack *a, t_stack *b)
 {
-	t_node	*tmp;
-
-	if (!a || !a->first_node)
-		return ;
-	tmp = a->first_node;
-	a->first_node = tmp->next;
-	if (a->first_node)
-		a->first_node->prev = NULL;
-	tmp->next = b->first_node;
-	tmp->prev = NULL;
-	if (b->first_node)
-		b->first_node->prev = tmp;
-	b->first_node = tmp;
-	b->size++;
-	a->size--;
-	if (a->size == 0)
-		a->last_node = NULL;
-	if (b->size == 1)
-		b->last_node = tmp;
-	write(1, "pb\n", 3);
+	push(a, b);
+	ft_printf("pb\n");
 }

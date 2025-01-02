@@ -16,7 +16,6 @@
 /* ************************************************************************** */
 /*                              DEFAULT VALUES                                */
 /* ************************************************************************** */
-// Integer limits
 # define MAX_INT       2147483647
 # define MIN_INT       -2147483648
 
@@ -28,10 +27,10 @@
 //sorted status
 # define SORTED         1
 # define UNSORTED       0
+
 /* ************************************************************************** */
 /*                                      ENUM ERROR                            */
 /* ************************************************************************** */
-
 enum e_error
 {
 	SUCCESS,
@@ -45,7 +44,6 @@ enum e_error
 /* ************************************************************************** */
 /*                  NODE, MOVE CALCULATION, AND STACK STRUCTURE               */
 /* ************************************************************************** */
-// Node structure for linked list
 typedef struct s_node
 {
 	struct s_node	*next;
@@ -54,7 +52,6 @@ typedef struct s_node
 	int				index;
 }	t_node;
 
-// Stack structure with metadata
 typedef struct s_stack
 {
 	t_node	*first_node;
@@ -63,12 +60,13 @@ typedef struct s_stack
 	char	id_stack;
 }	t_stack;
 
-// Move calculation structure
-typedef struct s_move
+typedef struct s_cost
 {
-	int	cost_moove;
-	int	target_value;
-	int	n_steps;
-}	t_move;
+	int	moves_a;
+	int	moves_b;
+	int	total_cost;
+	int	value;
+	int	target_pos;
+}	t_cost;
 
 #endif
