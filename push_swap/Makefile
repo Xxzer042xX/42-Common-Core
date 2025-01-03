@@ -28,15 +28,22 @@ LIBFT = $(LIBFT_DIR)/libftprintf.a
 #                              SOURCE FILES                                    #
 ################################################################################
 
-OPERATIONS_SRC = $(wildcard $(SRC_DIR)/operations/*.c)
+OPERATIONS_SRC = $(SRC_DIR)/operations/push_ops.c \
+				 $(SRC_DIR)/operations/reverse_rotate_ops.c \
+				 $(SRC_DIR)/operations/rotate_ops.c \
+				 $(SRC_DIR)/operations/swap_ops.c \
 
-SORT_SRC = $(wildcard $(SRC_DIR)/sort/*.c)
+SORT_SRC = $(SRC_DIR)/sort/sort_big.c \
+		   $(SRC_DIR)/sort/sort_small.c \
 
-PARSER_SRC = $(wildcard $(SRC_DIR)/parser/*.c)
+PARSER_SRC = $(SRC_DIR)/parser/parsing_utils.c \
+			 $(SRC_DIR)/parser/parsing.c \
 
-UTILS_SRC = $(wildcard $(SRC_DIR)/utils/*.c)
+UTILS_SRC = $(SRC_DIR)/utils/push_swap_utils.c \
 
-CORE_SRC = $(wildcard $(SRC_DIR)/core/*.c)
+CORE_SRC = $(SRC_DIR)/core/clean_stack.c \
+		   $(SRC_DIR)/core/error.c \
+		   $(SRC_DIR)/core/init_stack.c \
 
 MAIN_SRC = $(SRC_DIR)/push_swap.c
 
