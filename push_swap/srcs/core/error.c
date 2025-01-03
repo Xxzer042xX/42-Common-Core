@@ -18,6 +18,8 @@ void	print_error(int error)
 		ft_putstr_fd("Invalide arguments\n", 2);
 	else if (error == ERR_MALLOC)
 		ft_putstr_fd("Memory allocation failed\n", 2);
+	else if (error == ERR_DUP)
+		ft_putstr_fd("Dup values\n", 2);
 	else if (error == DEBUG)
 		ft_putstr_fd("et ben faut bosser tes examens\n", 2);
 }

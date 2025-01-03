@@ -19,11 +19,6 @@
 # define MAX_INT       2147483647
 # define MIN_INT       -2147483648
 
-/* MOVES COST */
-# define COST_ROTATE    1
-# define COST_SWAP      1
-# define COST_PUSH      1
-
 //sorted status
 # define SORTED         1
 # define UNSORTED       0
@@ -42,7 +37,7 @@ enum e_error
 };
 
 /* ************************************************************************** */
-/*                  NODE, MOVE CALCULATION, AND STACK STRUCTURE               */
+/*                            NODE, AND STACK STRUCTURE                       */
 /* ************************************************************************** */
 typedef struct s_node
 {
@@ -59,14 +54,5 @@ typedef struct s_stack
 	int		size;
 	char	id_stack;
 }	t_stack;
-
-typedef struct s_cost
-{
-	int	moves_a;
-	int	moves_b;
-	int	total_cost;
-	int	value;
-	int	target_pos;
-}	t_cost;
 
 #endif

@@ -25,7 +25,6 @@ static void	push(t_stack *src, t_stack *dst)
 	else
 		src->last_node = NULL;
 	src->size--;
-
 	temp->next = dst->first_node;
 	if (dst->first_node)
 		dst->first_node->prev = temp;

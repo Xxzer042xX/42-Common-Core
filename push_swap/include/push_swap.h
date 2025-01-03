@@ -53,16 +53,17 @@ void	rrb(t_stack *b);
 void	rrr(t_stack *a, t_stack *b);
 
 /* ************************************************************************** */
-/*                             STACK UTILS                                    */
+/*                             PUSH_SWAP UTILS                                */
 /* ************************************************************************** */
 int		is_sorted(t_stack *stack);
-int		check_duplicate(t_stack *stack, int num);
-int		add_to_stack(t_stack *stack, int num);
+void 	index_stack(t_stack *stack);
+void	choose_algo(t_stack *a, t_stack *b);
 
 /* ************************************************************************** */
 /*                                 PARSING                                    */
 /* ************************************************************************** */
 int		parse_args(int ac, char **av, t_stack *a);
+//utils
 int		handle_numbers(t_stack *stack, char **numbers);
 int		process_number(t_stack *stack, const char *str);
 
@@ -77,17 +78,6 @@ void	sort_big(t_stack *a, t_stack *b);
 /* ************************************************************************** */
 /*                         OPTIMIZATION   POSITION                            */
 /* ************************************************************************** */
-int		find_position(t_stack *stack, int value);
 int		find_min_pos(t_stack *stack);
-int		find_max_position(t_stack *stack);
-int		find_insert_position(t_stack *a, int value);
-void    get_min_max(t_stack *stack, int *min, int *max);
-
-/* ************************************************************************** */
-/*                                CALCULAT COST                               */
-/* ************************************************************************** */
-int		calculate_cost(t_stack *stack, int pos);
-void	update_cost(t_cost *cost, t_stack *a, t_stack *b, int pos_a);
-void 	execute_move(t_stack *a, t_stack *b, t_cost *cost);
 
 #endif
