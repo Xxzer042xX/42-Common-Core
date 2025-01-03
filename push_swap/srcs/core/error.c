@@ -9,6 +9,7 @@
 /*   Updated: 2024/12/24 22:32:22 by madelmen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../../include/push_swap.h"
 
 void	print_error(int error)

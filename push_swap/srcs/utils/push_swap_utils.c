@@ -62,15 +62,9 @@ void	choose_algo(t_stack *a, t_stack *b)
 		sort_four(a, b);
 	else if (a->size == 5)
 		sort_five(a, b);
-	else if (a->size <= 100)
-	{
-		index_stack(a);
-		sort_big(a, b);
-	}
 	else
 	{
 		index_stack(a);
 		sort_big(a, b);
-		//sort_larg(a, b);
 	}
 }
