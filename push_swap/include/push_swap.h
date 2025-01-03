@@ -70,7 +70,6 @@ int		process_number(t_stack *stack, const char *str);
 /* ************************************************************************** */
 /*                                   SORT                                     */
 /* ************************************************************************** */
-int		find_min_pos(t_stack *stack);
 void	sort_three(t_stack *a);
 void	sort_four(t_stack *a, t_stack *b);
 void	sort_five(t_stack *a, t_stack *b);

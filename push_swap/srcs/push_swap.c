@@ -29,6 +29,7 @@ int	main(int ac, char **av)
 		return (cleanup(a, b, status), status);
 	if (is_sorted(a) == SORTED)
 		return (cleanup(a, b, SUCCESS), SUCCESS);
+	index_stack(a);
 	choose_algo(a, b);
 	return (cleanup(a, b, SUCCESS), SUCCESS);
 }

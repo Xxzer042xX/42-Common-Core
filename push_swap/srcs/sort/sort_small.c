@@ -12,29 +12,8 @@
 
 #include "../../include/push_swap.h"
 
-static void	rotate_to_min(t_stack *a)
-{
-	int	min_pos;
-
-	if (!a || !a->first_node || a->size < 2)
-		return ;
-	min_pos = find_min_pos(a);
-	if (min_pos < 0 || min_pos >= a->size)
-		return ;
-	while (min_pos > 0)
-	{
-		if (min_pos <= a->size / 2)
-		{
-			ra(a);
-			min_pos--;
-		}
-		else
-		{
-			rra(a);
-			min_pos = (min_pos + 1) % a->size;
-		}
-	}
-}
+static int	find_min_pos(t_stack *stack);
+static void	rotate_to_min(t_stack *a);
 
 void	sort_three(t_stack *a)
 {
@@ -44,9 +23,9 @@ void	sort_three(t_stack *a)
 
 	if (a->size != 3)
 		return ;
-	first = a->first_node->value;
-	second = a->first_node->next->value;
-	third = a->last_node->value;
+	first = a->first_node->index;
+	second = a->first_node->next->index;
+	third = a->last_node->index;
 	if (first > second && second < third && first < third)
 		sa(a);
 	else if (first > second && second > third)
@@ -67,62 +46,67 @@ void	sort_three(t_stack *a)
 
 void	sort_four(t_stack *a, t_stack *b)
 {
-	if (!a || !b || !a->first_node)
-		return ;
-	if (a->size != 4)
-		return ;
 	rotate_to_min(a);
-	if (a->size > 3)
-		pb(a, b);
-	if (a->size == 3)
-		sort_three(a);
-	if (b && b->size > 0)
-		pa(a, b);
+	pb(a, b);
+	sort_three(a);
+	pa(a, b);
 }
 
 void	sort_five(t_stack *a, t_stack *b)
 {
-	int	initial_size;
-
-	if (!a || !b || !a->first_node)
+	if (!a || !b || !a->first_node || a->size != 5)
 		return ;
-	if (a->size != 5)
-		return ;
-	initial_size = a->size;
-	while (a->size > 3 && initial_size == 5)
+	while (a->size > 3)
 	{
-		if (!a->first_node)
-			break ;
 		rotate_to_min(a);
-		if (b && a->size > 3)
-			pb(a, b);
+		pb(a, b);
 	}
-	if (a->size == 3)
-		sort_three(a);
+	sort_three(a);
 	while (b && b->size > 0)
 		pa(a, b);
 }
 
-int	find_min_pos(t_stack *stack)
+static void	rotate_to_min(t_stack *a)
+{
+	t_node	*temp;
+	int		min_pos;
+	int		min_index;
+
+	if (!a || !a->first_node || a->size < 2)
+		return ;
+	min_index = a->first_node->index;
+	temp = a->first_node;
+	while (temp)
+	{
+		if (temp->index < min_index)
+			min_index = temp->index;
+		temp = temp->next;
+	}
+	while (a->first_node->index != min_index)
+	{
+		min_pos = find_min_pos(a);
+		if (min_pos <= a->size / 2)
+			ra(a);
+		else
+			rra(a);
+	}
+}
+
+static int	find_min_pos(t_stack *stack)
 {
 	t_node	*current;
-	int		min;
 	int		min_pos;
 	int		pos;
 
 	if (!stack || !stack->first_node)
 		return (0);
 	current = stack->first_node;
-	min = current->value;
 	min_pos = 0;
 	pos = 0;
 	while (current)
 	{
-		if (current->value < min)
-		{
-			min = current->value;
+		if (current->index == 0)
 			min_pos = pos;
-		}
 		current = current->next;
 		pos++;
 	}
