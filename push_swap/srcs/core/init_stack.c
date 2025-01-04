@@ -6,11 +6,11 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 19:43:02 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/01 19:43:02 by madelmen         ###   ########.fr       */
+/*   Updated: 2025/01/04 03:35:11 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/push_swap.h"
+#include "../../include/push_swap.h"
 
 /* ************************************************************************** */
 /*                                                                            */
