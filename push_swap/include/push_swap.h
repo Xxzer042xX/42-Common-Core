@@ -34,8 +34,8 @@
 /*                             CORE FUNCTIONS                                 */
 /* ************************************************************************** */
 int		init_stack(char id, t_stack **stack);
+int		cleanup(t_stack *a, t_stack *b, int status);
 void	print_error(int error);
-void	cleanup(t_stack *a, t_stack *b, int status);
 
 /* ************************************************************************** */
 /*                              STACK OPERATIONS                              */

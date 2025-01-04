@@ -12,6 +12,26 @@
 
 #include "../../include/push_swap.h"
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction d'affichage des messages d'erreur sur la sortie d'erreur.       */
+/*                                                                            */
+/*   Cette fonction affiche des messages d'erreur spécifiques en fonction     */
+/*   du code d'erreur reçu. Les messages sont envoyés sur la sortie           */
+/*   d'erreur (fd 2) pour une gestion appropriée des erreurs.                 */
+/*                                                                            */
+/*   Messages d'erreur gérés :                                                */
+/*   - ERR_ARGS : Arguments invalides fournis au programme                    */
+/*   - ERR_MALLOC : Échec d'allocation mémoire                                */
+/*   - ERR_DUP : Valeurs dupliquées détectées                                 */
+/*   - DEBUG : Message de débogage personnalisé                               */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - error : code d'erreur entier déterminant le message à afficher         */
+/*                                                                            */
+/*   Ne retourne rien (void)                                                  */
+/*                                                                            */
+/* ************************************************************************** */
 void	print_error(int error)
 {
 	ft_putstr_fd("Error: ", 2);

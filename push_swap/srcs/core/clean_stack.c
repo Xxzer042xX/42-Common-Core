@@ -14,7 +14,28 @@
 
 static void	free_stack(t_stack *stack);
 
-void	cleanup(t_stack *a, t_stack *b, int status)
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction de nettoyage final du programme.                                */
+/*                                                                            */
+/*   Cette fonction se charge de libérer proprement toute la mémoire          */
+/*   allouée pour les piles A et B, et affiche un message d'erreur si         */
+/*   nécessaire avant la fin du programme.                                    */
+/*                                                                            */
+/*   Actions effectuées :                                                     */
+/*   1. Libération de la pile A si elle existe                                */
+/*   2. Libération de la pile B si elle existe                                */
+/*   3. Affichage du message d'erreur si le statut n'est pas SUCCESS          */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - a : pointeur vers la pile A                                            */
+/*   - b : pointeur vers la pile B                                            */
+/*   - status : code de statut/erreur du programme                            */
+/*                                                                            */
+/*   Ne retourne rien (void)                                                  */
+/*                                                                            */
+/* ************************************************************************** */
+int	cleanup(t_stack *a, t_stack *b, int status)
 {
 	if (a)
 		free_stack(a);
@@ -22,15 +43,33 @@ void	cleanup(t_stack *a, t_stack *b, int status)
 		free_stack(b);
 	if (status != SUCCESS)
 		print_error(status);
+	return (status);
 }
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction utilitaire pour libérer la mémoire d'une pile complète.         */
+/*                                                                            */
+/*   Cette fonction statique libère récursivement tous les noeuds d'une       */
+/*   pile ainsi que la structure de la pile elle-même.                        */
+/*                                                                            */
+/*   Processus de libération :                                                */
+/*   1. Vérification de l'existence de la pile                                */
+/*   2. Parcours de tous les noeuds de la pile                                */
+/*   3. Libération de chaque noeud individuellement                           */
+/*   4. Libération finale de la structure de pile                             */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - stack : pointeur vers la pile à libérer                                */
+/*                                                                            */
+/*   Ne retourne rien (void)                                                  */
+/*                                                                            */
+/* ************************************************************************** */
 static void	free_stack(t_stack *stack)
 {
 	t_node	*current;
 	t_node	*next;
 
-	if (!stack)
-		return ;
 	current = stack->first_node;
 	while (current)
 	{

@@ -15,6 +15,26 @@
 static int	find_min_pos(t_stack *stack);
 static void	rotate_to_min(t_stack *a);
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction de tri optimisée pour exactement trois éléments.                */
+/*                                                                            */
+/*   Implémente un tri par cas pour trois éléments :                          */
+/*   - Compare les indices des trois éléments                                 */
+/*   - Identifie le cas spécifique parmi les 5 possibles                      */
+/*   - Applique la séquence d'instructions optimale pour ce cas               */
+/*                                                                            */
+/*   Cas traités :                                                            */
+/*   1. first > second && second < third && first < third : sa                */
+/*   2. first > second && second > third : sa + rra                           */
+/*   3. first > second && second < third && first > third : ra                */
+/*   4. first < second && second > third && first < third : sa + ra           */
+/*   5. first < second && second > third && first > third : rra               */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - a : pointeur vers la pile à trier                                      */
+/*                                                                            */
+/* ************************************************************************** */
 void	sort_three(t_stack *a)
 {
 	int	first;
@@ -44,6 +64,21 @@ void	sort_three(t_stack *a)
 		rra(a);
 }
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction de tri optimisée pour exactement quatre éléments.               */
+/*                                                                            */
+/*   Stratégie de tri :                                                       */
+/*   1. Place le plus petit élément au sommet de la pile                      */
+/*   2. Déplace cet élément vers la pile B                                    */
+/*   3. Trie les trois éléments restants avec sort_three                      */
+/*   4. Ramène le plus petit élément au sommet de la pile A                   */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - a : pointeur vers la pile principale                                   */
+/*   - b : pointeur vers la pile auxiliaire                                   */
+/*                                                                            */
+/* ************************************************************************** */
 void	sort_four(t_stack *a, t_stack *b)
 {
 	rotate_to_min(a);
@@ -52,6 +87,20 @@ void	sort_four(t_stack *a, t_stack *b)
 	pa(a, b);
 }
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction de tri optimisée pour exactement cinq éléments.                 */
+/*                                                                            */
+/*   Stratégie de tri :                                                       */
+/*   1. Place et pousse les deux plus petits éléments vers B                  */
+/*   2. Trie les trois éléments restants avec sort_three                      */
+/*   3. Ramène les deux plus petits éléments de B vers A                      */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - a : pointeur vers la pile principale                                   */
+/*   - b : pointeur vers la pile auxiliaire                                   */
+/*                                                                            */
+/* ************************************************************************** */
 void	sort_five(t_stack *a, t_stack *b)
 {
 	if (!a || !b || !a->first_node || a->size != 5)
@@ -66,6 +115,20 @@ void	sort_five(t_stack *a, t_stack *b)
 		pa(a, b);
 }
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction utilitaire qui fait tourner la pile jusqu'au minimum.           */
+/*                                                                            */
+/*   Processus :                                                              */
+/*   1. Trouve l'index minimum dans la pile                                   */
+/*   2. Détermine la position de cet index                                    */
+/*   3. Choisit la rotation optimale (ra ou rra) selon la position            */
+/*   4. Effectue les rotations jusqu'à ce que le minimum soit au sommet       */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - a : pointeur vers la pile à manipuler                                  */
+/*                                                                            */
+/* ************************************************************************** */
 static void	rotate_to_min(t_stack *a)
 {
 	t_node	*temp;
@@ -92,6 +155,23 @@ static void	rotate_to_min(t_stack *a)
 	}
 }
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction utilitaire qui trouve la position du minimum dans la pile.      */
+/*                                                                            */
+/*   Parcourt la pile pour trouver la position de l'élément avec index 0 :    */
+/*   1. Initialise les compteurs et pointeurs                                 */
+/*   2. Parcourt tous les noeuds                                              */
+/*   3. Enregistre la position quand l'index 0 est trouvé                     */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - stack : pointeur vers la pile à analyser                               */
+/*                                                                            */
+/*   Retourne :                                                               */
+/*   - La position de l'élément minimum dans la pile                          */
+/*   - 0 si la pile est vide ou invalide                                      */
+/*                                                                            */
+/* ************************************************************************** */
 static int	find_min_pos(t_stack *stack)
 {
 	t_node	*current;

@@ -12,6 +12,35 @@
 
 #include "../../include/push_swap.h"
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction d'analyse et de traitement des arguments du programme.          */
+/*                                                                            */
+/*   Cette fonction gère deux formats d'entrée possibles :                    */
+/*   1. Un seul argument contenant tous les nombres séparés par des espaces   */
+/*   2. Plusieurs arguments, chacun contenant un seul nombre                  */
+/*                                                                            */
+/*   Dans le cas d'un seul argument :                                         */
+/*   - Découpe la chaîne en utilisant les espaces comme séparateurs           */
+/*   - Traite chaque nombre individuellement                                  */
+/*   - Libère la mémoire allouée pour le découpage                            */
+/*                                                                            */
+/*   Dans le cas de plusieurs arguments :                                     */
+/*   - Vérifie que chaque argument n'est pas vide                             */
+/*   - Traite chaque argument comme un nombre                                 */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - ac : nombre d'arguments                                                */
+/*   - av : tableau des arguments                                             */
+/*   - stack : pointeur vers la pile à remplir                                */
+/*                                                                            */
+/*   Retourne :                                                               */
+/*   - SUCCESS : si tous les arguments ont été traités avec succès            */
+/*   - ERR_MALLOC : si l'allocation mémoire échoue                            */
+/*   - ERR_ARGS : si un argument est invalide                                 */
+/*   - Autres codes d'erreur possibles selon process_number                   */
+/*                                                                            */
+/* ************************************************************************** */
 int	parse_args(int ac, char **av, t_stack *stack)
 {
 	char	**numbers;
@@ -30,8 +59,6 @@ int	parse_args(int ac, char **av, t_stack *stack)
 	}
 	while (i < ac)
 	{
-		if (!av[i] || !av[i][0])
-			return (ERR_ARGS);
 		status = process_number(stack, av[i]);
 		if (status != SUCCESS)
 			return (status);
