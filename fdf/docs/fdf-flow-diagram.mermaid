@@ -1,0 +1,28 @@
+flowchart TB
+    subgraph Input[Entrée & Initialisation]
+        F[Fichier .fdf] --> P[Parser]
+        P --> V[Validation]
+        V --> M[Matrice de Points]
+    end
+
+    subgraph Core[Coeur du Programme]
+        M --> T[Transformations]
+        T --> R[Rendu]
+        R --> D[Affichage]
+        
+        subgraph Events[Événements]
+            K[Clavier] --> E[Gestionnaire]
+            Mo[Souris] --> E
+            E --> T
+        end
+    end
+
+    subgraph UI[Interface]
+        D --> S[Barre Latérale]
+        S --> I[Informations]
+        I --> C[Contrôles]
+    end
+
+    style Input fill:#f9f,stroke:#333
+    style Core fill:#bbf,stroke:#333
+    style UI fill:#bfb,stroke:#333

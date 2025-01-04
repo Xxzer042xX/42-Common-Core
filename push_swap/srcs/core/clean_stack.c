@@ -32,7 +32,7 @@ static void	free_stack(t_stack *stack);
 /*   - b : pointeur vers la pile B                                            */
 /*   - status : code de statut/erreur du programme                            */
 /*                                                                            */
-/*   Ne retourne rien (void)                                                  */
+/*   Retourne  le status de fin du programme                                  */
 /*                                                                            */
 /* ************************************************************************** */
 int	cleanup(t_stack *a, t_stack *b, int status)
