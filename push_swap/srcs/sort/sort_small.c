@@ -41,8 +41,6 @@ void	sort_three(t_stack *a)
 	int	second;
 	int	third;
 
-	if (a->size != 3)
-		return ;
 	first = a->first_node->index;
 	second = a->first_node->next->index;
 	third = a->last_node->index;
@@ -103,8 +101,6 @@ void	sort_four(t_stack *a, t_stack *b)
 /* ************************************************************************** */
 void	sort_five(t_stack *a, t_stack *b)
 {
-	if (!a || !b || !a->first_node || a->size != 5)
-		return ;
 	while (a->size > 3)
 	{
 		rotate_to_min(a);
@@ -135,8 +131,6 @@ static void	rotate_to_min(t_stack *a)
 	int		min_pos;
 	int		min_index;
 
-	if (!a || !a->first_node || a->size < 2)
-		return ;
 	min_index = a->first_node->index;
 	temp = a->first_node;
 	while (temp)
@@ -178,8 +172,6 @@ static int	find_min_pos(t_stack *stack)
 	int		min_pos;
 	int		pos;
 
-	if (!stack || !stack->first_node)
-		return (0);
 	current = stack->first_node;
 	min_pos = 0;
 	pos = 0;
