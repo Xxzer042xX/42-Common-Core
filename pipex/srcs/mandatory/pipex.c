@@ -15,14 +15,14 @@
 static void	init_pipex(t_pipex *pipex, int argc, char **argv, char **env);
 static void	free_pipex(t_pipex *pipex);
 
-int	main(int argc, char **argv, char **env)
+int	main(int ac, char **av, char **env)
 {
 	t_pipex	pipex;
 	int		i;
 
-	if (argc != 5)
+	if (ac != 5)
 		error_exit(ERR_INPUT);
-	init_pipex(&pipex, argc, argv, env);
+	init_pipex(&pipex, ac, av, env);
 	create_pipes(&pipex);
 	i = 0;
 	while (i < pipex.cmd_count)
