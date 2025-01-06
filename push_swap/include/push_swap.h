@@ -6,7 +6,7 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 20:30:31 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/25 23:51:57 by madelmen         ###   LAUSANNE.ch       */
+/*   Updated: 2025/01/06 01:12:55 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	rrr(t_stack *a, t_stack *b);
 /*                             PUSH_SWAP UTILS                                */
 /* ************************************************************************** */
 int		is_sorted(t_stack *stack);
-void 	index_stack(t_stack *stack);
+void	index_stack(t_stack *stack);
 void	choose_algo(t_stack *a, t_stack *b);
 
 /* ************************************************************************** */

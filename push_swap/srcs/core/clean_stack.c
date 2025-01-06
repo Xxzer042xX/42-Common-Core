@@ -6,11 +6,11 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 19:34:03 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/01 19:34:03 by madelmen         ###   ########.fr       */
+/*   Updated: 2025/01/06 01:14:20 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/push_swap.h"
+#include "../../include/push_swap.h"
 
 static void	free_stack(t_stack *stack);
 
