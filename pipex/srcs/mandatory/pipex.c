@@ -21,8 +21,8 @@ int	main(int ac, char **av, char **env)
 		error_exit(ERR_INPUT);
 	init_pipex(&pipex, ac, av, env);
 	create_pipes(&pipex);
-	i = 0;
-	while (i < pipex.cmd_count)
+	i = -1;
+	while (++i < pipex.cmd_count)
 	{
 		pipex.cmds[i].pid = fork();
 		if (pipex.cmds[i].pid == -1)
