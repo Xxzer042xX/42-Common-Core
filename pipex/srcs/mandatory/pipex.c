@@ -6,14 +6,11 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 20:05:42 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/03 20:05:42 by madelmen         ###   ########.fr       */
+/*   Updated: 2025/01/06 01:53:40 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/pipex.h"
-
-static void	init_pipex(t_pipex *pipex, int argc, char **argv, char **env);
-static void	free_pipex(t_pipex *pipex);
 
 int	main(int ac, char **av, char **env)
 {
@@ -43,11 +40,11 @@ int	main(int ac, char **av, char **env)
 	return (0);
 }
 
-static void	init_pipex(t_pipex *pipex, int argc, char **argv, char **env)
+void	init_pipex(t_pipex *pipex, int ac, char **av, char **env)
 {
 	int	i;
 
-	pipex->cmd_count = argc - 3;
+	pipex->cmd_count = ac - 3;
 	pipex->env = env;
 	pipex->infile = -1;
 	pipex->outfile = -1;
@@ -63,11 +60,11 @@ static void	init_pipex(t_pipex *pipex, int argc, char **argv, char **env)
 	}
 	i = -1;
 	while (++i < pipex->cmd_count)
-		parse_cmd(&pipex->cmds[i], argv[i + 2], env);
-	open_files(pipex, argv, argc);
+		parse_cmd(&pipex->cmds[i], av[i + 2], env);
+	open_files(pipex, av, ac);
 }
 
-static void	free_pipex(t_pipex *pipex)
+void	free_pipex(t_pipex *pipex)
 {
 	int	i;
 	int	j;
