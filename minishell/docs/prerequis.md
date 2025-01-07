@@ -1,5 +1,3 @@
-Je vais restructurer le plan en prenant en compte précisément le sujet du PDF. Voici une approche détaillée :
-
 📚 PHASE 1 : PRÉPARATION ET CONFIGURATION
 ----------------------------------------
 
