@@ -12,15 +12,29 @@
 
 #include "libft.h"
 
-int	ft_intlen(int nb)
+int	ft_intlen(int n)
 {
 	int	len;
 
-	len = (nb <= 0);
-	while (nb != 0)
+	len = (n <= 0);
+	while (n != 0)
 	{
-		nb /= 10;
+		n /= 10;
 		len += 1;
 	}
 	return (len);
 }
+
+/*
+int	ft_int_len(int n)
+{
+	int	sign;
+
+	sign = (n < 0);
+	if (n < 0)
+		n *= -1;
+	if (n == 0)
+		return (1);
+	return (sign + 1 + ft_int_len(n / 10));
+}
+*/

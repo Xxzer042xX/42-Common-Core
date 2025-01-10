@@ -1,0 +1,86 @@
+READ(2)                                                                                                                                            Manuel du programmeur Linux                                                                                                                                           READ(2)
+
+NOM
+       read - Lire depuis un descripteur de fichier
+
+SYNOPSIS
+       #include <unistd.h>
+
+       ssize_t read(int fd, void *buf, size_t count);
+
+DESCRIPTION
+       read() lit jusqu'à count octets depuis le descripteur de fichier fd dans le tampon pointé par buf.
+
+       Sur les fichiers permettant le positionnement, l'opération de lecture a lieu à la position actuelle dans le fichier et elle est déplacée du nombre d'octets lus. Si la position actuelle dans le fichier est à la fin du fichier ou après, aucun octet n'est lu et read() renvoie zéro.
+
+       Si count vaut zéro, read() pourrait détecter les erreurs décrites ci-dessous. En l’absence d'erreur, ou si read() ne vérifie pas les erreurs, un read() avec un count de 0 renvoie zéro et n'a pas d'autres effets.
+
+       Selon POSIX.1, si count est supérieur à SSIZE_MAX, le résultat est défini par l'implémentation ; voir les NOTES pour la limite supérieure sous Linux.
+
+VALEUR RENVOYÉE
+       En  cas  de  succès, le nombre d'octets lus est renvoyé (zéro indique une fin de fichier), et la tête de lecture est avancée de ce nombre. Le fait que le nombre renvoyé soit plus petit que le nombre demandé n'est pas une erreur. Cela se produit, par exemple, s'il y a moins d'octets disponibles (parce qu'on était
+       peut-être près de la fin du fichier, ou parce qu'on lit depuis un tube ou un terminal) ou bien si read() a été interrompu par un signal. Voir les NOTES.
+
+       En cas d'erreur, -1 est renvoyé et errno est positionné correctement. Dans ce cas, il n'est pas précisé si la position du fichier (s'il y en a) change.
+
+ERREURS
+       EAGAIN Le descripteur de fichier fd fait référence à un fichier autre qu'un socket et a été marqué comme non bloquant (O_NONBLOCK), et la lecture devrait bloquer. Voir open(2) pour plus de détails sur l'attribut O_NONBLOCK.
+
+       EAGAIN ou EWOULDBLOCK
+              Le descripteur de fichier fd fait référence à un socket et a été marqué comme non bloquant (O_NONBLOCK), et la lecture devrait bloquer. POSIX.1-2001 permet de renvoyer l'une ou l'autre des erreurs dans ce cas et n'exige pas que ces constantes aient la même valeur. Une  application  portable  devrait  donc
+              tester les deux possibilités.
+
+       EBADF  fd n'est pas un descripteur de fichier valable ou n'est pas ouvert en lecture.
+
+       EFAULT buf pointe en dehors de l'espace d'adressage accessible.
+
+       EINTR  read() a été interrompu par un signal avant d'avoir eu le temps de lire quoi que ce soit ; consultez signal(7).
+
+       EINVAL Le descripteur fd correspond à un objet qu'il est impossible de lire. Ou bien le fichier a été ouvert avec l'attribut O_DIRECT, et l'adresse de buf, la valeur de count ou la position actuelle de la tête de lecture ne sont pas alignées correctement.
+
+       EINVAL fd a été créé par un appel à timerfd_create(2) et une mauvaise taille de tampon a été donnée à read() ; consultez timerfd_create(2) pour plus d'informations.
+
+       EIO    Erreur d'entrée-sortie. Cela arrive, par exemple, si un processus est dans un groupe en arrière-plan et tente de lire depuis le terminal qui le gère et soit il ignore, soit il bloque un signal SIGTTIN, ou bien son groupe est orphelin. Cela arrive également si une erreur d'entrée-sortie de bas niveau s'est
+              produite pendant la lecture d'un disque ou d'une bande. Une autre cause possible de EIO sur les systèmes de fichiers en réseau est la présence d'un verrou consultatif sur le descripteur de fichier et le fait qu'il a été perdu. Voir la section Perte de verrou de fcntl(2) pour plus de détails.
+
+       EISDIR fd est un répertoire.
+
+       D'autres erreurs peuvent se produire suivant le type d'objet associé à fd.
+
+CONFORMITÉ
+       SVr4, 4.3BSD, POSIX.1-2001.
+
+NOTES
+       Les types size_t et ssize_t sont respectivement des types de données d’entiers non signés et signés indiqués par POSIX.1.
+
+       Sur Linux, read() (et les appels système équivalents) transfèreront au maximum 0x7ffff000 (2 147 479 552) octets et renverront le nombre d'octets transférés (cela est vrai aussi bien sur des systèmes 32 que 64 bits).
+
+       Sur un système de fichiers NFS, la lecture de petites quantités de données ne mettra à jour l'horodatage du fichier que lors de la première lecture. Les lectures suivantes ne modifieront pas cette heure. Cela est dû à la mise en cache des attributs côté client, car la plupart, si ce n'est tous les  clients  NFS,
+       mettent  à  jour  sur le serveur st_atime (heure de dernier accès au fichier), et les lectures côté client satisfaites par le cache du client n'effectueront pas la mise à jour de st_atime sur le serveur, car il n'y a pas de lecture du côté serveur. La véritable sémantique UNIX peut être obtenue en désactivant le
+       cache des attributs du côté client, mais généralement cela augmente sensiblement la charge du serveur et dégrade les performances.
+
+BOGUES
+       Selon POSIX.1-2008/SUSv4, Section XSI 2.9.7 (« Thread Interactions with Regular File Operations ») :
+
+           Toutes les fonctions suivantes doivent être atomiques et ne pas se perturber mutuellement pour ce qui concerne les effets spécifiés dans POSIX.1-2008 lorsqu'elles opèrent sur les fichiers normaux ou sur les liens symboliques : ...
+
+       read() et readv(2) figurent parmi les API listées par la suite. En outre, la mise à jour du décalage de fichier fait partie des effets qui doivent être atomiques pour les threads (et pour les processus). Cependant, dans les versions de Linux antérieures à 3.14, cela n'était pas le cas : si deux processus  parta‐
+       geant  un  même  descripteur  de fichier ouvert (consultez open(2)) effectuaient une action read() (ou readv(2)) simultanément, alors les opération E/S n'étaient pas atomiques pour ce qui concernait la mise à jour du décalage de fichier. En conséquence, les lectures effectuées par les deux processus pouvaient se
+       chevaucher au niveau des blocs des données récupérées (de façon incorrecte). Ce problème a été résolu dans Linux 3.14.
+
+VOIR AUSSI
+       close(2), fcntl(2), ioctl(2), lseek(2), open(2), pread(2), readdir(2), readlink(2), readv(2), select(2), write(2), fread(3)
+
+COLOPHON
+       Cette page fait partie de la publication 5.10 du projet man-pages Linux. Une description du projet et des instructions pour signaler des anomalies et la dernière version de cette page peuvent être trouvées à l'adresse https://www.kernel.org/doc/man-pages/.
+
+TRADUCTION
+       La traduction française de cette page de manuel a été créée par Christophe Blaess <https://www.blaess.fr/christophe/>, Stéphan Rafin <stephan.rafin@laposte.net>, Thierry Vignaud <tvignaud@mandriva.com>, François Micaux, Alain Portal <aportal@univ-montp2.fr>, Jean-Philippe Guérard  <fevrier@tigreraye.org>,  Jean-
+       Luc  Coulon (f5ibh) <jean-luc.coulon@wanadoo.fr>, Julien Cristau <jcristau@debian.org>, Thomas Huriaux <thomas.huriaux@gmail.com>, Nicolas François <nicolas.francois@centraliens.net>, Florentin Duneau <fduneau@gmail.com>, Simon Paillard <simon.paillard@resel.enst-bretagne.fr>, Denis Barbier <barbier@debian.org>,
+       David Prévot <david@tilapin.org>, Frédéric Hantrais <fhantrais@gmail.com> et Jean-Philippe MENGUAL <jpmengual@debian.org>
+
+       Cette traduction est une documentation libre ; veuillez vous reporter à la GNU General Public License version 3 ⟨https://www.gnu.org/licenses/gpl-3.0.html⟩ concernant les conditions de copie et de distribution. Il n'y a aucune RESPONSABILITÉ LÉGALE.
+
+       Si vous découvrez un bogue dans la traduction de cette page de manuel, veuillez envoyer un message à debian-l10n-french@lists.debian.org ⟨⟩.
+
+Linux                                                                                                                                                    2 février 2018                                                                                                                                                  READ(2)

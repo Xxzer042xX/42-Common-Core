@@ -1,0 +1,122 @@
+FORK(2)                                                                                                                                            Manuel du programmeur Linux                                                                                                                                           FORK(2)
+
+NOM
+       fork - Créer un processus enfant
+
+SYNOPSIS
+       #include <sys/types.h>
+       #include <unistd.h>
+
+       pid_t fork(void);
+
+DESCRIPTION
+       fork() crée un nouveau processus en copiant le processus appelant. Le nouveau processus est appelé enfant (« child »). Le processus appelant est appelé parent.
+
+       Les processus parent et enfant fonctionnent dans des espaces mémoire séparés. Au moment du fork(), les deux espaces mémoire ont le même contenu. Les écritures en mémoire, les associations de fichier (mmap(2)) et les désassociations (munmap(2)) effectuées par un processus ne concernent pas l'autre.
+
+       Le processus enfant est une copie exacte du processus parent, sauf sur les points suivants :
+
+       –  L'enfant a son propre identifiant de processus unique et ce PID ne correspond à l'identifiant d'aucune session ou d'aucun groupe de processus existant (setpgid(2)).
+
+       –  L'identifiant de processus parent (PPID) de l'enfant est l'identifiant de processus (PID) du parent.
+
+       –  L'enfant n'hérite pas des verrouillages mémoire du parent (mlock(2), mlockall(2)).
+
+       –  Les utilisations de ressources (getrusage(2)) et les compteurs de temps processeur (times(2)) sont remis à zéro dans l'enfant.
+
+       –  L'ensemble de signaux en attente dans l'enfant est initialement vide (sigpending(2)).
+
+       –  L'enfant n'hérite pas des opérations sur les sémaphores de son parent (semop(2)).
+
+       –  L'enfant n'hérite pas des verrouillages d’enregistrements associés au processus de son parent (fcntl(2)) (en revanche, il hérite des verrouillages de description de fichier ouvert fcntl(2) et des verrouillages flock(2) de son parent).
+
+       –  L'enfant n'hérite pas des temporisations de son parent (setitimer(2), alarm(2), timer_create(2)).
+
+       –  L'enfant n'hérite pas des opérations d'E/S asynchrones en cours de son parent (aio_read(3), aio_write(3)) et n'hérite d'aucun contexte d'E/S asynchrone de son parent (consultez io_setup(2)).
+
+       Les attributs de processus de la liste précédente sont tous définis dans POSIX.1. Les processus parent et enfant diffèrent également par les propriétés spécifiques Linux suivantes :
+
+       –  L'enfant n'hérite pas des notifications de modification de répertoire (dnotify) de son parent (voir la description de F_NOTIFY dans fcntl(2)).
+
+       –  Le drapeau PR_SET_PDEATHSIG de prctl(2) est réinitialisé, de manière à ce que l'enfant ne reçoive pas de signal lorsque son parent se termine.
+
+       –  La valeur de temporisation relâchée par défaut est définie à la valeur de temporisation relâchée actuelle de son parent. Veuillez consulter la description de PR_SET_TIMERSLACK dans prctl(2).
+
+       –  Les projections en mémoire qui ont été marquées avec l'attribut MADV_DONTFORK de madvise(2) ne sont pas héritées lors d'un fork().
+
+       –  La mémoire dans les plages d'adresses ayant été marquées par un attribut MADV_WIPEONFORK de madvise(2) est remise à zéro dans l'enfant après un fork() (le paramètre MADV_WIPEONFORK reste en place pour ces plages d'adresses dans l'enfant).
+
+       –  Le signal de terminaison de l'enfant est toujours SIGCHLD (consultez clone(2)).
+
+       –  Les bits de permission d'accès au port indiqués par ioperm(2) ne sont pas hérités par l'enfant ; l'enfant doit activer avec ioperm(2) les bits dont il a besoin.
+
+       Notez également les points suivants :
+
+       –  Le  processus  enfant  est  créé avec un unique thread — celui qui a appelé fork(). L'espace d'adressage virtuel complet du parent est copié dans l'enfant, y compris l'état des mutex, les variables de condition, et autres objets de pthreads ; l'utilisation de pthread_atfork(3) peut être utile pour traiter les
+          problèmes que cela peut occasionner.
+
+       –  Après un fork() dans un programme multithreadé, l'enfant ne peut appeler en toute sécurité que les fonctions async-signal-safe (voir signal-safety(7)) jusqu'au moment où il appelle execve(2).
+
+       –  L'enfant hérite de copies des descripteurs de fichier ouverts du parent. Chaque descripteur de fichier de l'enfant renvoie à la même description de fichier ouvert (consultez open(2)) que le descripteur de fichier correspondant dans le processus parent. Cela signifie que les deux descripteurs partagent les at‐
+          tributs d'état du fichier, le décalage et les attributs d'E/S liés aux signaux (voir la description de F_SETOWN et F_SETSIG dans fcntl(2)).
+
+       –  L'enfant hérite de copies des descripteurs de l'ensemble des files de messages ouvertes du parent (consultez mq_overview(7)). Chaque descripteur de fichier de l'enfant renvoie à la même description de file de messages ouverte que le descripteur correspondant dans le parent. Cela signifie que les deux descrip‐
+          teurs partagent leurs attributs (mq_flags).
+
+       –  L'enfant hérite d'une copie de l'ensemble des flux de répertoire ouverts par le parent (consultez opendir(3)). POSIX.1 indique que les flux de répertoire correspondant dans le parent et l'enfant peuvent partager le positionnement du flux de répertoire ; sous Linux/glibc, ce n'est pas le cas.
+
+VALEUR RENVOYÉE
+       En cas de succès, le PID de l'enfant est renvoyé au parent, et 0 est renvoyé à l'enfant. En cas d'échec -1 est renvoyé au parent, aucun processus enfant n'est créé, et errno contient le code d'erreur.
+
+ERREURS
+       EAGAIN Une limite imposée par le système du nombre de threads a été atteinte. Il existe un certain nombre de limites qui peuvent occasionner cette erreur :
+
+              –  La limite de ressource souple RLIMIT_NPROC (définie avec setrlimit(2)), qui limite le nombre de processus et de threads pour l'ID d'un utilisateur réel, a été atteinte ;
+
+              –  La limite du système du noyau du nombre de processus et de threads, /"proc/sys/kernel/threads-max, a été atteinte (voir proc(5)) ;
+
+              –  Le numéro maximal de PID, /proc/sys/kernel/pid_max, a été atteint (voir proc(5)) ;
+
+              –  Le nombre maximal de PID (pids.max) imposée par le contrôleur de « nombre de processus » cgroup (PID) a été atteinte.
+
+       EAGAIN L’appelant parent opère sous la politique d’ordonnancement SCHED_DEADLINE et n’a pas l’attribut reset-on-fork activé. Consultez sched(7).
+
+       ENOMEM fork() a échoué car le noyau n'a plus assez de mémoire.
+
+       ENOMEM Il y a eu une tentative de créer un processus enfant dans l'espace de noms d'un PID dont le processus « init » s'est terminé. Voir pid_namespaces(7).
+
+       ENOSYS fork() n'est pas géré sur cette plate-forme (par exemple sur du matériel sans unité de gestion mémoire).
+
+       ERESTARTNOINTR (depuis Linux 2.6.17)
+              L'appel système a été interrompu par un signal et va être redémarré (cela n'est visible qu'à l'occasion d'un trace()).
+
+CONFORMITÉ
+       POSIX.1-2001, POSIX.1-2008, SVr4, 4.3BSD.
+
+NOTES
+       Sous Linux, fork() est implémenté en utilisant une méthode de copie à l'écriture. Cela consiste à ne faire la véritable duplication d'une page mémoire que lorsqu'un processus en modifie une instance. Tant qu'aucun des deux processus n'écrit dans une page donnée, celle‐ci n'est pas vraiment dupliquée.  Ainsi  les
+       seules pénalisations induites par fork() sont le temps et la mémoire nécessaires à la copie de la table des pages du parent ainsi que la création d'une structure unique de tâche pour l'enfant.
+
+   différences entre bibliothèque C et noyau
+       Depuis la version 2.3.3, plutôt que d'invoquer l'appel système fork() du noyau, l'enveloppe fork() de la glibc qui est fournie comme faisant partie de l'implémentation de threading NPTL invoque clone(2) avec des attributs qui fournissent le même effet que l'appel système traditionnel (un appel à fork() est équi‐
+       valent à un appel à clone(2) avec flags valant exactement SIGCHLD). L'enveloppe de la glibc invoque tous les gestionnaires de fourche (« fork ») établis avec pthread_atfork(3).
+
+EXEMPLES
+       Consultez pipe(2) et wait(2).
+
+VOIR AUSSI
+       clone(2), execve(2), exit(2), setrlimit(2), unshare(2), vfork(2), wait(2), daemon(3), pthread_atfork(3), capabilities(7), credentials(7)
+
+COLOPHON
+       Cette page fait partie de la publication 5.10 du projet man-pages Linux. Une description du projet et des instructions pour signaler des anomalies et la dernière version de cette page peuvent être trouvées à l'adresse https://www.kernel.org/doc/man-pages/.
+
+TRADUCTION
+       La traduction française de cette page de manuel a été créée par Christophe Blaess <https://www.blaess.fr/christophe/>, Stéphan Rafin <stephan.rafin@laposte.net>, Thierry Vignaud <tvignaud@mandriva.com>, François Micaux, Alain Portal <aportal@univ-montp2.fr>, Jean-Philippe Guérard  <fevrier@tigreraye.org>,  Jean-
+       Luc  Coulon (f5ibh) <jean-luc.coulon@wanadoo.fr>, Julien Cristau <jcristau@debian.org>, Thomas Huriaux <thomas.huriaux@gmail.com>, Nicolas François <nicolas.francois@centraliens.net>, Florentin Duneau <fduneau@gmail.com>, Simon Paillard <simon.paillard@resel.enst-bretagne.fr>, Denis Barbier <barbier@debian.org>,
+       David Prévot <david@tilapin.org> et Jean-Philippe MENGUAL <jpmengual@debian.org>
+
+       Cette traduction est une documentation libre ; veuillez vous reporter à la GNU General Public License version 3 ⟨https://www.gnu.org/licenses/gpl-3.0.html⟩ concernant les conditions de copie et de distribution. Il n'y a aucune RESPONSABILITÉ LÉGALE.
+
+       Si vous découvrez un bogue dans la traduction de cette page de manuel, veuillez envoyer un message à debian-l10n-french@lists.debian.org ⟨⟩.
+
+Linux                                                                                                                                                      9 juin 2020                                                                                                                                                   FORK(2)

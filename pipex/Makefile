@@ -27,11 +27,7 @@ LIBFT = $(LIBFT_DIR)/libftprintf.a
 ################################################################################
 #                              SOURCE FILES                                    #
 ################################################################################
-SRC_FILE = $(SRC_DIR)/mandatory/cmd_utils.c \
-		   $(SRC_DIR)/mandatory/pipe_utils.c \
-		   $(SRC_DIR)/mandatory/file_utils.c \
-		   $(SRC_DIR)/mandatory/error_handler.c \
-		   $(SRC_DIR)/mandatory/pipex.c \
+SRC_FILE = $(SRC_DIR)/pipex.c \
 
 SRC = $(SRC_FILE)
 

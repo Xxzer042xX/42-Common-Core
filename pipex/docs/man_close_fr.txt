@@ -1,0 +1,94 @@
+CLOSE(2)                                                                                                                                           Manuel du programmeur Linux                                                                                                                                          CLOSE(2)
+
+NOM
+       close - Fermer un descripteur de fichier
+
+SYNOPSIS
+       #include <unistd.h>
+
+       int close(int fd);
+
+DESCRIPTION
+       close() ferme le descripteur de fichier fd, de manière à ce qu'il ne référence plus aucun fichier, et puisse être réutilisé. Tous les verrouillages (consultez fcntl(2)) sur le fichier qui lui était associé, appartenant au processus, sont supprimés (quel que soit le descripteur de fichier qui fut utilisé pour ob‐
+       tenir le verrouillage).
+
+       Si fd est le dernier descripteur de fichier qui se réfère à une description de fichier ouvert sous-jacente (consultez open(2)), les ressources associées à la description de fichier ouvert sont libérées. Si le descripteur était la dernière référence sur un fichier supprimé avec unlink(2), le fichier est  effecti‐
+       vement effacé.
+
+VALEUR RENVOYÉE
+       Si elle réussit, la fonction close() renvoie zéro. En cas d'erreur, elle renvoie -1 et remplit errno avec le code d'erreur.
+
+ERREURS
+       EBADF  Le descripteur de fichier fd est invalide.
+
+       EINTR  L'appel système close() a été interrompu par un signal ; consultez signal(7).
+
+       EIO    Une erreur d'entrée-sortie s'est produite.
+
+       ENOSPC, EDQUOT
+              Sur NFS, ces erreurs ne sont en principe pas signalées lors de la première écriture qui dépasse l'espace de stockage disponible, mais lors d'un write(2), fsync(2) ou close() consécutif.
+
+       Voir les NOTES pour un point sur la raison pour laquelle close() ne devrait pas réessayer après une erreur.
+
+CONFORMITÉ
+       POSIX.1-2001, POSIX.1-2008, SVr4, 4.3BSD.
+
+NOTES
+       Une  fermeture  sans erreur ne garantit pas que les données ont été vraiment écrites sur le disque, car le noyau repousse les écritures le plus tard possible. Il n'est pas fréquent qu'un système de fichiers vide les tampons dès la fermeture d'un flux. Si vous désirez vous assurer que les informations sont en sû‐
+       reté sur le disque, utilisez fsync(2) (mais des considérations matérielles entrent en jeu à ce moment).
+
+       L'attribut de descripteur de fichier close-on-exec peut être utilisé pour s'assurer qu'un descripteur de fichier est fermé automatiquement en cas de succès de execve(2) ; voir fcntl(2) pour des détails.
+
+   Processus multithreadés et close()
+       Il est probablement imprudent de fermer des descripteurs de fichier alors qu'ils peuvent peut-être être utilisés par des appels système dans d'autres threads du même processus. Puisqu'un descripteur de fichier peut être réutilisé, il y a des conditions de concurrence obscures qui peuvent provoquer des effets  de
+       bord non désirés.
+
+       Par ailleurs, imaginez un scénario où deux threads effectuent plusieurs opérations sur le même descripteur de fichier :
+
+       1. Un thread est bloqué dans un appel système E/S sur le descripteur de fichier. Par exemple, il essaie de write(2) dans un tube déjà plein ou de read(2) depuis le socket d'un flux qui n'a pas de données disponibles actuellement.
+
+       2. Un autre thread ferme le descripteur de fichier.
+
+       Dans cette situation, le comportement varie selon les systèmes. Sur certains, quand le descripteur de fichier est fermé, l'appel système qui bloque renvoie immédiatement une erreur.
+
+       Sur  Linux (et probablement d'autres systèmes), le comportement est différent. L'appel système E/S bloquant conserve une référence à la description du fichier ouvert sous-jacent et celle-ci garde la description ouverte jusqu'à ce que l'appel système E/S se termine (voir open(2) pour un point sur les descriptions
+       de fichiers ouverts). Ainsi, l'appel système bloquant du premier thread peut se terminer avec succès après le close() du deuxième thread.
+
+   Gérer les erreurs renvoyées par close()
+       Un programmeur prudent vérifiera le code de retour de close(), car il est possible qu'une erreur correspondant à un appel write(2) antérieur ne soit rapportée que lors du close() final. Ne pas vérifier le code de retour lorsqu’un fichier est fermé peut conduire à une perte silencieuse de données. Cela est  prin‐
+       cipalement vrai dans le cas de systèmes de fichiers NFS, ou avec l'utilisation des quotas de disques.
+
+       Remarquez cependant que la valeur de retour ne devrait être utilisée que pour les diagnostics (à savoir pour prévenir une application qu'il peut rester des E/S en attente ou échouées) ou de correction (comme pour écrire un fichier une ou plusieurs fois ou pour créer une sauvegarde).
+
+       Réessayer close() après un renvoi d'échec n'est pas la bonne manière de faire, car il peut en résulter que le descripteur d'un fichier qui serait réutilisé à partir d'un autre thread se ferme. Cela est possible car le noyau Linux abandonne toujours tôt le descripteur de fichier lors d'une opération de fermeture,
+       ce qui le libère pour être réutilisé ; les étapes de renvoi d'erreur telles que l'effacement des données sur le système de fichiers ou le périphérique arrivent plus tard dans l'opération de fermeture.
+
+       De même, beaucoup d'autres implémentations ferment toujours le descripteur de fichier (sauf en cas de EBADF, qui signifie que le descripteur de fichier n'était pas valable), même si elles signalent ensuite une erreur renvoyée par close(). POSIX.1 ne dit rien aujourd'hui sur ce point  mais  ce  comportement  sera
+       rendu obligatoire dans la prochaine version majeure du standard.
+
+       Un programmeur prudent qui veut savoir les erreurs E/S doit faire précéder close() d'un appel fsync(2).
+
+       L'erreur EINTR est un cas un peu particulier. Concernant l'erreur EINTR, POSIX.1-2008 dit :
+
+              Si close() est interrompu par un signal qui doit être récupéré, il renverra -1 et positionnera errno sur EINTR et l'état de fildes ne sera pas spécifié.
+
+       Cela  autorise un comportement qui arrive sur Linux et beaucoup d'autres implémentations, où, comme pour beaucoup d'erreurs pouvant être signalées par close(), le descripteur de fichier se fermera assurément. Néanmoins, cela permet aussi une autre possibilité : l'implémentation renvoie une erreur EINTR et laisse
+       le descripteur de fichier ouvert (selon sa documentation, le close() de HP-UX fait cela). L'appelant doit donc utiliser une fois de plus close() pour fermer le descripteur de fichier, afin d'éviter des fuites du descripteur de fichier. Cette divergence de comportements dans l'implémentation apporte  un  obstacle
+       difficile à la portabilité des applications car sur beaucoup d'implémentations, close() ne doit pas être rappelé après une erreur EINTR, tandis que sur au moins une d'elles, close() doit être rappelé. Il est envisagé de s'occuper de ce casse-tête dans la prochaine version majeure du standard POSIX.1.
+
+VOIR AUSSI
+       fcntl(2), fsync(2), open(2), shutdown(2), unlink(2), fclose(3)
+
+COLOPHON
+       Cette page fait partie de la publication 5.10 du projet man-pages Linux. Une description du projet et des instructions pour signaler des anomalies et la dernière version de cette page peuvent être trouvées à l'adresse https://www.kernel.org/doc/man-pages/.
+
+TRADUCTION
+       La  traduction  française de cette page de manuel a été créée par Christophe Blaess <https://www.blaess.fr/christophe/>, Stéphan Rafin <stephan.rafin@laposte.net>, Thierry Vignaud <tvignaud@mandriva.com>, François Micaux, Alain Portal <aportal@univ-montp2.fr>, Jean-Philippe Guérard <fevrier@tigreraye.org>, Jean-
+       Luc Coulon (f5ibh) <jean-luc.coulon@wanadoo.fr>, Julien Cristau <jcristau@debian.org>, Thomas Huriaux <thomas.huriaux@gmail.com>, Nicolas François <nicolas.francois@centraliens.net>, Florentin Duneau <fduneau@gmail.com>, Simon Paillard <simon.paillard@resel.enst-bretagne.fr>, Denis Barbier  <barbier@debian.org>,
+       David Prévot <david@tilapin.org> et Jean-Philippe MENGUAL <jpmengual@debian.org>
+
+       Cette traduction est une documentation libre ; veuillez vous reporter à la GNU General Public License version 3 ⟨https://www.gnu.org/licenses/gpl-3.0.html⟩ concernant les conditions de copie et de distribution. Il n'y a aucune RESPONSABILITÉ LÉGALE.
+
+       Si vous découvrez un bogue dans la traduction de cette page de manuel, veuillez envoyer un message à debian-l10n-french@lists.debian.org ⟨⟩.
+
+Linux                                                                                                                                                      9 juin 2020                                                                                                                                                  CLOSE(2)

@@ -1,0 +1,156 @@
+PIPE(2)                                                                                                     Manuel du programmeur Linux                                                                                                     PIPE(2)
+
+NOM
+       pipe, pipe2 - Créer un tube
+
+SYNOPSIS
+       #include <unistd.h>
+
+       /* Sur Alpha, IA-64, MIPS, SuperH et SPARC/SPARC64 ; voir les NOTES */
+       struct fd_pair {
+       long fd[2];
+       };
+       struct fd_pair pipe();
+
+       /* Sur toutes les autres architectures */
+       int pipe(int pipefd[2]);
+
+       #define _GNU_SOURCE             /* Consultez feature_test_macros(7) */
+       #include <fcntl.h>              /* Obtenir les définition de constante O_* */
+       #include <unistd.h>
+
+       int pipe2(int pipefd[2], int flags);
+
+DESCRIPTION
+       pipe() crée un tube, un canal unidirectionnel de données qui peut être utilisé pour la communication entre processus. Le tableau pipefd est utilisé pour renvoyer deux descripteurs de fichier faisant référence aux extrémités du tube. pi‐
+       pefd[0] fait référence à l'extrémité de lecture du tube. pipefd[1] fait référence à l'extrémité d'écriture du tube. Les données écrites sur l'extrémité d'écriture du tube sont mises en mémoire tampon par le  noyau  jusqu'à  ce  qu'elles
+       soient lues sur l'extrémité de lecture du tube. Pour plus de détails, consultez pipe(7).
+
+       Si flags est nul, alors pipe2() est identique à pipe(). Les valeurs suivantes peuvent être incluses à l'aide d'un OU binaire dans flags pour obtenir différents comportements :
+
+       O_CLOEXEC
+              Placer l'attribut « close-on-exec » (FD_CLOEXEC) sur les deux nouveaux descripteurs de fichiers. Consultez la description de cet attribut dans open(2) pour savoir pourquoi cela peut être utile.
+
+       O_DIRECT (depuis Linux 3.4)
+              Créer  un tube qui assure les E/S en mode « packet ». Chaque opération write(2) vers le tube est exécutée avec un paquet distinct et les opérations read(2) depuis le tube lisent un seul paquet à la fois. Notez les précisions sui‐
+              vantes :
+
+              –  Les opérations d'écriture dont la taille dépasse PIPE_BUF octets (voir pipe(7)) seront fractionnées en plusieurs paquets. La constante PIPE_BUF est définie dans <limits.h>.
+
+              –  Si une opération read(2) indique une taille du tampon inférieure à celle du paquet à venir, alors seul le nombre d'octets demandé sera lu et les octets supplémentaires du paquet seront écartés. Si l'on souhaite  s'assurer  que
+                 même les paquets les plus longs seront lus, il suffit de définir la taille du tampon à PIPE_BUF (voir le point précédent).
+
+              –  Les paquets de longueur nulle ne sont pas acceptés (une opération read(2) qui indique une taille de tampon de longueur zéro est sans effet et renvoie 0).
+
+              Les anciens noyaux qui n'acceptent pas cet attribut renvoient une erreur EINVAL.
+
+              Depuis Linux 4.5, il est possible de modifier le paramètre O_DIRECT d'un descripteur de fichier de tube en utilisant fcntl(2).
+
+       O_NONBLOCK
+              Placer  l'attribut d'état de fichier O_NONBLOCK sur les descriptions de fichier ouvert auxquelles renvoient les nouveaux descripteurs de fichiers. Utiliser cet attribut économise des appels supplémentaires à fcntl(2) pour obtenir
+              le même résultat.
+
+VALEUR RENVOYÉE
+       S'il réussit, cet appel système renvoie 0. S'il échoue, il renvoie -1 et remplit errno en conséquence et pipefd est laissé inchangé..
+
+       Sur Linux (et d'autres systèmes), pipe() ne modifie pas pipefd en cas d'échec. Une exigence qui standardise ce comportement a été ajoutée dans POSIX.1-2008 TC2. L'appel système pipe2() spécifique à Linux ne modifie donc  pas  pipefd  en
+       cas d'échec.
+
+ERREURS
+       EFAULT pipefd n'est pas valable.
+
+       EINVAL (pipe2()) Valeur incorrecte dans flags.
+
+       EMFILE La limite du nombre de descripteurs de fichiers par processus a été atteinte.
+
+       ENFILE La limite du nombre total de fichiers ouverts pour le système entier a été atteinte.
+
+       ENFILE La limite dure de l'utilisateur en mémoire qu'il est possible d'allouer aux tubes a été atteinte et l'appelant n'est pas privilégié ; voir pipe(7).
+
+VERSIONS
+       pipe2() a été ajouté à Linux dans la version 2.6.27 ; sa prise en charge par la glibc est disponible depuis la version 2.9.
+
+CONFORMITÉ
+       pipe() : POSIX.1-2001, POSIX.1-2008.
+
+       pipe2() est spécifique à Linux.
+
+NOTES
+       L'ABI  SystemV  sur  certaines  architectures permet d'utiliser plus d'un registre pour renvoyer plusieurs valeurs ; diverses architectures (Alpha, IA-64, MIPS, SuperH et SPARC/SPARC64) abusent de cette fonction pour implémenter l'appel
+       système pipe() de manière opérationnelle : l'appel ne prend aucun paramètre et renvoie une paire de descripteurs de fichier comme code de retour en cas de succès. La fonction enveloppe pipe() de la glibc gère cela  de  manière  transpa‐
+       rente. Voir syscall(2) pour des informations sur les registres utilisés pour stocker le deuxième descripteur de fichier.
+
+EXEMPLES
+       Le programme suivant crée un tube, puis invoque fork(2) pour créer un processus enfant ; l'enfant hérite d'un double du jeu de descripteurs de fichier qui se rapportent au même tube. Après le fork(2), chaque processus ferme les descrip‐
+       teurs dont il n'a pas besoin pour le tube (consultez pipe(7)). Le parent écrit alors la chaîne contenue dans l'argument de ligne de commande du programme dans le tube, et l'enfant lit cette chaîne un octet à la fois  dans  le  tube,  et
+       l'affiche sur la sortie standard.
+
+   Source du programme
+       #include <sys/types.h>
+       #include <sys/wait.h>
+       #include <stdio.h>
+       #include <stdlib.h>
+       #include <unistd.h>
+       #include <string.h>
+
+       int
+       main(int argc, char *argv[])
+       {
+           int pipefd[2];
+           pid_t cpid;
+           char buf;
+
+           if (argc != 2) {
+               fprintf(stderr, "Utilisation : %s <chaîne>\n", argv[0]);
+               exit(EXIT_FAILURE);
+           }
+
+           if (pipe(pipefd) == -1) {
+               perror("pipe");
+               exit(EXIT_FAILURE);
+           }
+
+           cpid = fork();
+           if (cpid == -1) {
+               perror("fork");
+               exit(EXIT_FAILURE);
+           }
+
+           if (cpid == 0) {    /* L'enfant lit dans le tube */
+               close(pipefd[1]);          /* Fermeture du descripteur en écriture inutilisé */
+
+               while (read(pipefd[0], &buf, 1) > 0)
+                   write(STDOUT_FILENO, &buf, 1);
+
+               write(STDOUT_FILENO, "\n", 1);
+               close(pipefd[0]);
+               _exit(EXIT_SUCCESS);
+
+           } else {            /* Le parent écrit argv[1] dans le tube */
+               close(pipefd[0]);          /* Fermeture du descripteur en lecture inutilisé*/
+               write(pipefd[1], argv[1], strlen(argv[1]));
+               close(pipefd[1]);          /* Le lecteur verra EOF */
+               wait(NULL);                /* Attente de l'enfant */
+               exit(EXIT_SUCCESS);
+           }
+       }
+
+VOIR AUSSI
+       fork(2), read(2), socketpair(2), write(2), popen(3), vmsplice(2), write(2), popen(3), pipe(7)
+
+COLOPHON
+       Cette  page  fait  partie  de  la  publication 5.10  du  projet  man-pages  Linux.  Une  description  du  projet  et  des  instructions  pour  signaler des anomalies et la dernière version de cette page peuvent être trouvées à l'adresse
+       https://www.kernel.org/doc/man-pages/.
+
+TRADUCTION
+       La traduction française de cette page de manuel a été créée par Christophe Blaess <https://www.blaess.fr/christophe/>, Stéphan Rafin <stephan.rafin@laposte.net>, Thierry Vignaud <tvignaud@mandriva.com>,  François  Micaux,  Alain  Portal
+       <aportal@univ-montp2.fr>,  Jean-Philippe  Guérard  <fevrier@tigreraye.org>,  Jean-Luc  Coulon (f5ibh) <jean-luc.coulon@wanadoo.fr>, Julien Cristau <jcristau@debian.org>, Thomas Huriaux <thomas.huriaux@gmail.com>, Nicolas François <nico‐
+       las.francois@centraliens.net>, Florentin Duneau <fduneau@gmail.com>, Simon Paillard <simon.paillard@resel.enst-bretagne.fr>, Denis Barbier <barbier@debian.org>, David Prévot <david@tilapin.org>, Frédéric  Hantrais  <fhantrais@gmail.com>
+       et Jean-Philippe MENGUAL <jpmengual@debian.org>
+
+       Cette traduction est une documentation libre ; veuillez vous reporter à la GNU General Public License version 3 ⟨https://www.gnu.org/licenses/gpl-3.0.html⟩ concernant les conditions de copie et de distribution. Il n'y a aucune RESPONSA‐
+       BILITÉ LÉGALE.
+
+       Si vous découvrez un bogue dans la traduction de cette page de manuel, veuillez envoyer un message à debian-l10n-french@lists.debian.org ⟨⟩.
+
+Linux                                                                                                               9 juin 2020                                                                                                             PIPE(2)
