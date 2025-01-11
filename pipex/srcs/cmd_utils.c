@@ -15,11 +15,18 @@
 void	execute_cmd(char *cmd, char **env)
 {
 	char	*path;
+	char 	**args;
 
+	args = ft_split(cmd, ' ');
+	if (!args)
+	{
+		ft_putstr_fd("Error: Split failed", 2);
+		exit(EXIT_FAILURE);
+	}
 	path = find_path(cmd, env);
 	if (path)
 	{
-		execve(path, &cmd, env);
+		execve(path, args, env);
 		perror("Error: Execve failed");
 		exit(EXIT_FAILURE);
 	}
@@ -29,4 +36,3 @@ void	execute_cmd(char *cmd, char **env)
 		exit(EXIT_FAILURE);
 	}
 }
-

@@ -24,7 +24,7 @@ static void	close_data(t_pipex *data)
 
 static void	first_child(t_pipex *data)
 {
-	if (dup2(data->infile, STDIN_FILENO) || \
+	if (dup2(data->infile, STDIN_FILENO) == -1 || \
 		dup2(data->pipe_fd[1], STDOUT_FILENO) == -1)
 	{
 		perror("Error: Dup2 failed");
@@ -64,4 +64,6 @@ void	creat_process(t_pipex *data)
 	}
 	if (data->cpid2 == 0)
 		second_child(data);
+	close_data(data->pipe_fd[0]);
+	close_data(data->pipe_fd[1]);
 }

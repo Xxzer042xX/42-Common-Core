@@ -25,9 +25,10 @@ static void	init_app(t_pipex *data, int ac, char **av, char **env)
 		exit(EXIT_FAILURE);
 	}
 	open_files(data, ac, av);
+	print_status_init(data);
 }
 
-static void open_files(t_pipex *data, int ac, char **av)
+static void	open_files(t_pipex *data, int ac, char **av)
 {
 	check_files_access(av);
 	data->infile = open(av[1], O_RDONLY);
@@ -63,6 +64,16 @@ static void	check_files_access(char **av)
 	}
 }
 
+static void	print_status_init(t_pipex *data)
+{
+	ft_printf("Initialisation des données:\n");
+	ft_printf("commandes reçues\t n1: %s\t", data->cmd1);
+	ft_printf("n2: %s\n", data->cmd2);
+	ft_printf("Fichiers reçus\t\t f1: %s\t", data->env[0]);
+	ft_printf("f2: %s\n", data->env[1]);
+	ft_printf("Pipe créé: [%d, %d]\n", data->pipe_fd[0], data->pipe_fd[1]);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	t_pipex	data;
@@ -73,11 +84,8 @@ int	main(int ac, char **av, char **env)
 		exit(EXIT_FAILURE);
 	}
 	init_app(&data, ac, av, env);
-	ft_printf("Commandes reçues:\ncmd1: %s\ncmd2: %s\n", av[2], av[3]);
-	printf("Fichiers ouverts:\ninfile: %d\noutfile: %d\n", data.infile, data.outfile);
-    printf("Pipe créé: [%d, %d]\n", data.pipe_fd[0], data.pipe_fd[1]);
 	creat_process(&data);
-    printf("En attente des processus %d et %d\n", data.cpid1, data.cpid2);
+    ft_printf("En attente des processus %d et %d\n", data.cpid1, data.cpid2);
 	waitpid(data.cpid1, NULL, 0);
 	waitpid(data.cpid2, NULL, 0);
 	return (0);
