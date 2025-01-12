@@ -6,7 +6,7 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 21:01:01 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/07 17:45:29 by madelmen         ###   LAUSANNE.ch       */
+/*   Updated: 2025/01/11 13:37:34 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include "../lib/libftprintf/include/ft_printf.h"
 # include "../lib/libftprintf/libft/libft.h"
 
-
 typedef struct s_pipex
 {
 	pid_t	cpid1;
@@ -39,10 +38,18 @@ typedef struct s_pipex
 	int		outfile;
 }	t_pipex;
 
-// Core functions
+//path_utils
 char	*find_path(char *cmd, char **env);
+
+//cmd_utils
 void	execute_cmd(char *cmd, char **env);
+
 void	process_cmd(char *cmd, int fdin, int fdout, char **env);
+
+//init
+void	init_app(t_pipex *data, char **av, char **env);
+
+//process.c
 void	create_process(t_pipex *data);
 
 #endif

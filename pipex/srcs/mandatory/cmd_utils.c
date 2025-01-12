@@ -6,16 +6,16 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 02:49:06 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/11 02:49:06 by madelmen         ###   ########.fr       */
+/*   Updated: 2025/01/11 14:34:12 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/pipex.h"
+#include "../../include/pipex.h"
 
 void	execute_cmd(char *cmd, char **env)
 {
 	char	*path;
-	char 	**args;
+	char	**args;
 
 	args = ft_split(cmd, ' ');
 	if (!args)
@@ -23,16 +23,18 @@ void	execute_cmd(char *cmd, char **env)
 		ft_putstr_fd("Error: Split failed", 2);
 		exit(EXIT_FAILURE);
 	}
-	path = find_path(cmd, env);
-	if (path)
+	path = find_path(args[0], env);
+	if (!path)
 	{
-		execve(path, args, env);
-		perror("Error: Execve failed");
+		ft_printf("Error: Command '%s' not found\n", args[0]);
+		ft_free_split(args, 0);
 		exit(EXIT_FAILURE);
 	}
-	else
+	if (execve(path, args, env) == -1)
 	{
-		ft_putstr_fd("Error: Command not found\n", 2);
+		perror("Error: Execve failed");
+		free(path);
+		ft_free_split(args, 0);
 		exit(EXIT_FAILURE);
 	}
 }
