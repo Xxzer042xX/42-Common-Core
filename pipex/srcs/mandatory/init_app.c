@@ -6,7 +6,7 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 12:42:24 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/11 14:37:56 by madelmen         ###   LAUSANNE.ch       */
+/*   Updated: 2025/01/12 14:47:26 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static void	open_files(t_pipex *data, char **av);
 static void	check_files_access(char **av);
-static void	print_status_init(t_pipex *data, char **av);
 
 void	init_app(t_pipex *data, char **av, char **env)
 {
@@ -28,7 +27,6 @@ void	init_app(t_pipex *data, char **av, char **env)
 		exit(EXIT_FAILURE);
 	}
 	open_files(data, av);
-	print_status_init(data, av);
 }
 
 static void	open_files(t_pipex *data, char **av)
@@ -65,14 +63,4 @@ static void	check_files_access(char **av)
 		perror("Error: Output file permission denied");
 		exit(EXIT_FAILURE);
 	}
-}
-
-static void	print_status_init(t_pipex *data, char **av)
-{
-	ft_printf("Initialisation des données:\n");
-	ft_printf("commandes reçues\t n1: %s\t", data->cmd1);
-	ft_printf("n2: %s\n", data->cmd2);
-	ft_printf("Fichiers reçus\t\t f1: %s\t", av[1]);
-	ft_printf("f2: %s\n", av[4]);
-	ft_printf("Pipe créé: [%d, %d]\n", data->pipe_fd[0], data->pipe_fd[1]);
 }

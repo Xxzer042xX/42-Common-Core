@@ -1,2 +1,1 @@
-Command found at: /usr/bin/wc
-6
+5

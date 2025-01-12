@@ -6,7 +6,7 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 02:49:16 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/12 10:28:55 by madelmen         ###   LAUSANNE.ch       */
+/*   Updated: 2025/01/12 14:55:28 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,7 @@ char	*find_path(char *cmd, char **env)
 		path = ft_strjoin(part_path, cmd);
 		free(part_path);
 		if (access(path, F_OK | X_OK) == 0)
-		{
-			ft_printf("Command found at: %s\n", path);
-			ft_free_split(paths, 0);
-			return (path);
-		}
+			return (ft_free_split(paths, 0), path);
 		free(path);
 		i++;
 	}

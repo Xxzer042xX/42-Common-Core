@@ -6,7 +6,7 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 21:01:01 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/11 13:37:34 by madelmen         ###   LAUSANNE.ch       */
+/*   Updated: 2025/01/12 15:00:48 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ char	*find_path(char *cmd, char **env);
 
 //cmd_utils
 void	execute_cmd(char *cmd, char **env);
-
-void	process_cmd(char *cmd, int fdin, int fdout, char **env);
 
 //init
 void	init_app(t_pipex *data, char **av, char **env);

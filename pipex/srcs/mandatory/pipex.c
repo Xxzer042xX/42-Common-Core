@@ -6,7 +6,7 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 11:46:48 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/12 14:21:13 by madelmen         ###   LAUSANNE.ch       */
+/*   Updated: 2025/01/12 14:47:49 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	main(int ac, char **av, char **env)
 	}
 	init_app(&data, av, env);
 	create_process(&data);
-	ft_printf("En attente des processus %d et %d\n", data.cpid1, data.cpid2);
 	if (waitpid(data.cpid1, &child1_status, 0) < 0)
 	{
 		perror("Error: Waitpid failed for process 1");
