@@ -33,9 +33,17 @@ SRC_FILE = $(SRC_DIR)/mandatory/pipex.c \
 		   $(SRC_DIR)/mandatory/process.c \
 		   $(SRC_DIR)/mandatory/path_utils.c \
 
+BONUS_FILE = $(SRC_DIR)/bonus/pipex_bonus.c \
+			 $(SRC_DIR)/bonus/cmd_utils_bonus.c \
+			 $(SRC_DIR)/bonus/init_app_bonus.c \
+			 $(SRC_DIR)/bonus/process_bonus.c \
+			 $(SRC_DIR)/bonus/path_utils_bonus.c \
+
 SRC = $(SRC_FILE)
+BONUS_SRC = $(BONUS_FILE);
 
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+bonus_OBJ = $(BONUS_SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)	
 
 ################################################################################
 #                             COMPILER OPTIONS                                 #
@@ -50,7 +58,7 @@ INCLUDES = $(INC)
 LIBS = -L$(LIBFT_DIR) -lftprintf
 CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
 NAME = $(BIN_DIR)/pipex
-
+BONUS_NAME = $(BIN_DIR)/pipex_bonus
 ################################################################################
 #                                COLORS                                        #
 ################################################################################
@@ -70,6 +78,8 @@ BOLD = \033[1m
 
 all: init $(LIBFT) $(NAME)
 
+bonus: init $(LIBFT) $(BONUS_NAME)
+
 init:
 	@mkdir -p $(BIN_DIR)
 	@mkdir -p $(OBJ_DIR)/mandatory
@@ -86,6 +96,12 @@ $(NAME): $(LIBFT) $(OBJ)
 	@$(CC) $(OBJ) $(LIBS) -o $(NAME)
 	@echo "$(GREEN)Build complete! Binary: $(BOLD)$(NAME)$(RESET)"
 	@echo "$(CYAN)Run with: ./$(NAME)$(RESET)"
+
+$(BONUS_NAME): $(LIBFT) $(BONUS_OBJ)
+	@echo "$(YELLOW)Linking $@...$(RESET)"
+	@$(CC) $(BONUS_OBJ) $(LIBS) -o $(BONUS_NAME)
+	@echo "$(GREEN)Bonus Build complete! Binary: $(BOLD)$(BONUS_NAME)$(RESET)"
+	@echo "$(CYAN)Run with: ./$(BONUS_NAME)$(RESET)"
 
 ################################################################################
 #                              OBJECT FILES                                    #
@@ -110,11 +126,14 @@ fclean: clean
 	@echo "$(RED)Cleaning executables and binaries...$(RESET)"
 	@$(MAKE)  -C $(LIBFT_DIR) fclean >/dev/null
 	@rm -f $(NAME)
+	@rm -f $(BONUS_NAME)
 	@rm -f $(BIN_DIR)/*
 	@rm -rf $(BIN_DIR)
 	@echo "$(GREEN)All binaries cleaned$(RESET)"
 
 re: fclean all
+
+bonus_re: fclean bonus
 
 ################################################################################
 #                              INFORMATION                                     #
@@ -128,6 +147,7 @@ show:
 	
 	@printf "\n$(BOLD)$(BLUE)%50s$(RESET)\n\n" "========== Project Structure =========="
 	@printf "$(PURPLE)%-20s$(RESET): %s\n" "Source Files" "$(SRC)"
+	@printf "$(PURPLE)%-20s$(RESET): %s\n" "Bonus Files" "$(BONUS_SRC)"
 	@printf "$(PURPLE)%-20s$(RESET): %s\n" "Object Files" "$(OBJ)"
 	@printf "$(PURPLE)%-20s$(RESET): %s\n" "Include Paths" "$(INC)"
 	
@@ -144,6 +164,7 @@ help:
 	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make clean" "Remove object files"
 	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make fclean" "Remove object files and executable"
 	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make re" "Recompile the project"
+	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make bonus_re" "Recompile the bonus part"
 	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make show" "Display project information"
 	@printf "$(CYAN)%-18s$(RESET) - %s\n\n" "make help" "Display this help message"
 
@@ -151,4 +172,4 @@ help:
 #                                 PHONY                                        #
 ################################################################################
 
-.PHONY: all init clean fclean re show help
+.PHONY: all init clean fclean re show help bonus
