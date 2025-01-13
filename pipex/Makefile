@@ -25,7 +25,7 @@ LIBFT_DIR = $(LIB_DIR)/libftprintf
 LIBFT = $(LIBFT_DIR)/libftprintf.a
 
 ################################################################################
-#                              SOURCE FILES                                    #
+#                                 MANDATORY                                    #
 ################################################################################
 SRC_FILE = $(SRC_DIR)/mandatory/pipex.c \
 		   $(SRC_DIR)/mandatory/cmd_utils.c \
@@ -33,32 +33,40 @@ SRC_FILE = $(SRC_DIR)/mandatory/pipex.c \
 		   $(SRC_DIR)/mandatory/process.c \
 		   $(SRC_DIR)/mandatory/path_utils.c \
 
+SRC = $(SRC_FILE)
+
+OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
+NAME = $(BIN_DIR)/pipex
+################################################################################
+#                                   BONUS                                      #
+################################################################################
 BONUS_FILE = $(SRC_DIR)/bonus/pipex_bonus.c \
 			 $(SRC_DIR)/bonus/cmd_utils_bonus.c \
 			 $(SRC_DIR)/bonus/init_app_bonus.c \
 			 $(SRC_DIR)/bonus/process_bonus.c \
 			 $(SRC_DIR)/bonus/path_utils_bonus.c \
+			 $(SRC_DIR)/bonus/clean_up_bonus.c \
+			 $(SRC_DIR)/bonus/files_utils_bonus.c \
+			 $(SRC_DIR)/bonus/heredoc_bonus.c \
 
-SRC = $(SRC_FILE)
-BONUS_SRC = $(BONUS_FILE);
+BONUS_SRC = $(BONUS_FILE)
 
-OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-bonus_OBJ = $(BONUS_SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)	
+BONUS_OBJ = $(BONUS_SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
+BONUS_NAME = $(BIN_DIR)/pipex_bonus
 ################################################################################
 #                             COMPILER OPTIONS                                 #
 ################################################################################
 
 # Headers
-INC = -I$(INC_DIR) -I$(INC_DIR)/utils
+INC = -I$(INC_DIR) -I$(INC_DIR)/mandatory -I$(INC_DIR)/bonus
 
-# Compiler and flags
 CC = cc
 INCLUDES = $(INC)
 LIBS = -L$(LIBFT_DIR) -lftprintf
 CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
-NAME = $(BIN_DIR)/pipex
-BONUS_NAME = $(BIN_DIR)/pipex_bonus
+
 ################################################################################
 #                                COLORS                                        #
 ################################################################################
@@ -164,6 +172,7 @@ help:
 	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make clean" "Remove object files"
 	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make fclean" "Remove object files and executable"
 	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make re" "Recompile the project"
+	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make bonus" "Compile the bonus part"
 	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make bonus_re" "Recompile the bonus part"
 	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make show" "Display project information"
 	@printf "$(CYAN)%-18s$(RESET) - %s\n\n" "make help" "Display this help message"
@@ -172,4 +181,4 @@ help:
 #                                 PHONY                                        #
 ################################################################################
 
-.PHONY: all init clean fclean re show help bonus
+.PHONY: all init clean fclean re show help bonus bonus_re

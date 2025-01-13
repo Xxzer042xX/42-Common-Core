@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
+/*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 02:48:53 by madelmen          #+#    #+#             */
 /*   Updated: 2025/01/12 14:18:07 by madelmen         ###   LAUSANNE.ch       */

@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
+/*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 02:49:06 by madelmen          #+#    #+#             */
 /*   Updated: 2025/01/11 14:34:12 by madelmen         ###   LAUSANNE.ch       */
