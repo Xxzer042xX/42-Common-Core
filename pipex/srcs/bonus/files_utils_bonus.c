@@ -45,7 +45,7 @@ void	open_files(t_pipex *data, int ac, char **av)
 	{
 		check_files_access(data, av);
 		data->infile = open(av[1], O_RDONLY);
-		if (data->infile < 0)
+		if (data->infile == -1)
 			ft_exit("Infile error", data);
 		data->outfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	}

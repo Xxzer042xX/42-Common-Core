@@ -22,7 +22,7 @@
 /*                              DEFAULT VALUES                                */
 /* ************************************************************************** */
 //matrix
-# define SCALE 0.1f
+# define SCALE 0.5f
 # define SCALE_STEP 20.0f
 # define SPACE 20.0f
 # define ISO_ANGLE 0.523599f
@@ -49,8 +49,8 @@
 //window
 # define INIT_WIN_W 1050
 # define INIT_WIN_H 450
-# define MAX_WIN_W 1920
-# define MAX_WIN_H 1080
+# define MAX_WIN_W 3840
+# define MAX_WIN_H 2160
 
 /* ************************************************************************** */
 /*                              OWN LIB                                       */

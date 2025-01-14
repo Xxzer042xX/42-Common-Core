@@ -45,12 +45,12 @@ int	main(int ac, char **av, char **env)
 	}
 	init_app(&data, av, env);
 	create_process(&data);
-	if (waitpid(data.cpid1, &child1_status, 0) < 0)
+	if (waitpid(data.cpid1, &child1_status, 0) == -1)
 	{
 		perror("Error: Waitpid failed for process 1");
 		exit(EXIT_FAILURE);
 	}
-	if (waitpid(data.cpid2, &child2_status, 0) < 0)
+	if (waitpid(data.cpid2, &child2_status, 0) == -1)
 	{
 		perror("Error: Waitpid failed for process 2");
 		exit(EXIT_FAILURE);
