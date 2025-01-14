@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_utils_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
+/*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/11 02:49:06 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/11 14:34:12 by madelmen         ###   LAUSANNE.ch       */
+/*   Created: 2025/01/14 12:29:00 by madelmen          #+#    #+#             */
+/*   Updated: 2025/01/14 12:29:12 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/pipex_bonus.h"
+#include "../../include/pipex_bonus.h"
 
 /* ************************************************************************** */
 /*                                                                            */

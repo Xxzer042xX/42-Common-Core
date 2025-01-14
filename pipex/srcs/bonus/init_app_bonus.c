@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/11 12:42:24 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/12 14:47:26 by madelmen         ###   LAUSANNE.ch       */
+/*   Created: 2025/01/14 12:29:56 by madelmen          #+#    #+#             */
+/*   Updated: 2025/01/14 12:30:04 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/pipex_bonus.h"
+#include "../../include/pipex_bonus.h"
 
 static void	create_pipes(t_pipex *data);
 static void	init_pipe_fds(t_pipex *data);

@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
+/*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/13 10:04:50 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/13 10:04:50 by madelmen         ###   ########.fr       */
+/*   Created: 2025/01/14 12:29:39 by madelmen          #+#    #+#             */
+/*   Updated: 2025/01/14 12:29:42 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/pipex_bonus.h"
+#include "../../include/pipex_bonus.h"
+
+static void	read_heredoc_input(t_pipex *data, int temp_fd);
 
 /* ************************************************************************** */
 /*                                                                            */

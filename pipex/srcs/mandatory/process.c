@@ -6,13 +6,11 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 02:48:53 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/12 14:18:07 by madelmen         ###   LAUSANNE.ch       */
+/*   Updated: 2025/01/14 12:36:58 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/pipex.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 static void	close_fd(int fd)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   files_utils_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
+/*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/13 12:33:46 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/13 12:33:46 by madelmen         ###   ########.fr       */
+/*   Created: 2025/01/14 12:29:21 by madelmen          #+#    #+#             */
+/*   Updated: 2025/01/14 12:29:24 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
