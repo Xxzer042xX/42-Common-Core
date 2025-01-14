@@ -12,6 +12,24 @@
 
 #include "../../include/pipex_bonus.h"
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction de recherche du chemin complet d'une commande dans le PATH.     */
+/*                                                                            */
+/*   Cette fonction :                                                         */
+/*   1. Ajoute le '/' entre le chemin et la commande                          */
+/*   2. Vérifie si la commande existe et est exécutable                       */
+/*   3. Tente chaque chemin jusqu'à trouver une commande valide               */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - cmd : nom de la commande à chercher                                    */
+/*   - paths : tableau de chemins où chercher la commande                     */
+/*                                                                            */
+/*   Retourne :                                                               */
+/*   - Le chemin complet de la commande si trouvée                            */
+/*   - NULL si la commande n'est pas trouvée                                  */
+/*                                                                            */
+/* ************************************************************************** */
 static char	*get_cmd_path(char *cmd, char **paths)
 {
 	char	*tmp;
@@ -30,6 +48,25 @@ static char	*get_cmd_path(char *cmd, char **paths)
 	return (NULL);
 }
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction principale de recherche de chemin d'une commande.               */
+/*                                                                            */
+/*   Cette fonction :                                                         */
+/*   1. Vérifie si la commande est valide                                     */
+/*   2. Si la commande contient '/', vérifie directement son accessibilité    */
+/*   3. Recherche la variable PATH dans l'environnement                       */
+/*   4. Décompose PATH et cherche la commande dans chaque répertoire          */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - cmd : nom de la commande à chercher                                    */
+/*   - env : variables d'environnement                                        */
+/*                                                                            */
+/*   Retourne :                                                               */
+/*   - Le chemin complet de la commande si trouvée                            */
+/*   - NULL si la commande n'est pas trouvée ou invalide                      */
+/*                                                                            */
+/* ************************************************************************** */
 char	*find_path(char *cmd, char **env)
 {
 	char	**paths;

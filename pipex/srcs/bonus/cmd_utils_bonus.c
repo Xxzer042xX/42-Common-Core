@@ -12,6 +12,30 @@
 
 #include "../include/pipex_bonus.h"
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction d'exécution d'une commande.                                     */
+/*                                                                            */
+/*   Cette fonction :                                                         */
+/*   1. Sépare la commande et ses arguments                                   */
+/*   2. Cherche le chemin complet de la commande                              */
+/*   3. Exécute la commande avec execve                                       */
+/*                                                                            */
+/*   Étapes détaillées :                                                      */
+/*   1. Analyse de la commande (parsing)                                      */
+/*   2. Recherche du chemin dans PATH                                         */
+/*   3. Exécution avec gestion des erreurs                                    */
+/*   4. Libération de la mémoire en cas d'échec                               */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - data : structure contenant les données du programme                    */
+/*   - cmd : chaîne de caractères contenant la commande et ses arguments      */
+/*   - env : variables d'environnement                                        */
+/*                                                                            */
+/*   Note : Cette fonction ne retourne jamais si l'exécution réussit          */
+/*   En cas d'échec, elle libère la mémoire et termine le programme           */
+/*                                                                            */
+/* ************************************************************************** */
 void	execute_cmd(t_pipex *data, char *cmd, char **env)
 {
 	char	*path;

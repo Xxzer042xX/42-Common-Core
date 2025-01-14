@@ -65,7 +65,7 @@ INC = -I$(INC_DIR) -I$(INC_DIR)/mandatory -I$(INC_DIR)/bonus
 CC = cc
 INCLUDES = $(INC)
 LIBS = -L$(LIBFT_DIR) -lftprintf
-CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
+CFLAGS = -Wall -Wextra -Werror $(INCLUDES) -g
 
 ################################################################################
 #                                COLORS                                        #
