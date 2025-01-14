@@ -15,6 +15,17 @@
 static void	open_files(t_pipex *data, char **av);
 static void	check_files_access(char **av);
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Initialise la structure de données principale.                           */
+/*                                                                            */
+/*   Cette fonction :                                                         */
+/*   1. Initialise la structure avec memset                                   */
+/*   2. Configure l'environnement et les commandes                            */
+/*   3. Crée le pipe                                                          */
+/*   4. Ouvre les fichiers                                                    */
+/*                                                                            */
+/* ************************************************************************** */
 void	init_app(t_pipex *data, char **av, char **env)
 {
 	ft_memset(data, 0, sizeof(t_pipex));
@@ -29,6 +40,16 @@ void	init_app(t_pipex *data, char **av, char **env)
 	open_files(data, av);
 }
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Ouvre les fichiers d'entrée et de sortie.                                */
+/*                                                                            */
+/*   Cette fonction :                                                         */
+/*   1. Vérifie les accès aux fichiers                                        */
+/*   2. Ouvre le fichier d'entrée en lecture                                  */
+/*   3. Ouvre/crée le fichier de sortie en écriture                           */
+/*                                                                            */
+/* ************************************************************************** */
 static void	open_files(t_pipex *data, char **av)
 {
 	check_files_access(av);
@@ -41,11 +62,22 @@ static void	open_files(t_pipex *data, char **av)
 	data->outfile = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (data->outfile == -1)
 	{
+		close(data->infile);
 		perror("Error: Output file permission denied");
 		exit(EXIT_FAILURE);
 	}
 }
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Vérifie les permissions et l'existence des fichiers.                     */
+/*                                                                            */
+/*   Cette fonction vérifie :                                                 */
+/*   1. L'existence du fichier d'entrée                                       */
+/*   2. Les permissions de lecture du fichier d'entrée                        */
+/*   3. Les permissions d'écriture pour le fichier de sortie                  */
+/*                                                                            */
+/* ************************************************************************** */
 static void	check_files_access(char **av)
 {
 	if (access(av[1], F_OK) == -1)
@@ -56,11 +88,6 @@ static void	check_files_access(char **av)
 	if (access(av[1], R_OK) == -1)
 	{
 		perror("Error: Input file permission denied");
-		exit(EXIT_FAILURE);
-	}
-	if (access(av[4], F_OK) == -1 && access(av[4], W_OK) == -1)
-	{
-		perror("Error: Output file permission denied");
 		exit(EXIT_FAILURE);
 	}
 }

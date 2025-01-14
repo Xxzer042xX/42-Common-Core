@@ -49,7 +49,7 @@ void	open_files(t_pipex *data, int ac, char **av)
 			ft_exit("Infile error", data);
 		data->outfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	}
-	if (data->outfile < 0)
+	if (data->outfile == -1)
 		ft_exit("Outfile error", data);
 }
 

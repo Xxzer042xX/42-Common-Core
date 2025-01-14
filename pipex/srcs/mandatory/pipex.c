@@ -12,6 +12,26 @@
 
 #include "../../include/pipex.h"
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction principale du programme pipex.                                  */
+/*                                                                            */
+/*   Cette fonction :                                                         */
+/*   1. Vérifie le nombre d'arguments                                         */
+/*   2. Initialise les données du programme                                   */
+/*   3. Crée et gère les processus enfants                                    */
+/*   4. Attend la fin des processus et retourne le statut approprié           */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - ac : nombre d'arguments                                                */
+/*   - av : tableau des arguments                                             */
+/*   - env : variables d'environnement                                        */
+/*                                                                            */
+/*   Retourne :                                                               */
+/*   - Le statut de sortie des processus enfants                              */
+/*   - EXIT_FAILURE en cas d'erreur                                           */
+/*                                                                            */
+/* ************************************************************************** */
 int	main(int ac, char **av, char **env)
 {
 	t_pipex	data;

@@ -29,7 +29,6 @@
 # include "../lib/libftprintf/include/ft_printf.h"
 # include "../lib/libftprintf/libft/libft.h"
 
-
 /* ************************************************************************** */
 /*                              STRUCTUR PIPEX                                */
 /* ************************************************************************** */
@@ -64,7 +63,6 @@ void	open_files(t_pipex *data, int ac, char **av);
 /* ************************************************************************** */
 void	handle_heredoc(t_pipex *data);
 
-
 /* ************************************************************************** */
 /*                              COMMANDS FUNCTIONS                            */
 /* ************************************************************************** */
@@ -83,6 +81,5 @@ void	free_pipe_fds(int **pipe_fds, int i);
 /*                              ERROR FUNCTIONS                               */
 /* ************************************************************************** */
 void	ft_exit(char *str, t_pipex *data);
-//void	print_error_args(void);
 
 #endif

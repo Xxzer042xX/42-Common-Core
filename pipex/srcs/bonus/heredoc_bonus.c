@@ -12,7 +12,6 @@
 
 #include "../include/pipex_bonus.h"
 
-
 /* ************************************************************************** */
 /*                                                                            */
 /*   Fonction principale de gestion du heredoc.                               */

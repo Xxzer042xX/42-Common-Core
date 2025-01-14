@@ -66,7 +66,7 @@ static void	create_pipes(t_pipex *data)
 	i = 0;
 	while (i < (data->cmd_count - 1))
 	{
-		if (pipe(data->pipe_fds[i]) < 0)
+		if (pipe(data->pipe_fds[i]) == -1)
 			ft_exit("Pipe error", data);
 		i++;
 	}

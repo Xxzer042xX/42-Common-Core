@@ -12,42 +12,78 @@
 
 #include "../../include/pipex.h"
 
-static char	*get_path_from_env(char **env)
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction de recherche du chemin complet d'une commande dans le PATH.     */
+/*                                                                            */
+/*   Cette fonction :                                                         */
+/*   1. Ajoute le '/' entre le chemin et la commande                          */
+/*   2. Vérifie si la commande existe et est exécutable                       */
+/*   3. Tente chaque chemin jusqu'à trouver une commande valide               */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - cmd : nom de la commande à chercher                                    */
+/*   - paths : tableau de chemins où chercher la commande                     */
+/*                                                                            */
+/*   Retourne :                                                               */
+/*   - Le chemin complet de la commande si trouvée                            */
+/*   - NULL si la commande n'est pas trouvée                                  */
+/*                                                                            */
+/* ************************************************************************** */
+static char	*get_cmd_path(char *cmd, char **paths)
 {
-	while (*env)
+	char	*tmp;
+	char	*command;
+
+	while (*paths)
 	{
-		if (ft_strncmp(*env, "PATH=", 5) == 0)
-			return (*env + 5);
-		env++;
+		tmp = ft_strjoin(*paths, "/");
+		command = ft_strjoin(tmp, cmd);
+		free(tmp);
+		if (access(command, F_OK | X_OK) == 0)
+			return (command);
+		free(command);
+		paths++;
 	}
 	return (NULL);
 }
 
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction principale de recherche de chemin d'une commande.               */
+/*                                                                            */
+/*   Cette fonction :                                                         */
+/*   1. Vérifie si la commande est valide                                     */
+/*   2. Si la commande contient '/', vérifie directement son accessibilité    */
+/*   3. Recherche la variable PATH dans l'environnement                       */
+/*   4. Décompose PATH et cherche la commande dans chaque répertoire          */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - cmd : nom de la commande à chercher                                    */
+/*   - env : variables d'environnement                                        */
+/*                                                                            */
+/*   Retourne :                                                               */
+/*   - Le chemin complet de la commande si trouvée                            */
+/*   - NULL si la commande n'est pas trouvée ou invalide                      */
+/*                                                                            */
+/* ************************************************************************** */
 char	*find_path(char *cmd, char **env)
 {
 	char	**paths;
 	char	*path;
-	char	*part_path;
 	int		i;
 
-	if (access(cmd, F_OK | X_OK) == 0)
+	if (!cmd || !*cmd)
+		return (NULL);
+	if (ft_strchr(cmd, '/') && access(cmd, F_OK | X_OK) == 0)
 		return (ft_strdup(cmd));
-	path = get_path_from_env(env);
-	if (!path)
-		return (NULL);
-	paths = ft_split(path, ':');
-	if (!path)
-		return (NULL);
 	i = 0;
-	while (paths[i])
-	{
-		part_path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(part_path, cmd);
-		free(part_path);
-		if (access(path, F_OK | X_OK) == 0)
-			return (ft_free_split(paths, 0), path);
-		free(path);
+	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
 		i++;
-	}
-	return (NULL);
+	if (!env[i])
+		return (NULL);
+	paths = ft_split(env[i] + 5, ':');
+	path = get_cmd_path(cmd, paths);
+	ft_free_split(paths, 0);
+	return (path);
 }
