@@ -6,7 +6,7 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 11:46:48 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/12 14:47:49 by madelmen         ###   LAUSANNE.ch       */
+/*   Updated: 2025/01/15 10:42:30 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ int	main(int ac, char **av, char **env)
 static void	print_error_args(void)
 {
 	ft_putstr_fd("Error: Invalid number of arguments\n", 2);
-	ft_putstr_fd("Usage: ./pipex_bonus", 2);
+	ft_putstr_fd("Usage: ./bin/pipex_bonus", 2);
 	ft_putstr_fd(" <file1> <cmd1> <cmd2> <...> <file2>\n", 2);
-	ft_putstr_fd("   or: ./pipex_bonus", 2);
+	ft_putstr_fd("   or: ./bin/pipex_bonus", 2);
 	ft_putstr_fd(" here_doc LIMITER <cmd1> <cmd2> <file2>\n", 2);
 	exit(EXIT_FAILURE);
 }

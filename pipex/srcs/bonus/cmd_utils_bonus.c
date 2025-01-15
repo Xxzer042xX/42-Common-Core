@@ -6,7 +6,7 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:29:00 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/14 12:29:12 by madelmen         ###   LAUSANNE.ch       */
+/*   Updated: 2025/01/15 11:31:43 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@
 /*   - env : variables d'environnement                                        */
 /*                                                                            */
 /*   Note : Cette fonction ne retourne jamais si l'exécution réussit          */
-/*   En cas d'échec, elle libère la mémoire et termine le programme           */
+/*   En cas d'échec, elle libère la mémoire et appel ft_exit, qui             */
+/*   termine le programme proprement                                          */
 /*                                                                            */
 /* ************************************************************************** */
 void	execute_cmd(t_pipex *data, char *cmd, char **env)

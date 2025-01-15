@@ -6,7 +6,7 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 02:48:53 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/12 14:18:07 by madelmen         ###   LAUSANNE.ch       */
+/*   Updated: 2025/01/15 11:28:42 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,41 +53,6 @@ void	create_processes(t_pipex *data, char **av)
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Fonction d'attente de la fin des processus enfants.                      */
-/*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Attend la terminaison de chaque processus enfant                      */
-/*   2. Collecte le statut de sortie de chaque processus                      */
-/*   3. Évite les processus zombies                                           */
-/*                                                                            */
-/*   Paramètres :                                                             */
-/*   - data : structure contenant les données du programme                    */
-/*                                                                            */
-/* ************************************************************************** */
-int	wait_processes(t_pipex *data)
-{
-	int	i;
-	int	status;
-	int	last_status;
-
-	i = 0;
-	last_status = 0;
-	while (i < data->cmd_count)
-	{
-		waitpid(data->cpids[i], &status, 0);
-		if (WIFEXITED(status))
-		{
-			last_status = WEXITSTATUS(status);
-			if (last_status != 0)
-				return (last_status);
-		}
-		i++;
-	}
-	return (last_status);
-}
-
-/* ************************************************************************** */
-/*                                                                            */
 /*   Fonction de configuration et exécution du processus enfant.              */
 /*                                                                            */
 /*   Cette fonction :                                                         */
@@ -129,4 +94,39 @@ static void	child_process(t_pipex *data, char **av, int i)
 	close_fd(data->infile);
 	close_fd(data->outfile);
 	execute_cmd(data, av[(i + 2) + data->here_doc], data->env);
+}
+
+/* ************************************************************************** */
+/*                                                                            */
+/*   Fonction d'attente de la fin des processus enfants.                      */
+/*                                                                            */
+/*   Cette fonction :                                                         */
+/*   1. Attend la terminaison de chaque processus enfant                      */
+/*   2. Collecte le statut de sortie de chaque processus                      */
+/*   3. Évite les processus zombies                                           */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - data : structure contenant les données du programme                    */
+/*                                                                            */
+/* ************************************************************************** */
+int	wait_processes(t_pipex *data)
+{
+	int	i;
+	int	status;
+	int	last_status;
+
+	i = 0;
+	last_status = 0;
+	while (i < data->cmd_count)
+	{
+		waitpid(data->cpids[i], &status, 0);
+		if (WIFEXITED(status))
+		{
+			last_status = WEXITSTATUS(status);
+			if (last_status != 0)
+				return (last_status);
+		}
+		i++;
+	}
+	return (last_status);
 }

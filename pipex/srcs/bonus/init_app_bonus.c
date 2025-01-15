@@ -6,7 +6,7 @@
 /*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:29:56 by madelmen          #+#    #+#             */
-/*   Updated: 2025/01/14 12:30:04 by madelmen         ###   LAUSANNE.ch       */
+/*   Updated: 2025/01/15 10:48:20 by madelmen         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,39 @@ void	init_app(t_pipex *data, int ac, char **av, char **env)
 
 /* ************************************************************************** */
 /*                                                                            */
+/*   Fonction d'initialisation des descripteurs de fichiers pour les pipes.   */
+/*                                                                            */
+/*   Cette fonction alloue la mémoire pour les descripteurs de fichiers :     */
+/*   1. Alloue le tableau principal de pointeurs                              */
+/*   2. Alloue chaque tableau de deux entiers pour chaque pipe                */
+/*   3. Gère les erreurs d'allocation avec libération propre                  */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - data : structure contenant les données du programme                    */
+/*                                                                            */
+/* ************************************************************************** */
+static void	init_pipe_fds(t_pipex *data)
+{
+	int	i;
+
+	data->pipe_fds = malloc(sizeof(int *) * (data->cmd_count - 1));
+	if (!data->pipe_fds)
+		ft_exit("Memory allocation failed", data, ERR_MALLOC);
+	i = 0;
+	while (i < (data->cmd_count - 1))
+	{
+		data->pipe_fds[i] = malloc(sizeof(int) * 2);
+		if (!data->pipe_fds[i])
+		{
+			free_pipe_fds(data->pipe_fds, i);
+			ft_exit("Memory allocation failed", data, ERR_MALLOC);
+		}
+		i++;
+	}
+}
+
+/* ************************************************************************** */
+/*                                                                            */
 /*   Fonction de création des pipes pour la communication inter-processus.    */
 /*                                                                            */
 /*   Cette fonction crée les pipes nécessaires entre les commandes :          */
@@ -68,39 +101,6 @@ static void	create_pipes(t_pipex *data)
 	{
 		if (pipe(data->pipe_fds[i]) == -1)
 			ft_exit("Pipe error", data, ERR_PIPE);
-		i++;
-	}
-}
-
-/* ************************************************************************** */
-/*                                                                            */
-/*   Fonction d'initialisation des descripteurs de fichiers pour les pipes.   */
-/*                                                                            */
-/*   Cette fonction alloue la mémoire pour les descripteurs de fichiers :     */
-/*   1. Alloue le tableau principal de pointeurs                              */
-/*   2. Alloue chaque tableau de deux entiers pour chaque pipe                */
-/*   3. Gère les erreurs d'allocation avec libération propre                  */
-/*                                                                            */
-/*   Paramètres :                                                             */
-/*   - data : structure contenant les données du programme                    */
-/*                                                                            */
-/* ************************************************************************** */
-static void	init_pipe_fds(t_pipex *data)
-{
-	int	i;
-
-	data->pipe_fds = malloc(sizeof(int *) * (data->cmd_count - 1));
-	if (!data->pipe_fds)
-		ft_exit("Memory allocation failed", data, ERR_MALLOC);
-	i = 0;
-	while (i < data->cmd_count - 1)
-	{
-		data->pipe_fds[i] = malloc(sizeof(int) * 2);
-		if (!data->pipe_fds[i])
-		{
-			free_pipe_fds(data->pipe_fds, i);
-			ft_exit("Memory allocation failed", data, ERR_MALLOC);
-		}
 		i++;
 	}
 }
