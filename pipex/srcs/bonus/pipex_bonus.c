@@ -46,7 +46,7 @@ int	main(int ac, char **av, char **env)
 	if (data.here_doc)
 	{
 		if (ac < 6)
-			ft_exit("Error: Invalid number of arguments for here_doc", NULL);
+			ft_exit("Error: Invalid nbr args for here_doc", NULL, EXIT_FAILURE);
 		data.limiter = av[2];
 	}
 	init_app(&data, ac, av, env);

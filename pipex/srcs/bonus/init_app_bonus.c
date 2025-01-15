@@ -67,7 +67,7 @@ static void	create_pipes(t_pipex *data)
 	while (i < (data->cmd_count - 1))
 	{
 		if (pipe(data->pipe_fds[i]) == -1)
-			ft_exit("Pipe error", data);
+			ft_exit("Pipe error", data, ERR_PIPE);
 		i++;
 	}
 }
@@ -91,7 +91,7 @@ static void	init_pipe_fds(t_pipex *data)
 
 	data->pipe_fds = malloc(sizeof(int *) * (data->cmd_count - 1));
 	if (!data->pipe_fds)
-		ft_exit("Error: Malloc", data);
+		ft_exit("Memory allocation failed", data, ERR_MALLOC);
 	i = 0;
 	while (i < data->cmd_count - 1)
 	{
@@ -99,7 +99,7 @@ static void	init_pipe_fds(t_pipex *data)
 		if (!data->pipe_fds[i])
 		{
 			free_pipe_fds(data->pipe_fds, i);
-			ft_exit("Error: Malloc", data);
+			ft_exit("Memory allocation failed", data, ERR_MALLOC);
 		}
 		i++;
 	}
@@ -123,6 +123,6 @@ static void	init_cpids(t_pipex *data)
 	if (!data->cpids)
 	{
 		free_pipe_fds(data->pipe_fds, data->cmd_count - 1);
-		ft_exit("Error: Malloc", data);
+		ft_exit("Memory allocation failed", data, ERR_MALLOC);
 	}
 }

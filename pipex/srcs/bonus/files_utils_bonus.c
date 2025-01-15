@@ -45,12 +45,10 @@ void	open_files(t_pipex *data, int ac, char **av)
 	{
 		check_files_access(data, av);
 		data->infile = open(av[1], O_RDONLY);
-		if (data->infile == -1)
-			ft_exit("Infile error", data);
 		data->outfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	}
 	if (data->outfile == -1)
-		ft_exit("Outfile error", data);
+		ft_exit("Error: no create outfile", data, ERR_NO_SUCH_FILE);
 }
 
 /* ************************************************************************** */
@@ -69,7 +67,7 @@ void	open_files(t_pipex *data, int ac, char **av)
 static void	check_files_access(t_pipex *data, char **av)
 {
 	if (access(av[1], F_OK) == -1)
-		ft_exit("Error: Input file does not exist", data);
+		ft_exit("Error: Input file does not exist", data, ERR_NO_SUCH_FILE);
 	if (access(av[1], R_OK) == -1)
-		ft_exit("Error: Input file permission denied", data);
+		ft_exit("Error: Input file permission denied", data, ERR_PERMISSION);
 }

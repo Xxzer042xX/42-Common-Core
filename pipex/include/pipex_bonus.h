@@ -30,6 +30,17 @@
 # include "../lib/libftprintf/libft/libft.h"
 
 /* ************************************************************************** */
+/*                              MACROS ERRORS                                 */
+/* ************************************************************************** */
+# define ERR_CMD_NOT_FOUND 127
+# define ERR_NO_SUCH_FILE 2
+# define ERR_PERMISSION 13
+# define ERR_PIPE 32
+# define ERR_MALLOC 12
+# define ERR_FORK 11
+# define ERR_DUP 10
+
+/* ************************************************************************** */
 /*                              STRUCTUR PIPEX                                */
 /* ************************************************************************** */
 typedef struct s_pipex
@@ -80,6 +91,6 @@ void	free_pipe_fds(int **pipe_fds, int i);
 /* ************************************************************************** */
 /*                              ERROR FUNCTIONS                               */
 /* ************************************************************************** */
-void	ft_exit(char *str, t_pipex *data);
+void	ft_exit(char *str, t_pipex *data, int status);
 
 #endif

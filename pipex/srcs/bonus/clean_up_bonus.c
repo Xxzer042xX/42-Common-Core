@@ -48,12 +48,12 @@ void	close_fd(int fd)
 /*   - data : structure à libérer (peut être NULL)                            */
 /*                                                                            */
 /* ************************************************************************** */
-void	ft_exit(char *str, t_pipex *data)
+void	ft_exit(char *str, t_pipex *data, int status)
 {
 	if (data)
 		free_parent(data);
 	perror(str);
-	exit(EXIT_FAILURE);
+	exit(status);
 }
 
 /* ************************************************************************** */

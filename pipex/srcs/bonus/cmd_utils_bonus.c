@@ -43,17 +43,17 @@ void	execute_cmd(t_pipex *data, char *cmd, char **env)
 
 	args = ft_split(cmd, ' ');
 	if (!args)
-		ft_exit("Error: Split failed", data);
+		ft_exit("Error: Memory allocation failed", data, ERR_MALLOC);
 	path = find_path(args[0], env);
 	if (!path)
 	{
 		ft_free_split(args, 0);
-		ft_exit("Error: Command not found", data);
+		ft_exit("", data, ERR_CMD_NOT_FOUND);
 	}
 	if (execve(path, args, env) == -1)
 	{
 		free(path);
 		ft_free_split(args, 0);
-		ft_exit("Error: Execve failed", data);
+		ft_exit("Error: Command execution failed", data, ERR_CMD_NOT_FOUND);
 	}
 }

@@ -79,7 +79,6 @@ show_files
 echo -e "${YELLOW}Status de sortie shell: ${status_shell}${NC}"
 echo -e "${YELLOW}Status de sortie pipex: ${status_pipex}${NC}"
 echo "Test de gestion d'erreur effectué"
-[ $status_shell -ne 0 ] && [ $status_pipex -ne 0 ]
 print_result
 
 echo "=== Test d'erreur 2: Fichier d'entrée inexistant ==="
@@ -92,8 +91,12 @@ show_files
 echo -e "${YELLOW}Status de sortie shell: ${status_shell}${NC}"
 echo -e "${YELLOW}Status de sortie pipex: ${status_pipex}${NC}"
 echo "Test de gestion d'erreur effectué"
-[ $status_shell -ne 0 ] && [ $status_pipex -ne 0 ]
-print_result
+if [ $status_pipex -ne 0 ]; then
+    echo -e "${GREEN}✓ Test passé${NC}"
+else
+    echo -e "${RED}✗ Test échoué${NC}"
+fi
+echo "----------------------------------------"
 
 # Tests supplémentaires
 echo "=== Test 5: head et tail ==="

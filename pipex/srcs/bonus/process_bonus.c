@@ -38,7 +38,10 @@ void	create_processes(t_pipex *data, char **av)
 	{
 		data->cpids[i] = fork();
 		if (data->cpids[i] == -1)
-			ft_exit("Fork error", data);
+		{
+			perror("Error: Fork failed");
+			exit(ERR_FORK);
+		}
 		if (data->cpids[i] == 0)
 			child_process(data, av, i);
 		i++;
@@ -72,10 +75,11 @@ int	wait_processes(t_pipex *data)
 	while (i < data->cmd_count)
 	{
 		waitpid(data->cpids[i], &status, 0);
-		if (i == data->cmd_count - 1)
+		if (WIFEXITED(status))
 		{
-			if (WIFEXITED(status))
-				last_status = WEXITSTATUS(status);
+			last_status = WEXITSTATUS(status);
+			if (last_status != 0)
+				return (last_status);
 		}
 		i++;
 	}
@@ -103,23 +107,23 @@ static void	child_process(t_pipex *data, char **av, int i)
 	if (i == 0)
 	{
 		if (dup2(data->infile, STDIN_FILENO) == -1)
-			ft_exit("Error: Dup2 failed for infile", data);
+			ft_exit("Error: Dup2 failed for infile", data, ERR_DUP);
 		if (dup2(data->pipe_fds[0][1], STDOUT_FILENO) == -1)
-			ft_exit("Error: Dup2 failed for pipe", data);
+			ft_exit("Error: Dup2 failed for pipe", data, ERR_DUP);
 	}
 	else if (i == data->cmd_count - 1)
 	{
 		if (dup2(data->pipe_fds[i - 1][0], STDIN_FILENO) == -1)
-			ft_exit("Error: Dup2 failed for pipe", data);
+			ft_exit("Error: Dup2 failed for pipe", data, ERR_DUP);
 		if (dup2(data->outfile, STDOUT_FILENO) == -1)
-			ft_exit("Error: Dup2 failed for outfile", data);
+			ft_exit("Error: Dup2 failed for outfile", data, ERR_DUP);
 	}
 	else
 	{
 		if (dup2(data->pipe_fds[i - 1][0], STDIN_FILENO) == -1)
-			ft_exit("Error: Dup2 failed for pipe", data);
+			ft_exit("Error: Dup2 failed for pipe", data, ERR_DUP);
 		if (dup2(data->pipe_fds[i][1], STDOUT_FILENO) == -1)
-			ft_exit("Error: Dup2 failed for pipe", data);
+			ft_exit("Error: Dup2 failed for pipe", data, ERR_DUP);
 	}
 	close_all_pipes(data);
 	close_fd(data->infile);

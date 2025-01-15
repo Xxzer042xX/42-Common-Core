@@ -32,15 +32,15 @@ void	handle_heredoc(t_pipex *data)
 	int		temp_fd;
 
 	temp_fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (temp_fd < 0)
-		ft_exit("Heredoc temp file error", data);
+	if (temp_fd == -1)
+		ft_exit("Error: Heredoc tmp_file creat failed", data, ERR_NO_SUCH_FILE);
 	read_heredoc_input(data, temp_fd);
 	close(temp_fd);
 	data->infile = open(".heredoc_tmp", O_RDONLY);
-	if (data->infile < 0)
+	if (data->infile == -1)
 	{
 		unlink(".heredoc_tmp");
-		ft_exit("Heredoc file error", data);
+		ft_exit("Error: Heredoc file opening failed", data, ERR_NO_SUCH_FILE);
 	}
 }
 
