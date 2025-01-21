@@ -1,0 +1,14 @@
+graph LR
+    subgraph "Toutes ces syntaxes sont équivalentes"
+        A1[cmd] -->|"> ou >>"| B1[output]
+        
+        A2[cmd] --- B2["> ou >> output"]
+        B2 --> C2[résultat identique]
+        
+        A3["> ou >> output"] --- B3[cmd]
+        B3 --> C3[résultat identique]
+    end
+    
+    style B1 fill:#9ff,stroke:#333
+    style C2 fill:#9ff,stroke:#333
+    style C3 fill:#9ff,stroke:#333
