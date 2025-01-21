@@ -7,7 +7,7 @@
 2. [Redirections de sortie (`>`)](#-redirections-simples-de-sortie-)
 3. [Redirections avec ajout (`>>`)](#-redirections-avec-ajout-)
 4. [Combinaisons avec pipes (`|`)](#-combinaisons-avec-pipes-)
-5. [Here-documents (heredoc)](#-here-documents-heredoc-)
+5. [Here-documents (heredoc)](#-here-documents-)
 6. [Here-strings (`<<<`)](#-here-strings-)
 7. [Descripteurs de fichiers](#-descripteurs-de-fichiers-)
 8. [Process Substitution](#-process-substitution-)
