@@ -1,4 +1,4 @@
-# 🚀 Guide Complet et Joyeux des Redirections Shell
+# 🚀 Guide Complet des Redirections Shell
 
 > "Dans le shell, tout est fichier, et chaque problème a sa redirection !" 😉
 
