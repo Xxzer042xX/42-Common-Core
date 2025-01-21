@@ -1,10 +1,5 @@
-bidding's
-Alison
-détente
-gaffes
-barista
-bidding's
-Alison
-détente
-gaffes
-barista
+Name	Age	City
+John	25	Paris
+Alice	30	Lyon
+Bob	22	Nice
+Eve	28	Paris

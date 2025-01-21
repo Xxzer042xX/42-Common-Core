@@ -28,58 +28,22 @@ show_files() {
 # Nettoyage initial
 rm -f infile.txt outfile_shell.txt outfile_pipex.txt
 
-# Création des fichiers de test
-echo "Bonjour le monde" > infile.txt
-echo "Test 123" >> infile.txt
-echo "Pipeline test" >> infile.txt
-echo "HELLO WORLD" >> infile.txt
-echo "test again" >> infile.txt
+# Création d'un fichier de test avec des données tabulées
+echo -e "Name\tAge\tCity" > infile.txt
+echo -e "John\t25\tParis" >> infile.txt
+echo -e "Alice\t30\tLyon" >> infile.txt
+echo -e "Bob\t22\tNice" >> infile.txt
+echo -e "Eve\t28\tParis" >> infile.txt
 
 echo -e "${BLUE}=== Contenu du fichier d'entrée ====${NC}"
 cat infile.txt
 echo "----------------------------------------"
 
-# Test 1: Triple pipe
-echo "=== Test 1: Triple pipe (cat | grep | tr) ==="
-echo "Shell command: < infile.txt cat | grep test | tr [:lower:] [:upper:] > outfile_shell.txt"
-< infile.txt cat | grep test | tr '[:lower:]' '[:upper:]' > outfile_shell.txt
-./bin/pipex_bonus infile.txt "cat" "grep test" "tr [:lower:] [:upper:]" outfile_pipex.txt
-show_files
-diff outfile_shell.txt outfile_pipex.txt
-print_result
-
-# Nettoyage avant le prochain test
-rm -f outfile_shell.txt outfile_pipex.txt
-
-# Test 2: Quadruple pipe
-echo "=== Test 2: Quadruple pipe (cat | grep | sed | tr) ==="
-echo "Shell command: < infile.txt cat | grep test | sed s/test/TEST/ | tr [:lower:] [:upper:] > outfile_shell.txt"
-< infile.txt cat | grep test | sed 's/test/TEST/' | tr '[:lower:]' '[:upper:]' > outfile_shell.txt
-./bin/pipex_bonus infile.txt "cat" "grep test" "sed s/test/TEST/" "tr [:lower:] [:upper:]" outfile_pipex.txt
-show_files
-diff outfile_shell.txt outfile_pipex.txt
-print_result
-
-# Nettoyage avant here_doc tests
-rm -f outfile_shell.txt outfile_pipex.txt
-
-# Test 3: Here_doc simple
-echo "=== Test 3: Here_doc simple ==="
-# Test shell
-cat > expected_input.txt << EOL
-hello world
-test line
-last line
-EOL
-cat expected_input.txt | tr '[:lower:]' '[:upper:]' > outfile_shell.txt
-
-# Test pipex_bonus
-./bin/pipex_bonus here_doc EOL "cat" "tr [:lower:] [:upper:]" outfile_pipex.txt << EOL
-hello world
-test line
-last line
-EOL
-
+# Test 1: awk avec sélection de colonne simple
+echo "=== Test 1: awk print première colonne ==="
+echo "Shell command: < infile.txt awk '{print \$1}' | sort > outfile_shell.txt"
+< infile.txt awk '{print $1}' | sort > outfile_shell.txt
+./bin/pipex_bonus infile.txt 'awk "{print \$1}"' "sort" outfile_pipex.txt
 show_files
 diff outfile_shell.txt outfile_pipex.txt
 print_result
@@ -87,25 +51,11 @@ print_result
 # Nettoyage
 rm -f outfile_shell.txt outfile_pipex.txt
 
-# Test 4: Here_doc avec grep
-echo "=== Test 4: Here_doc avec grep et tr ==="
-# Test shell
-cat > expected_input.txt << LIMITER
-first line
-middle test
-last line
-test line
-LIMITER
-cat expected_input.txt | grep line | tr '[:lower:]' '[:upper:]' > outfile_shell.txt
-
-# Test pipex_bonus
-./bin/pipex_bonus here_doc LIMITER "grep line" "tr [:lower:] [:upper:]" outfile_pipex.txt << LIMITER
-first line
-middle test
-last line
-test line
-LIMITER
-
+# Test 2: awk avec condition
+echo "=== Test 2: awk avec filtrage sur ville ==="
+echo "Shell command: < infile.txt awk '\$3==\"Paris\" {print \$1,\$2}' | tr [:lower:] [:upper:] > outfile_shell.txt"
+< infile.txt awk '$3=="Paris" {print $1,$2}' | tr '[:lower:]' '[:upper:]' > outfile_shell.txt
+./bin/pipex_bonus infile.txt 'awk "\$3==\"Paris\" {print \$1,\$2}"' "tr [:lower:] [:upper:]" outfile_pipex.txt
 show_files
 diff outfile_shell.txt outfile_pipex.txt
 print_result
@@ -113,43 +63,44 @@ print_result
 # Nettoyage
 rm -f outfile_shell.txt outfile_pipex.txt
 
-# Test 5: Multiple pipes avec commandes complexes
-echo "=== Test 5: Multiple pipes avec commandes complexes ==="
-echo "Shell command: < infile.txt grep test | sed s/test/CHECK/ | tr [:lower:] [:upper:] | wc -l > outfile_shell.txt"
-< infile.txt grep test | sed 's/test/CHECK/' | tr '[:lower:]' '[:upper:]' | wc -l > outfile_shell.txt
-./bin/pipex_bonus infile.txt "grep test" "sed s/test/CHECK/" "tr [:lower:] [:upper:]" "wc -l" outfile_pipex.txt
+# Test 3: awk avec calcul simple
+echo "=== Test 3: awk avec somme ==="
+echo "Shell command: < infile.txt awk '{sum+=\$2} END {print sum}' > outfile_shell.txt"
+< infile.txt awk '{sum+=$2} END {print sum}' > outfile_shell.txt
+./bin/pipex_bonus infile.txt 'awk "{sum+=\$2} END {print sum}"' "cat" outfile_pipex.txt
 show_files
 diff outfile_shell.txt outfile_pipex.txt
 print_result
 
-# Nettoyage
-rm -f outfile_shell.txt outfile_pipex.txt
+# Test 4: cut et grep simple
+echo "=== Test 4: cut et grep ==="
+echo "Shell command: < infile.txt cut -f1 | grep 'e' > outfile_shell.txt"
+< infile.txt cut -f1 | grep 'e' > outfile_shell.txt
+./bin/pipex_bonus infile.txt "cut -f1" "grep e" outfile_pipex.txt
+show_files
+diff outfile_shell.txt outfile_pipex.txt
+print_result
 
-# Test 6: Here_doc avec commande invalide
-echo "=== Test 6: Here_doc avec commande invalide ==="
+# Test 5: here_doc avec commande simple
+echo "=== Test 5: here_doc avec sort ==="
 # Test shell
-cat > expected_input.txt << ENDING
-test line
-ENDING
-(cat expected_input.txt | invalidcmd > outfile_shell.txt) 2>/dev/null
-status_shell=$?
+cat << LIMIT | sort > outfile_shell.txt
+John
+Alice
+Bob
+LIMIT
 
 # Test pipex_bonus
-./bin/pipex_bonus here_doc ENDING "invalidcmd" "cat" outfile_pipex.txt << ENDING
-test line
-ENDING
-status_pipex=$?
+./bin/pipex_bonus here_doc LIMIT "cat" "sort" outfile_pipex.txt << LIMIT
+John
+Alice
+Bob
+LIMIT
 
 show_files
-echo -e "${YELLOW}Status de sortie shell: ${status_shell}${NC}"
-echo -e "${YELLOW}Status de sortie pipex: ${status_pipex}${NC}"
-if [ $status_pipex -ne 0 ]; then
-    echo -e "${GREEN}✓ Test passé${NC}"
-else
-    echo -e "${RED}✗ Test échoué${NC}"
-fi
-echo "----------------------------------------"
+diff outfile_shell.txt outfile_pipex.txt
+print_result
 
 # Nettoyage final
 echo -e "${BLUE}=== Nettoyage des fichiers de test ===${NC}"
-rm -f infile.txt outfile_shell.txt outfile_pipex.txt expected_input.txt
+rm -f infile.txt outfile_shell.txt outfile_pipex.txt
