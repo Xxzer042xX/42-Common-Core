@@ -2,15 +2,15 @@
 
 ## 📚 Table des matières
 1. 🎯 [Vue d'ensemble](#vue-densemble)
-2. ⚙️ [Spécifications techniques](#spécifications-techniques)
+2. ⚙️ [Spécifications techniques](#specifications-techniques)
 3. 🏗️ [Architecture](#architecture)
 4. 💻 [Implémentation](#implémentation)
 5. ⚡ [Gestion des processus](#gestion-des-processus)
-6. 🔧 [Configurations avancées](#configurations-avancées)
+6. 🔧 [Configurations avancées](#configurations-avancees)
 7. 🧪 [Tests et validation](#tests-et-validation)
 8. 📎 [Annexes](#annexes)
 
-## 🎯 Vue d'ensemble
+## Vue d'ensemble
 
 ### 📋 Description
 Pipex est une implémentation en C des mécanismes de redirection et de pipeline UNIX. Ce projet reproduit le comportement natif des pipes shell en utilisant les appels système de bas niveau.
@@ -28,7 +28,7 @@ Pipex est une implémentation en C des mécanismes de redirection et de pipeline
 # < infile cmd1 | cmd2 > outfile
 ```
 
-## ⚙️ Spécifications techniques
+## Specifications techniques
 
 ### 🛠️ Environnement de développement
 - 🐧 Système : Unix/Linux
@@ -67,7 +67,7 @@ malloc()  // Allocation dynamique
 free()    // Libération mémoire
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### 📁 Structure du projet
 ```
@@ -109,7 +109,7 @@ pipex/
    - Messages contextuels
    - Nettoyage en cas d'erreur
 
-## 💻 Implémentation
+## Implementation
 
 ### 🚦 Initialisation
 1. ✅ Validation des arguments
@@ -131,7 +131,7 @@ pipex/
 - 🧹 Libération propre des ressources
 - 📝 Messages d'erreur détaillés
 
-## ⚡ Gestion des processus
+## Gestion des processus
 
 ### 🔄 Process lifecycle
 1. **Création** 🔨 : Fork et initialisation
@@ -145,7 +145,7 @@ pipex/
 - ⏳ Synchronisation par wait/waitpid
 - 🔔 Gestion des signaux (optionnel)
 
-## 🔧 Configurations avancées
+## Configurations avancees
 
 ### 📝 Mode Here_doc
 Implémentation du heredoc UNIX :
