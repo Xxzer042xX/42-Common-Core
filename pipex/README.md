@@ -4,11 +4,9 @@
 1. 🎯 [Vue d'ensemble](#vue-densemble)
 2. ⚙️ [Spécifications techniques](#specifications-techniques)
 3. 🏗️ [Architecture](#architecture)
-4. 💻 [Implémentation](#implémentation)
+4. 💻 [Implémentation](#implementation)
 5. ⚡ [Gestion des processus](#gestion-des-processus)
 6. 🔧 [Configurations avancées](#configurations-avancees)
-7. 🧪 [Tests et validation](#tests-et-validation)
-8. 📎 [Annexes](#annexes)
 
 ## Vue d'ensemble
 
