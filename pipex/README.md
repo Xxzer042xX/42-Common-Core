@@ -1,165 +1,160 @@
-# 📝 Pipex - Projet 42
+# 🚀 Pipex - Documentation Technique
 
-## 📋 Table des matières
-1. [Introduction](#introduction)
-2. [Aperçu du projet](#aperçu-du-projet)
-3. [Prérequis](#prérequis)
-4. [Installation et utilisation](#installation-et-utilisation)
-5. [Détails d'implémentation](#détails-dimplémentation)
-6. [Bonus](#bonus)
-7. [Exemples](#exemples)
-8. [Structure du projet](#structure-du-projet)
-9. [Gestion des erreurs](#gestion-des-erreurs)
-10. [Ressources](#ressources)
+## 📚 Table des matières
+1. 🎯 [Vue d'ensemble](#vue-densemble)
+2. ⚙️ [Spécifications techniques](#spécifications-techniques)
+3. 🏗️ [Architecture](#architecture)
+4. 💻 [Implémentation](#implémentation)
+5. ⚡ [Gestion des processus](#gestion-des-processus)
+6. 🔧 [Configurations avancées](#configurations-avancées)
+7. 🧪 [Tests et validation](#tests-et-validation)
+8. 📎 [Annexes](#annexes)
 
-## 🔎 Introduction
-Pipex est un projet qui vise à approfondir la compréhension des mécanismes UNIX en recréant la fonctionnalité des pipes (`|`) en C. Le programme reproduit le comportement des pipelines de commandes shell, en gérant spécifiquement l'entrée/sortie de fichiers et l'exécution des commandes via des tubes.
+## 🎯 Vue d'ensemble
 
-## 🚀 Aperçu du projet
-L'objectif principal est de créer un programme qui se comporte exactement comme la commande shell :
+### 📋 Description
+Pipex est une implémentation en C des mécanismes de redirection et de pipeline UNIX. Ce projet reproduit le comportement natif des pipes shell en utilisant les appels système de bas niveau.
+
+### 🎯 Objectifs
+- 🔄 Reproduction fidèle du comportement des pipes UNIX
+- 💪 Gestion robuste des processus et de la mémoire
+- 🔒 Implementation sécurisée des redirections d'entrée/sortie
+- 📈 Extensibilité pour les fonctionnalités avancées
+
+### 💡 Contexte d'utilisation
 ```bash
-< fichier1 cmd1 | cmd2 > fichier2
-```
-en l'implémentant comme :
-```bash
-./pipex fichier1 cmd1 cmd2 fichier2
+./pipex infile cmd1 cmd2 outfile
+# Équivalence shell:
+# < infile cmd1 | cmd2 > outfile
 ```
 
-### Fonctionnalités principales
-- Gestion des fichiers d'entrée/sortie
-- Exécution des commandes
-- Communication entre processus via pipes
-- Gestion des erreurs
-- Prévention des fuites mémoire
+## ⚙️ Spécifications techniques
 
-## ⚙️ Prérequis
-- Compilateur GCC
-- Make
-- Système d'exploitation UNIX
-- Connaissances de base des commandes shell
+### 🛠️ Environnement de développement
+- 🐧 Système : Unix/Linux
+- 🔨 Compilateur : GCC avec flags de compilation stricts
+- 📋 Standard : C11
+- ⚡ Makefile : Compilation optimisée et règles standards
 
-### Fonctions autorisées
+### 📦 Dépendances requises
+- 📚 Libc standard
+- 🔄 Environnement POSIX compatible
+- 🔑 Permissions d'accès aux appels système
+
+### 🔧 API système utilisée
 ```c
-- open, close, read, write
-- malloc, free
-- perror, strerror
-- access
-- dup, dup2
-- execve
-- exit
-- fork
-- pipe
-- unlink
-- wait, waitpid
+// 📂 Gestion des fichiers
+open()    // Ouverture des fichiers
+close()   // Fermeture des descripteurs
+read()    // Lecture de données
+write()   // Écriture de données
+access()  // Vérification des permissions
+unlink()  // Suppression de fichiers
+
+// 🔄 Gestion des processus
+fork()    // Création de processus
+execve()  // Exécution de programmes
+wait()    // Attente de processus
+waitpid() // Attente de processus spécifique
+
+// 🔌 Gestion des descripteurs
+pipe()    // Création de tube
+dup()     // Duplication de descripteur
+dup2()    // Duplication avec cible spécifique
+
+// 💾 Gestion mémoire
+malloc()  // Allocation dynamique
+free()    // Libération mémoire
 ```
 
-## 📥 Installation et utilisation
+## 🏗️ Architecture
 
-### Installation
+### 📁 Structure du projet
+```
+pipex/
+├── include/          🔍
+│   ├── pipex.h       # Définitions et prototypes
+│   └── errors.h      # Gestion des erreurs
+├── src/             💻
+│   ├── main.c        # Point d'entrée
+│   ├── init.c        # Initialisation
+│   ├── process.c     # Gestion des processus
+│   ├── exec.c        # Exécution des commandes
+│   ├── utils.c       # Fonctions utilitaires
+│   └── cleanup.c     # Nettoyage ressources
+├── bonus/           ⭐
+│   └── [fichiers bonus]
+└── tests/           🧪
+    └── [fichiers de test]
+```
+
+### 🔨 Modules fonctionnels
+1. **Core** 🎯
+   - Parsing des arguments
+   - Validation des entrées
+   - Gestion du flux principal
+
+2. **Process Management** ⚡
+   - Fork et création de processus
+   - Synchronisation
+   - Communication inter-processus
+
+3. **File Operations** 📂
+   - Gestion des descripteurs
+   - Redirections E/S
+   - Validation des accès
+
+4. **Error Handling** ⚠️
+   - Codes d'erreur personnalisés
+   - Messages contextuels
+   - Nettoyage en cas d'erreur
+
+## 💻 Implémentation
+
+### 🚦 Initialisation
+1. ✅ Validation des arguments
+2. 🔒 Vérification des permissions
+3. 🔧 Initialisation des structures de données
+4. ⚙️ Configuration des descripteurs
+
+### 🔄 Pipeline d'exécution
+1. 🌟 Création du pipe de communication
+2. 🔄 Fork des processus enfants
+3. 🔌 Configuration des redirections
+4. ▶️ Exécution des commandes
+5. ⏳ Synchronisation et attente
+6. 🧹 Nettoyage des ressources
+
+### ⚠️ Gestion des erreurs
+- 🔍 Validation extensive des entrées
+- ✅ Vérification des valeurs de retour
+- 🧹 Libération propre des ressources
+- 📝 Messages d'erreur détaillés
+
+## ⚡ Gestion des processus
+
+### 🔄 Process lifecycle
+1. **Création** 🔨 : Fork et initialisation
+2. **Configuration** ⚙️ : Redirection des descripteurs
+3. **Exécution** ▶️ : Lancement des commandes
+4. **Supervision** 👀 : Monitoring et synchronisation
+5. **Terminaison** 🏁 : Nettoyage et codes de retour
+
+### 🔄 Communication inter-processus
+- 📡 Tubes anonymes pour le flux de données
+- ⏳ Synchronisation par wait/waitpid
+- 🔔 Gestion des signaux (optionnel)
+
+## 🔧 Configurations avancées
+
+### 📝 Mode Here_doc
+Implémentation du heredoc UNIX :
 ```bash
-git clone https://github.com/votre_nom/pipex.git
-cd pipex
-make
+./pipex here_doc LIMITER cmd1 cmd2 outfile
 ```
 
-### Utilisation de base
+### 🔗 Multi-pipes
+Support de pipes multiples :
 ```bash
-./pipex fichier_entree "cmd1" "cmd2" fichier_sortie
+./pipex infile cmd1 cmd2 cmd3 ... cmdn outfile
 ```
-
-### Exemples
-```bash
-./pipex infile "ls -l" "wc -l" outfile
-# Équivalent à : < infile ls -l | wc -l > outfile
-
-./pipex infile "grep bonjour" "wc -w" outfile
-# Équivalent à : < infile grep bonjour | wc -w > outfile
-```
-
-## 🔧 Détails d'implémentation
-
-### Fonctionnalités principales
-1. **Traitement des arguments**
-   - Validation des arguments d'entrée
-   - Vérification des permissions des fichiers
-   - Analyse des commandes et leurs paramètres
-
-2. **Création du pipe**
-   - Création du tube de communication entre processus
-   - Gestion appropriée des descripteurs de fichiers
-
-3. **Gestion des processus**
-   - Création des processus fils avec fork
-   - Gestion de l'exécution et synchronisation des processus
-   - Traitement de l'exécution des commandes avec execve
-
-4. **Opérations sur les fichiers**
-   - Gestion de l'ouverture et lecture du fichier d'entrée
-   - Gestion de la création et écriture du fichier de sortie
-   - Implémentation des redirections de descripteurs de fichiers
-
-### Gestion de la mémoire
-- Allocation et libération soigneuse des ressources
-- Prévention des fuites mémoire
-- Fermeture appropriée des descripteurs de fichiers
-
-## ⭐ Bonus
-
-### Pipes multiples
-Gestion de plusieurs commandes en séquence :
-```bash
-./pipex fichier1 cmd1 cmd2 cmd3 ... cmdn fichier2
-# Équivalent à : < fichier1 cmd1 | cmd2 | cmd3 ... | cmdn > fichier2
-```
-
-### Support here_doc
-Gestion de la méthode d'entrée here_doc :
-```bash
-./pipex here_doc LIMITEUR cmd cmd1 fichier
-# Équivalent à : cmd << LIMITEUR | cmd1 >> fichier
-```
-
-## 📁 Structure du projet
-```
-.
-├── Makefile
-├── README.md
-├── include/
-│   └── pipex.h
-├── src/
-│   ├── main.c
-│   ├── process.c
-│   ├── utils.c
-│   └── error.c
-└── bonus/
-    └── pipex_bonus.c
-```
-
-## ⚠️ Gestion des erreurs
-Le programme gère différents cas d'erreur :
-- Nombre invalide d'arguments
-- Erreurs de permission d'accès aux fichiers
-- Échecs d'exécution des commandes
-- Échecs d'allocation mémoire
-- Erreurs de création de pipe
-
-Chaque erreur est gérée proprement avec des messages appropriés et un nettoyage correct.
-
-## 📚 Ressources
-- [Pipes UNIX expliqués](https://www.rozmichelle.com/pipes-forks-dups/)
-- [Fork en C](https://www.geeksforgeeks.org/fork-system-call/)
-- [Appels système de Pipe](https://www.geeksforgeeks.org/pipe-system-call/)
-
-## 📝 Note
-Ce projet fait partie du cursus de l'école 42 et vise à enseigner :
-- La création et gestion des processus
-- La manipulation des descripteurs de fichiers
-- La communication inter-processus
-- La gestion des erreurs en C
-- La gestion de la mémoire
-
-## 👤 Auteur
-Votre Nom (@votre_login)
-
-## 📄 Licence
-Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de détails.
