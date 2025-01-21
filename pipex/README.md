@@ -7,6 +7,7 @@
 4. 💻 [Implémentation](#implementation)
 5. ⚡ [Gestion des processus](#gestion-des-processus)
 6. 🔧 [Configurations avancées](#configurations-avancees)
+7. 📎 [Annexes](https://github.com/Xxzer042xX/42-Common-Core/blob/main/pipex/docs/shell-redirections-readme.md)
 
 ## Vue d'ensemble
 
