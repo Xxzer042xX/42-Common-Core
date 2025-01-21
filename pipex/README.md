@@ -160,7 +160,7 @@ Support de pipes multiples :
 ./pipex infile cmd1 cmd2 cmd3 ... cmdn outfile
 ```
 
-## 📚 Ressources
+##  Ressources
 - [Pipes UNIX expliqués](https://www.rozmichelle.com/pipes-forks-dups/)
 - [Fork en C](https://www.geeksforgeeks.org/fork-system-call/)
 - [Appels système de Pipe](https://www.geeksforgeeks.org/pipe-system-call/)
