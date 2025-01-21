@@ -8,6 +8,7 @@
 5. ⚡ [Gestion des processus](#gestion-des-processus)
 6. 🔧 [Configurations avancées](#configurations-avancees)
 7. 📎 [Guide redirections Shell](https://github.com/Xxzer042xX/42-Common-Core/blob/main/pipex/docs/shell-redirections-readme.md)
+8. 📎 [Guide variables d'environnement et processus](https://github.com/Xxzer042xX/42-Common-Core/blob/main/pipex/docs/shell-var-env.md)
 
 ## Vue d'ensemble
 
