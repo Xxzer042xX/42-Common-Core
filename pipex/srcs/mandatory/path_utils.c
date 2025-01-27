@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   path_utils.c                                       :+:      :+:    :+:   */
+/*   path_util.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/pipex.h"
+#include "../../include/pipex_bonus.h"
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -84,6 +84,6 @@ char	*find_path(char *cmd, char **env)
 		return (NULL);
 	paths = ft_split(env[i] + 5, ':');
 	path = get_cmd_path(cmd, paths);
-	ft_free_split(paths, 0);
+	ft_free_split(paths);
 	return (path);
 }

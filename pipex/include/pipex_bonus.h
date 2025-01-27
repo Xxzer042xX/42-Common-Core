@@ -45,16 +45,16 @@
 /* ************************************************************************** */
 typedef struct s_pipex
 {
-	pid_t	*cpids;
-	char	**env;
-	char	**cmds;
-	char	*limiter;
-	int		**pipe_fds;
-	int		cmd_count;
-	int		pipe_count;
-	int		infile;
-	int		outfile;
-	int		here_doc;
+	pid_t	*cpids;//child process id
+	char	**env;//environment variables
+	char	**cmds;//commands
+	char	*limiter;//limiter for here_doc
+	int		**pipe_fds;//pipe file descriptors
+	int		cmd_count;//number of commands
+	int		pipe_count;//number of pipes
+	int		infile;//input file
+	int		outfile;//output file
+	int		here_doc;//here_doc mode
 }	t_pipex;
 
 /* ************************************************************************** */

@@ -1,5 +1,6 @@
-Name	Age	City
-John	25	Paris
-Alice	30	Lyon
-Bob	22	Nice
-Eve	28	Paris
+NAME        AGE     CITY    DEPT    SALARY
+Jean        25      Paris   IT      55000
+Marie       30      Lyon    HR      62000
+Pierre      28      Paris   Sales   58000
+Sophie      32      Nice    IT      65000
+Lucas       27      Lyon    Sales   56000

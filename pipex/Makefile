@@ -27,11 +27,14 @@ LIBFT = $(LIBFT_DIR)/libftprintf.a
 ################################################################################
 #                                 MANDATORY                                    #
 ################################################################################
-SRC_FILE = $(SRC_DIR)/mandatory/pipex.c \
-		   $(SRC_DIR)/mandatory/cmd_utils.c \
-		   $(SRC_DIR)/mandatory/init_app.c \
-		   $(SRC_DIR)/mandatory/process.c \
-		   $(SRC_DIR)/mandatory/path_utils.c \
+SRC_FILE =  $(SRC_DIR)/mandatory/pipex.c \
+			 $(SRC_DIR)/mandatory/cmd_utils.c \
+			 $(SRC_DIR)/mandatory/init_app.c \
+			 $(SRC_DIR)/mandatory/process.c \
+			 $(SRC_DIR)/mandatory/path_utils.c \
+			 $(SRC_DIR)/mandatory/clean_up.c \
+			 $(SRC_DIR)/mandatory/files_utils.c \
+			 $(SRC_DIR)/mandatory/heredoc.c \
 
 SRC = $(SRC_FILE)
 
@@ -168,6 +171,7 @@ show:
 
 help:
 	@printf "$(BOLD)$(BLUE)\n%33s$(RESET)\n\n" "====Available commands:===="
+	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make init" "Initialize project structure"
 	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make or make all" "Compile the project"
 	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make clean" "Remove object files"
 	@printf "$(CYAN)%-18s$(RESET) - %s\n" "make fclean" "Remove object files and executable"

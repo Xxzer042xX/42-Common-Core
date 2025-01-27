@@ -18,11 +18,22 @@ static void	print_error_args(void);
 /*                                                                            */
 /*   Fonction principale du programme pipex bonus.                            */
 /*                                                                            */
-/*   Cette fonction gère le flux principal du programme en :                  */
-/*   1. Vérifiant le nombre d'arguments                                       */
-/*   2. Initialisant la structure de données                                  */
-/*   3. Gérant le mode here_doc si activé                                     */
-/*   4. Créant et gérant les processus pour l'exécution des commandes         */
+/*   Programme qui simule le comportement des pipes shell (|) et              */
+/*   redirections (<, >, <<, >>). Il permet d'exécuter plusieurs commandes    */
+/*   en chaîne en redirigeant leurs entrées/sorties.                          */
+/*                                                                            */
+/*   Modes supportés :                                                        */
+/*   1. Mode standard : file1 cmd1 cmd2 ... cmdN file2                        */
+/*      Équivalent à : < file1 cmd1 | cmd2 | ... | cmdN > file2               */
+/*   2. Mode here_doc : here_doc LIMITER cmd1 cmd2 file2                      */
+/*      Équivalent à : cmd1 << LIMITER | cmd2 >> file2                        */
+/*                                                                            */
+/*   Flux d'exécution :                                                       */
+/*   1. Vérification des arguments                                            */
+/*   2. Initialisation (init_app)                                             */
+/*   3. Création des processus (create_processes)                             */
+/*   4. Attente des processus (wait_processes)                                */
+/*   5. Nettoyage des ressources                                              */
 /*                                                                            */
 /*   Paramètres :                                                             */
 /*   - ac : nombre d'arguments                                                */
@@ -30,8 +41,8 @@ static void	print_error_args(void);
 /*   - env : variables d'environnement                                        */
 /*                                                                            */
 /*   Retourne :                                                               */
-/*   - EXIT_SUCCESS en cas de succès                                          */
-/*   - EXIT_FAILURE en cas d'erreur (via print_error_args)                    */
+/*   - Le statut de sortie du dernier processus en cas de succès              */
+/*   - EXIT_FAILURE en cas d'erreur                                           */
 /*                                                                            */
 /* ************************************************************************** */
 int	main(int ac, char **av, char **env)
@@ -46,7 +57,7 @@ int	main(int ac, char **av, char **env)
 	if (data.here_doc)
 	{
 		if (ac < 6)
-			ft_exit("Error: Invalid nbr args for here_doc", NULL, EXIT_FAILURE);
+			ft_exit("invalid nbr args for here_doc", NULL, EXIT_FAILURE);
 		data.limiter = av[2];
 	}
 	init_app(&data, ac, av, env);
@@ -60,16 +71,18 @@ int	main(int ac, char **av, char **env)
 /*                                                                            */
 /*   Fonction d'affichage des erreurs d'arguments.                            */
 /*                                                                            */
-/*   Cette fonction affiche sur la sortie d'erreur (fd 2) :                   */
-/*   1. Un message d'erreur sur le nombre d'arguments invalide                */
-/*   2. L'utilisation correcte du programme                                   */
-/*   3. Les deux syntaxes possibles (normale et here_doc)                     */
+/*   Cette fonction affiche la syntaxe correcte du programme avec :           */
+/*   1. Mode standard :                                                       */
+/*      ./pipex_bonus input.txt "ls -l" "wc -l" output.txt                    */
+/*      Équivalent shell : < input.txt ls -l | wc -l > output.txt             */
 /*                                                                            */
-/*   Paramètres :                                                             */
-/*   - Aucun                                                                  */
+/*   2. Mode here_doc :                                                       */
+/*      ./pipex_bonus here_doc EOF "grep hello" "wc -l" output.txt            */
+/*      Équivalent shell : grep hello << EOF | wc -l >> output.txt            */
 /*                                                                            */
 /*   Comportement :                                                           */
-/*   - Termine le programme avec EXIT_FAILURE après l'affichage               */
+/*   - Affiche les messages sur stderr (fd 2)                                 */
+/*   - Termine le programme avec EXIT_FAILURE                                 */
 /*                                                                            */
 /* ************************************************************************** */
 static void	print_error_args(void)

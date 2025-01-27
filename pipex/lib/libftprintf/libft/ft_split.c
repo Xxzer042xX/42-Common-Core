@@ -51,13 +51,6 @@ static char	*word_dup(const char *start, int len)
 	return (word);
 }
 
-static void	free_split(char **split, int i)
-{
-	while (i >= 0)
-		free(split[i--]);
-	free(split);
-}
-
 static char	**init_split(char **split, char *s, int c)
 {
 	int	i;
@@ -73,7 +66,7 @@ static char	**init_split(char **split, char *s, int c)
 				len++;
 			split[i] = word_dup(s, len);
 			if (!split[i])
-				return (free_split(split, i), NULL);
+				return (ft_free_split(split), NULL);
 			i++;
 			s += len;
 		}

@@ -49,7 +49,7 @@ int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*get_next_line(int fd);
 int		ft_strcmp(const char *s1, const char *s2);
 int		count_line(const char *filename);
-void	ft_free_split(char **split, int i);
+void	ft_free_split(char **split);
 
 /* ************************************************************************** */
 /*                           Fonctions de Conversion                          */
@@ -103,6 +103,7 @@ int		ft_isupper(int c);
 int		ft_islower(int c);
 int		ft_isflags(int c);
 int		ft_ishexa(const char *str);
+int		ft_isquote(char c);
 
 /* ************************************************************************** */
 /*                        Structures et Fonctions Bonus                       */
@@ -114,13 +115,13 @@ typedef struct s_list
 }	t_list;
 
 t_list	*ft_lstnew(void *content);
-void	ft_lstadd_front(t_list **lst, t_list *news);
-int		ft_lstsize(t_list *lst);
 t_list	*ft_lstlast(t_list *lst);
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+int		ft_lstsize(t_list *lst);
+void	ft_lstadd_front(t_list **lst, t_list *news);
 void	ft_lstadd_back(t_list **lst, t_list *news);
 void	ft_lstdelone(t_list *lst, void (*del)(void *));
 void	ft_lstclear(t_list **lst, void (*del)(void *));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
-t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 #endif

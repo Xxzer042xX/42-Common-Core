@@ -54,7 +54,9 @@ SRCS = ft_atoi.c \
 	   get_next_line.c \
 	   count_line.c \
 	   ft_atol.c \
-
+	   ft_count_bit.c \
+	   ft_isquote.c \
+	
 SRCS_BONUS = ft_lstnew_bonus.c \
 			 ft_lstadd_front_bonus.c \
 			 ft_lstsize_bonus.c \

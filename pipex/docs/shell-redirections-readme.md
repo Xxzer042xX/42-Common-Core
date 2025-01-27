@@ -1,3 +1,4 @@
+```mermaid
 # 🚀 Guide Complet des Redirections Shell
 
 > "Dans le shell, tout est fichier, et chaque problème a sa redirection !" 😉
@@ -266,3 +267,4 @@ commande 2>&1 | tee log.txt
 Les redirections shell sont puissantes mais demandent de la pratique. N'hésitez pas à expérimenter dans un environnement de test, et rappelez-vous : la documentation (`man bash`) est votre meilleure amie ! 
 
 Happy scripting! 🚀
+```

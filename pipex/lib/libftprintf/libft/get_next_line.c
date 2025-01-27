@@ -156,7 +156,7 @@ static char	*read_file(int fd, char *static_buffer)
 static int	init_buffer(char **static_buffer)
 {
 	*static_buffer = ft_calloc(1, 1);
-	if (!static_buffer)
+	if (!(*static_buffer))
 		return (0);
 	return (1);
 }

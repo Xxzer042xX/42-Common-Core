@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_split.c                                    :+:      :+:    :+:   */
+/*   ft_isquote.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: madelmen <madelmen@student.42lausanne.ch   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/06 15:58:50 by madelmen          #+#    #+#             */
-/*   Updated: 2024/12/06 15:58:50 by madelmen         ###   ########.fr       */
+/*   Created: 2025/01/25 14:51:19 by madelmen          #+#    #+#             */
+/*   Updated: 2025/01/25 14:51:19 by madelmen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_free_split(char **split)
+int	ft_isquote(char c)
 {
-	int	i;
-
-	i = 0;
-	if (!split)
-		return ;
-	while (split[i])
-		free(split[i++]);
-	free(split);
+	return (c == '\'' || c == '"');
 }

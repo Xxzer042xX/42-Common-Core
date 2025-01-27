@@ -20,12 +20,21 @@ static void	init_cpids(t_pipex *data);
 /*                                                                            */
 /*   Fonction d'initialisation principale de l'application.                   */
 /*                                                                            */
-/*   Cette fonction initialise toutes les données nécessaires au programme :  */
-/*   1. Configure les variables d'environnement                               */
-/*   2. Calcule le nombre de commandes à exécuter                             */
-/*   3. Initialise les descripteurs de fichiers                               */
-/*   4. Crée les pipes nécessaires                                            */
-/*   5. Ouvre les fichiers d'entrée/sortie                                    */
+/*   Architecture du programme :                                              */
+/*   Pour N commandes, le programme crée :                                    */
+/*   - N-1 pipes pour connecter les commandes                                 */
+/*   - N processus enfants (un pour chaque commande)                          */
+/*   - 2 fichiers (entrée et sortie)                                          */
+/*                                                                            */
+/*   Étapes d'initialisation :                                                */
+/*   1. Configuration de l'environnement et calcul des dimensions             */
+/*      - Stockage des variables d'environnement                              */
+/*      - Calcul du nombre de commandes (ac-3 ou ac-4 pour here_doc)          */
+/*   2. Initialisation des structures                                         */
+/*      - Tableau de pipes (pipe_fds[N-1][2])                                 */
+/*      - Tableau de PIDs (cpids[N])                                          */
+/*      - Descripteurs de fichiers (infile, outfile)                          */
+/*   3. Création des pipes et ouverture des fichiers                          */
 /*                                                                            */
 /*   Paramètres :                                                             */
 /*   - data : structure contenant les données du programme                    */
@@ -50,10 +59,20 @@ void	init_app(t_pipex *data, int ac, char **av, char **env)
 /*                                                                            */
 /*   Fonction d'initialisation des descripteurs de fichiers pour les pipes.   */
 /*                                                                            */
-/*   Cette fonction alloue la mémoire pour les descripteurs de fichiers :     */
-/*   1. Alloue le tableau principal de pointeurs                              */
-/*   2. Alloue chaque tableau de deux entiers pour chaque pipe                */
-/*   3. Gère les erreurs d'allocation avec libération propre                  */
+/*   Structure des pipes :                                                    */
+/*   pipe_fds est un tableau de N-1 pipes, où N est le nombre de commandes    */
+/*   Chaque pipe[i] contient deux descripteurs de fichiers :                  */
+/*   - pipe[i][0] : extrémité de lecture                                      */
+/*   - pipe[i][1] : extrémité d'écriture                                      */
+/*                                                                            */
+/*   Exemple pour 3 commandes (cmd1 | cmd2 | cmd3) :                          */
+/*   - pipe_fds[0] connecte cmd1 à cmd2                                       */
+/*   - pipe_fds[1] connecte cmd2 à cmd3                                       */
+/*                                                                            */
+/*   Gestion d'erreurs :                                                      */
+/*   En cas d'échec d'allocation :                                            */
+/*   1. Libère toute la mémoire déjà allouée                                  */
+/*   2. Termine le programme avec ERR_MALLOC                                  */
 /*                                                                            */
 /*   Paramètres :                                                             */
 /*   - data : structure contenant les données du programme                    */
@@ -83,10 +102,15 @@ static void	init_pipe_fds(t_pipex *data)
 /*                                                                            */
 /*   Fonction de création des pipes pour la communication inter-processus.    */
 /*                                                                            */
-/*   Cette fonction crée les pipes nécessaires entre les commandes :          */
-/*   1. Itère sur le nombre de commandes moins 1                              */
-/*   2. Crée un pipe pour chaque paire de commandes adjacentes                */
-/*   3. Gère les erreurs potentielles de création de pipe                     */
+/*   Création du pipeline de commandes :                                      */
+/*   Pour N commandes, crée N-1 pipes formant une chaîne :                    */
+/*   cmd1 --> pipe[0] --> cmd2 --> pipe[1] --> cmd3 ... cmdN                  */
+/*                                                                            */
+/*   Flux de données :                                                        */
+/*   1. La sortie de chaque commande i est connectée à pipe[i][1]             */
+/*   2. L'entrée de chaque commande i+1 est connectée à pipe[i][0]            */
+/*   3. Le premier processus lit depuis infile                                */
+/*   4. Le dernier processus écrit dans outfile                               */
 /*                                                                            */
 /*   Paramètres :                                                             */
 /*   - data : structure contenant les données du programme                    */
@@ -109,12 +133,28 @@ static void	create_pipes(t_pipex *data)
 /*                                                                            */
 /*   Fonction d'initialisation des PIDs des processus enfants.                */
 /*                                                                            */
-/*   Cette fonction alloue la mémoire pour stocker les PIDs :                 */
-/*   1. Alloue un tableau de taille cmd_count                                 */
-/*   2. Gère les erreurs d'allocation avec libération des ressources          */
+/*   Rôle dans l'architecture :                                               */
+/*   - Alloue un tableau pour stocker les PIDs de tous les processus          */
+/*   - Permet de suivre et gérer tous les processus enfants                   */
+/*                                                                            */
+/*   Structure :                                                              */
+/*   - cpids[i] stocke le PID du processus exécutant la commande i            */
+/*   - La taille du tableau est égale au nombre de commandes                  */
+/*   Exemple pour "cmd1 | cmd2 | cmd3" :                                      */
+/*   - cpids[0] = PID du processus exécutant cmd1                             */
+/*   - cpids[1] = PID du processus exécutant cmd2                             */
+/*   - cpids[2] = PID du processus exécutant cmd3                             */
+/*                                                                            */
+/*   Gestion d'erreurs :                                                      */
+/*   1. En cas d'échec d'allocation :                                         */
+/*      - Libère les pipes déjà alloués                                       */
+/*      - Termine le programme avec ERR_MALLOC                                */
 /*                                                                            */
 /*   Paramètres :                                                             */
 /*   - data : structure contenant les données du programme                    */
+/*                                                                            */
+/*   Note : Ce tableau est essentiel pour wait_processes qui l'utilise        */
+/*   pour attendre la fin de tous les processus enfants.                      */
 /*                                                                            */
 /* ************************************************************************** */
 static void	init_cpids(t_pipex *data)
