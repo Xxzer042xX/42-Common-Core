@@ -16,15 +16,31 @@ static void	read_heredoc_input(t_pipex *data, int temp_fd);
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Fonction principale de gestion du heredoc.                               */
+/*   Gestion du mode heredoc (équivalent de << en shell).                     */
 /*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Crée un fichier temporaire                                            */
-/*   2. Gère la lecture des entrées                                           */
-/*   3. Configure le fichier d'entrée pour le pipeline                        */
+/*   Simule le comportement de la redirection heredoc :                       */
+/*   1. Création du fichier temporaire :                                      */
+/*      - Nom : .heredoc_tmp                                                  */
+/*      - Mode : O_CREAT|O_WRONLY|O_TRUNC (création/écriture/réinitialise)    */
+/*      - Permissions : 0644 (rw-r--r--)                                      */
 /*                                                                            */
-/*   Paramètres :                                                             */
-/*   - data : structure contenant les données du programme                    */
+/*   2. Processus :                                                           */
+/*      - Lecture des entrées via read_heredoc_input                          */
+/*      - Fermeture du fichier temporaire                                     */
+/*      - Réouverture en lecture pour le pipeline                             */
+/*                                                                            */
+/*   3. Nettoyage en cas d'erreur :                                           */
+/*      - Suppression du fichier temporaire (unlink)                          */
+/*      - Libération des ressources                                           */
+/*                                                                            */
+/*   Exemple shell équivalent :                                               */
+/*   cmd1 << EOF | cmd2                                                       */
+/*   ligne1                                                                   */
+/*   ligne2                                                                   */
+/*   EOF                                                                      */
+/*                                                                            */
+/*   Paramètre :                                                              */
+/*   - data : structure contenant le délimiteur et les descripteurs           */
 /*                                                                            */
 /* ************************************************************************** */
 void	handle_heredoc(t_pipex *data)
@@ -46,14 +62,28 @@ void	handle_heredoc(t_pipex *data)
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Fonction de lecture des entrées pour le heredoc.                         */
+/*   Lecture interactive des entrées du heredoc.                              */
 /*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Lit les entrées standard jusqu'au délimiteur                          */
-/*   2. Écrit chaque ligne dans le fichier temporaire                         */
+/*   Processus de lecture :                                                   */
+/*   1. Affichage du prompt "heredoc> "                                       */
+/*   2. Lecture ligne par ligne (get_next_line)                               */
+/*   3. Comparaison avec le délimiteur :                                      */
+/*      - Si ligne == délimiteur + '\n' : fin de lecture                      */
+/*      - Si ligne == NULL (Ctrl+D) : fin de lecture                          */
+/*      - Sinon : écriture dans le fichier temporaire                         */
+/*                                                                            */
+/*   Gestion des entrées :                                                    */
+/*   - Conserve les retours à la ligne (\n)                                   */
+/*   - Pas d'interprétation des caractères spéciaux                           */
+/*   - Support de Ctrl+D pour terminer l'entrée                               */
+/*                                                                            */
+/*   Exemple d'utilisation :                                                  */
+/*   heredoc> Première ligne                                                  */
+/*   heredoc> Deuxième ligne                                                  */
+/*   heredoc> EOF (délimiteur)                                                */
 /*                                                                            */
 /*   Paramètres :                                                             */
-/*   - data : structure contenant les données du programme                    */
+/*   - data : structure contenant le délimiteur (data->limiter)               */
 /*   - temp_fd : descripteur du fichier temporaire                            */
 /*                                                                            */
 /* ************************************************************************** */

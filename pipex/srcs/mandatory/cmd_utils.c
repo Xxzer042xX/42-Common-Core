@@ -19,36 +19,28 @@ static int	parse_token(const char *cmd, char **args, int *qtype);
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Fonction d'exécution d'une commande.                                     */
+/*   Fonction d'exécution d'une commande dans le pipeline.                    */
 /*                                                                            */
-/*   Processus d'exécution d'une commande :                                   */
-/*   1. Parsing de la commande :                                              */
-/*      "ls -la /tmp" devient ["ls", "-la", "/tmp", NULL]                     */
-/*      Gère les guillemets : 'echo "Hello World"' -> ["echo", "Hello World"] */
+/*   Cette fonction gère les étapes finales de l'exécution :                  */
+/*   1. Analyse de la commande avec parse_command                             */
+/*      Ex: "ls -la /tmp" -> ["ls", "-la", "/tmp", NULL]                      */
 /*                                                                            */
-/*   2. Recherche du chemin :                                                 */
-/*      - Vérifie si la commande contient un chemin (/bin/ls)                 */
-/*      - Sinon, cherche dans les répertoires PATH                            */
-/*      Exemple : "ls" -> "/bin/ls"                                           */
+/*   2. Recherche du chemin avec find_path                                    */
+/*      - Chemin absolu si présent (/bin/ls)                                  */
+/*      - Recherche dans PATH sinon (ls -> /bin/ls)                           */
 /*                                                                            */
-/*   3. Exécution :                                                           */
-/*      - Remplace le processus actuel par la nouvelle commande               */
-/*      - Utilise les redirections configurées précédemment                   */
+/*   3. Exécution de la commande avec execve                                  */
+/*      - Remplace le processus actuel                                        */
+/*      - Utilise les redirections préalablement configurées                  */
 /*                                                                            */
-/*   Gestion des erreurs :                                                    */
-/*   - Échec de parsing : ERR_MALLOC                                          */
-/*   - Commande non trouvée : ERR_CMD_NOT_FOUND                               */
-/*   - Échec d'exécution : ERR_CMD_NOT_FOUND                                  */
-/*                                                                            */
-/*   Exemple d'utilisation :                                                  */
-/*   execute_cmd(data, "grep 'pattern' -i", env);                             */
-/*   -> Parse en ["grep", "pattern", "-i"]                                    */
-/*   -> Trouve "/usr/bin/grep"                                                */
-/*   -> Exécute avec les redirections configurées                             */
+/*   Gestion d'erreurs :                                                      */
+/*   - Échec de parse_command -> ERR_MALLOC                                   */
+/*   - Commande non trouvée   -> ERR_CMD_NOT_FOUND                            */
+/*   - Échec d'execve         -> ERR_CMD_NOT_FOUND                            */
 /*                                                                            */
 /*   Paramètres :                                                             */
 /*   - data : structure contenant les données du programme                    */
-/*   - cmd : chaîne de caractères contenant la commande et ses arguments      */
+/*   - cmd : commande à exécuter (ex: "ls -la")                               */
 /*   - env : variables d'environnement                                        */
 /*                                                                            */
 /* ************************************************************************** */
@@ -74,24 +66,29 @@ void	execute_cmd(t_pipex *data, char *cmd, char **env)
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Gestion des caractères spéciaux lors du parsing.                         */
+/*   Gestionnaire de guillemets et caractères d'échappement.                  */
 /*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Analyse les guillemets simples et doubles                             */
-/*   2. Gère les caractères d'échappement                                     */
+/*   Cette fonction détermine le traitement de chaque caractère :             */
+/*   1. Guillemets (' ou ") :                                                 */
+/*      - Active/désactive le mode guillemet approprié                        */
+/*      - Ignore le caractère guillemet lui-même                              */
 /*                                                                            */
-/*   Étapes détaillées :                                                      */
-/*   1. Vérification du type de guillemet                                     */
-/*   2. Mise à jour de l'état du parsing                                      */
-/*   3. Gestion des caractères d'échappement                                  */
+/*   2. Caractère d'échappement (\) :                                         */
+/*      - Active le mode échappement pour le prochain caractère               */
+/*      - Permet d'inclure guillemets et espaces dans les arguments           */
+/*                                                                            */
+/*   Comportement selon contexte :                                            */
+/*   - Hors guillemets : \ et guillemets sont spéciaux                        */
+/*   - Dans guillemets : seul le guillemet correspondant est spécial          */
 /*                                                                            */
 /*   Paramètres :                                                             */
-/*   - cmd : chaîne à analyser                                                */
-/*   - i : position courante dans la chaîne                                   */
-/*   - qtype : type de guillemet actif                                        */
+/*   - cmd : chaîne en cours d'analyse                                        */
+/*   - i : position actuelle                                                  */
+/*   - qtype : type de guillemet actif (0, ' ou ")                            */
 /*   - esc : état d'échappement                                               */
 /*                                                                            */
-/*   Note : Retourne 1 si le caractère doit être ignoré, 0 sinon              */
+/*   Retourne :                                                               */
+/*   1 si caractère spécial (à ignorer), 0 sinon (à conserver)                */
 /*                                                                            */
 /* ************************************************************************** */
 static int	handle_quote_esc(const char *cmd, int *i, int *qtype, int *esc)
@@ -116,24 +113,33 @@ static int	handle_quote_esc(const char *cmd, int *i, int *qtype, int *esc)
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Extraction d'un token de la commande.                                    */
+/*   Extracteur d'arguments individuels d'une commande.                       */
 /*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Alloue la mémoire pour le token                                       */
-/*   2. Extrait les caractères jusqu'à un délimiteur                          */
-/*   3. Gère les guillemets et échappements                                   */
+/*   Cette fonction isole un argument en :                                    */
+/*   1. Allouant un buffer de 1024 caractères pour l'argument                 */
+/*      - Taille fixe pour éviter les débordements                            */
+/*      - Limite la taille maximum d'un argument                              */
 /*                                                                            */
-/*   Étapes détaillées :                                                      */
-/*   1. Allocation mémoire                                                    */
-/*   2. Copie des caractères avec gestion spéciale                            */
-/*   3. Terminaison du token                                                  */
+/*   2. Extrayant les caractères jusqu'à :                                    */
+/*      - Un espace (hors guillemets)                                         */
+/*      - La fin de la commande                                               */
+/*      Tout en gérant :                                                      */
+/*      - Les guillemets via handle_quote_esc                                 */
+/*      - Les caractères échappés                                             */
+/*                                                                            */
+/*   Exemples d'extraction :                                                  */
+/*   Dans "echo 'Hello World'" :                                              */
+/*   - Premier appel : extrait "echo"                                         */
+/*   - Second appel  : extrait "Hello World"                                  */
 /*                                                                            */
 /*   Paramètres :                                                             */
-/*   - cmd : chaîne source                                                    */
-/*   - i : position de début                                                  */
+/*   - cmd : commande source                                                  */
+/*   - i : position actuelle (mise à jour après extraction)                   */
 /*   - qtype : type de guillemet actif                                        */
 /*                                                                            */
-/*   Note : Retourne NULL en cas d'erreur d'allocation                        */
+/*   Retourne :                                                               */
+/*   - L'argument extrait (chaîne allouée)                                    */
+/*   - NULL si échec d'allocation                                             */
 /*                                                                            */
 /* ************************************************************************** */
 static char	*extract_token(const char *cmd, int *i, int *qtype)
@@ -159,22 +165,28 @@ static char	*extract_token(const char *cmd, int *i, int *qtype)
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Analyse complète d'une commande.                                         */
+/*   Fonction principale d'analyse d'une commande shell.                      */
 /*                                                                            */
 /*   Cette fonction :                                                         */
-/*   1. Alloue le tableau d'arguments                                         */
-/*   2. Parse la commande en tokens                                           */
-/*   3. Vérifie la validité des guillemets                                    */
+/*   1. Alloue un tableau de 256 pointeurs pour les arguments                 */
+/*      - Limite fixe de 256 arguments par commande                           */
+/*      - Termine toujours par NULL pour execve                               */
 /*                                                                            */
-/*   Étapes détaillées :                                                      */
-/*   1. Allocation du tableau                                                 */
-/*   2. Parsing des tokens                                                    */
-/*   3. Vérification finale                                                   */
+/*   2. Analyse la commande via parse_token                                   */
+/*      - Découpe en respectant les guillemets et échappements                */
+/*      - Vérifie que tous les guillemets sont fermés                         */
 /*                                                                            */
-/*   Paramètres :                                                             */
-/*   - cmd : commande à analyser                                              */
+/*   Exemples de parsing :                                                    */
+/*   - "ls -la"          -> ["ls", "-la", NULL]                               */
+/*   - "echo 'bonjour'"  -> ["echo", "bonjour", NULL]                         */
+/*   - "grep \"motif\""  -> ["grep", "motif", NULL]                           */
 /*                                                                            */
-/*   Note : Retourne NULL si erreur parsing ou allocation                     */
+/*   Retourne :                                                               */
+/*   - Succès : tableau d'arguments terminé par NULL                          */
+/*   - Échec : NULL (erreur allocation ou guillemets non fermés)              */
+/*                                                                            */
+/*   Paramètre :                                                              */
+/*   - cmd : chaîne de commande à analyser                                    */
 /*                                                                            */
 /* ************************************************************************** */
 static char	**parse_command(const char *cmd)
@@ -195,24 +207,33 @@ static char	**parse_command(const char *cmd)
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Découpage de la commande en tokens.                                      */
+/*   Analyseur syntaxique des arguments d'une commande.                       */
 /*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Parcourt la chaîne de commande                                        */
-/*   2. Extrait chaque token                                                  */
-/*   3. Remplit le tableau d'arguments                                        */
+/*   Cette fonction découpe la commande en :                                  */
+/*   1. Ignorant les espaces multiples entre arguments                        */
+/*      - Avance jusqu'au prochain caractère non-espace                       */
+/*      - Permet "cmd   arg" équivalent à "cmd arg"                           */
 /*                                                                            */
-/*   Étapes détaillées :                                                      */
-/*   1. Initialisation des compteurs                                          */
-/*   2. Extraction des tokens                                                 */
-/*   3. Terminaison du tableau                                                */
+/*   2. Extrayant chaque argument via extract_token                           */
+/*      - Remplit le tableau args progressivement                             */
+/*      - Vérifie chaque allocation                                           */
+/*      - Termine le tableau par NULL                                         */
+/*                                                                            */
+/*   Exemples de découpage :                                                  */
+/*   "echo   'Hello'   'World'" devient :                                     */
+/*   args[0] = "echo"                                                         */
+/*   args[1] = "Hello"                                                        */
+/*   args[2] = "World"                                                        */
+/*   args[3] = NULL                                                           */
 /*                                                                            */
 /*   Paramètres :                                                             */
 /*   - cmd : commande à découper                                              */
-/*   - args : tableau de destination                                          */
+/*   - args : tableau de destination pour les arguments                       */
 /*   - qtype : type de guillemet actif                                        */
 /*                                                                            */
-/*   Note : Retourne 0 si succès, -1 si erreur                                */
+/*   Retourne :                                                               */
+/*   - 0 si succès                                                            */
+/*   - -1 si erreur d'allocation                                              */
 /*                                                                            */
 /* ************************************************************************** */
 static int	parse_token(const char *cmd, char **args, int *qtype)

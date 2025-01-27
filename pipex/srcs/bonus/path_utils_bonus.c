@@ -14,20 +14,33 @@
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Fonction de recherche du chemin complet d'une commande dans le PATH.     */
+/*   Fonction de test des chemins possibles pour une commande.                */
 /*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Ajoute le '/' entre le chemin et la commande                          */
-/*   2. Vérifie si la commande existe et est exécutable                       */
-/*   3. Tente chaque chemin jusqu'à trouver une commande valide               */
+/*   Pour chaque chemin dans PATH, cette fonction :                           */
+/*   1. Construit le chemin complet :                                         */
+/*      - Ajoute '/' entre le chemin et la commande                           */
+/*      Ex: "/bin" + "/" + "ls" -> "/bin/ls"                                  */
+/*                                                                            */
+/*   2. Vérifie l'accessibilité :                                             */
+/*      - F_OK : existence du fichier                                         */
+/*      - X_OK : permission d'exécution                                       */
+/*                                                                            */
+/*   3. Gestion mémoire :                                                     */
+/*      - Libère les chemins temporaires si non valides                       */
+/*      - Retourne le premier chemin valide trouvé                            */
+/*                                                                            */
+/*   Exemple de recherche pour "ls" :                                         */
+/*   1. Teste "/bin/ls"                                                       */
+/*   2. Si échec, teste "/usr/bin/ls"                                         */
+/*   3. Continue jusqu'à trouver un chemin valide                             */
 /*                                                                            */
 /*   Paramètres :                                                             */
-/*   - cmd : nom de la commande à chercher                                    */
-/*   - paths : tableau de chemins où chercher la commande                     */
+/*   - cmd : nom de la commande (ex: "ls")                                    */
+/*   - paths : tableau de chemins du PATH (ex: ["/bin", "/usr/bin", ...])     */
 /*                                                                            */
 /*   Retourne :                                                               */
-/*   - Le chemin complet de la commande si trouvée                            */
-/*   - NULL si la commande n'est pas trouvée                                  */
+/*   - Chemin valide (ex: "/bin/ls")                                          */
+/*   - NULL si aucun chemin valide trouvé                                     */
 /*                                                                            */
 /* ************************************************************************** */
 static char	*get_cmd_path(char *cmd, char **paths)
@@ -50,21 +63,35 @@ static char	*get_cmd_path(char *cmd, char **paths)
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Fonction principale de recherche de chemin d'une commande.               */
+/*   Fonction principale de résolution du chemin d'une commande.              */
 /*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Vérifie si la commande est valide                                     */
-/*   2. Si la commande contient '/', vérifie directement son accessibilité    */
-/*   3. Recherche la variable PATH dans l'environnement                       */
-/*   4. Décompose PATH et cherche la commande dans chaque répertoire          */
+/*   Processus de recherche :                                                 */
+/*   1. Vérifications initiales :                                             */
+/*      - Commande non vide                                                   */
+/*      - Si commande contient '/', vérifie directement le chemin             */
+/*      Ex: "./script.sh" ou "/bin/ls"                                        */
+/*                                                                            */
+/*   2. Recherche dans PATH :                                                 */
+/*      - Trouve la variable PATH dans env                                    */
+/*      - Découpe PATH en tableau de chemins                                  */
+/*      Ex: PATH=/bin:/usr/bin -> ["/bin", "/usr/bin"]                        */
+/*                                                                            */
+/*   3. Recherche dans chaque chemin via get_cmd_path                         */
+/*      - Teste chaque chemin possible                                        */
+/*      - Libère la mémoire du tableau de chemins                             */
+/*                                                                            */
+/*   Cas spéciaux :                                                           */
+/*   - Commande avec chemin : "./cmd" ou "/path/to/cmd"                       */
+/*   - Commande simple : "ls" ou "grep"                                       */
+/*   - PATH non trouvé dans env                                               */
 /*                                                                            */
 /*   Paramètres :                                                             */
-/*   - cmd : nom de la commande à chercher                                    */
+/*   - cmd : commande à chercher                                              */
 /*   - env : variables d'environnement                                        */
 /*                                                                            */
 /*   Retourne :                                                               */
-/*   - Le chemin complet de la commande si trouvée                            */
-/*   - NULL si la commande n'est pas trouvée ou invalide                      */
+/*   - Chemin complet de la commande                                          */
+/*   - NULL si commande invalide ou introuvable                               */
 /*                                                                            */
 /* ************************************************************************** */
 char	*find_path(char *cmd, char **env)

@@ -16,22 +16,32 @@ static void	check_files_access(t_pipex *data, char **av);
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Fonction d'ouverture des fichiers d'entrée et de sortie.                 */
+/*   Fonction de gestion des fichiers d'entrée/sortie du pipeline.            */
 /*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Gère deux modes : heredoc et normal                                   */
-/*   2. Pour le mode heredoc :                                                */
-/*      - Configure l'entrée via handle_heredoc                               */
-/*      - Ouvre le fichier de sortie en mode append                           */
-/*   3. Pour le mode normal :                                                 */
-/*      - Vérifie les permissions des fichiers                                */
-/*      - Ouvre le fichier d'entrée en lecture                                */
-/*      - Ouvre le fichier de sortie en écriture (truncate)                   */
+/*   Gère deux modes de fonctionnement :                                      */
+/*   1. Mode heredoc (<<) :                                                   */
+/*      - Entrée : créée par handle_heredoc                                   */
+/*      - Sortie : mode append (>>)                                           */
+/*      Exemple : cmd << DELIM >> outfile                                     */
+/*                                                                            */
+/*   2. Mode normal (< >) :                                                   */
+/*      - Entrée : mode lecture seule                                         */
+/*      - Sortie : truncate et création si nécessaire                         */
+/*      Exemple : < infile cmd > outfile                                      */
+/*                                                                            */
+/*   Permissions des fichiers :                                               */
+/*   - Fichiers créés : rw-r--r-- (0644)                                      */
+/*   - Vérifie les droits en lecture pour infile                              */
+/*   - Vérifie les droits en écriture pour outfile                            */
+/*                                                                            */
+/*   Gestion d'erreurs :                                                      */
+/*   - Échec d'ouverture outfile -> ERR_NO_SUCH_FILE                          */
+/*   - Autres erreurs gérées par check_files_access                           */
 /*                                                                            */
 /*   Paramètres :                                                             */
 /*   - data : structure contenant les données du programme                    */
 /*   - ac : nombre d'arguments                                                */
-/*   - av : tableau des arguments du programme                                */
+/*   - av : tableau des arguments                                             */
 /*                                                                            */
 /* ************************************************************************** */
 void	open_files(t_pipex *data, int ac, char **av)
@@ -53,15 +63,24 @@ void	open_files(t_pipex *data, int ac, char **av)
 
 /* ************************************************************************** */
 /*                                                                            */
+/*   check_files_access:                                                      */
 /*   Fonction de vérification des permissions des fichiers.                   */
 /*                                                                            */
-/*   Cette fonction vérifie :                                                 */
-/*   1. L'existence du fichier d'entrée                                       */
-/*   2. Les droits en lecture sur le fichier d'entrée                         */
+/*   Cette fonction vérifie deux conditions pour le fichier d'entrée :        */
+/*   1. Existence du fichier (F_OK)                                           */
+/*      - Si n'existe pas -> ERR_NO_SUCH_FILE                                 */
+/*      - Message: "bash: infile: No such file or directory"                  */
+/*                                                                            */
+/*   2. Permissions en lecture (R_OK)                                         */
+/*      - Si pas de permission -> ERR_PERMISSION                              */
+/*      - Message: "input file permission denied"                             */
+/*                                                                            */
+/*   Note : Cette vérification n'est pas faite en mode heredoc                */
+/*   car le fichier d'entrée est créé temporairement par le programme.        */
 /*                                                                            */
 /*   Paramètres :                                                             */
 /*   - data : structure contenant les données du programme                    */
-/*   - av : tableau des arguments du programme                                */
+/*   - av : tableau des arguments (av[1] est le fichier d'entrée)             */
 /*                                                                            */
 /* ************************************************************************** */
 static void	check_files_access(t_pipex *data, char **av)

@@ -16,12 +16,16 @@
 /*                                                                            */
 /*   Fonction de fermeture sécurisée d'un descripteur de fichier.             */
 /*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Vérifie si le descripteur est valide (-1 = invalide)                  */
-/*   2. Tente de fermer le descripteur                                        */
-/*   3. Affiche un avertissement en cas d'échec                               */
+/*   Cette fonction évite les erreurs courantes de fermeture en :             */
+/*   1. Vérifiant la validité du descripteur (-1 = invalide)                  */
+/*   2. Gérant l'échec potentiel de close()                                   */
 /*                                                                            */
-/*   Paramètres :                                                             */
+/*   Usage dans pipex :                                                       */
+/*   - Fermeture des fichiers d'entrée/sortie                                 */
+/*   - Fermeture des extrémités de pipes                                      */
+/*   - Nettoyage des descripteurs inutilisés                                  */
+/*                                                                            */
+/*   Paramètre :                                                              */
 /*   - fd : descripteur de fichier à fermer                                   */
 /*                                                                            */
 /* ************************************************************************** */
@@ -36,16 +40,28 @@ void	close_fd(int fd)
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Fonction de sortie propre du programme avec message d'erreur.            */
+/*   Fonction de gestion de sortie propre du programme.                       */
 /*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Libère la mémoire si une structure data est fournie                   */
-/*   2. Affiche le message d'erreur avec perror                               */
-/*   3. Termine le programme avec EXIT_FAILURE                                */
+/*   Séquence de nettoyage :                                                  */
+/*   1. Libération des ressources si data est fourni :                        */
+/*      - Fermeture des pipes                                                 */
+/*      - Libération de la mémoire                                            */
+/*      - Suppression des fichiers temporaires                                */
+/*                                                                            */
+/*   2. Affichage de l'erreur :                                               */
+/*      - Utilise perror pour le message système                              */
+/*      - Affiche sur stderr                                                  */
+/*                                                                            */
+/*   3. Terminaison avec status approprié :                                   */
+/*      - ERR_NO_SUCH_FILE                                                    */
+/*      - ERR_PERMISSION                                                      */
+/*      - ERR_MALLOC                                                          */
+/*      - etc.                                                                */
 /*                                                                            */
 /*   Paramètres :                                                             */
 /*   - str : message d'erreur à afficher                                      */
-/*   - data : structure à libérer (peut être NULL)                            */
+/*   - data : structure à nettoyer (peut être NULL)                           */
+/*   - status : code de sortie                                                */
 /*                                                                            */
 /* ************************************************************************** */
 void	ft_exit(char *str, t_pipex *data, int status)
@@ -58,15 +74,25 @@ void	ft_exit(char *str, t_pipex *data, int status)
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Fonction de libération complète de la mémoire du processus parent.       */
+/*   Fonction de nettoyage principal du programme.                            */
 /*                                                                            */
-/*   Cette fonction libère :                                                  */
-/*   1. Les tableaux de descripteurs de pipes                                 */
-/*   2. Le tableau des PIDs des processus enfants                             */
-/*   3. Le fichier temporaire heredoc si utilisé                              */
+/*   Nettoyage complet des ressources :                                       */
+/*   1. Pipes (pipe_fds) :                                                    */
+/*      - N-1 pipes pour N commandes                                          */
+/*      - Chaque pipe contient 2 descripteurs [lecture, écriture]             */
+/*      Exemple pour 3 commandes :                                            */
+/*      cmd1 | cmd2 | cmd3 nécessite 2 pipes                                  */
 /*                                                                            */
-/*   Paramètres :                                                             */
-/*   - data : structure contenant les données à libérer                       */
+/*   2. PIDs des processus (cpids) :                                          */
+/*      - Tableau des PIDs des processus enfants                              */
+/*      - Taille = nombre de commandes                                        */
+/*                                                                            */
+/*   3. Fichier heredoc :                                                     */
+/*      - Supprime .heredoc_tmp si mode heredoc actif                         */
+/*      - Évite de laisser des fichiers temporaires                           */
+/*                                                                            */
+/*   Paramètre :                                                              */
+/*   - data : structure contenant toutes les ressources                       */
 /*                                                                            */
 /* ************************************************************************** */
 void	free_parent(t_pipex *data)
@@ -96,14 +122,21 @@ void	free_parent(t_pipex *data)
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Fonction de fermeture de tous les pipes du programme.                    */
+/*   close_all_pipes:                                                         */
+/*   Fonction de fermeture de tous les pipes.                                 */
 /*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Parcourt tous les pipes créés                                         */
-/*   2. Ferme les extrémités lecture et écriture de chaque pipe               */
+/*   Pour chaque pipe du pipeline :                                           */
+/*   1. Ferme l'extrémité de lecture (pipe[i][0])                             */
+/*   2. Ferme l'extrémité d'écriture (pipe[i][1])                             */
 /*                                                                            */
-/*   Paramètres :                                                             */
-/*   - data : structure contenant les pipes à fermer                          */
+/*   Structure des pipes :                                                    */
+/*   Pour N commandes :                                                       */
+/*   - N-1 pipes numérotés de 0 à N-2                                         */
+/*   - pipe[i][0] : lecture pour commande i+1                                 */
+/*   - pipe[i][1] : écriture pour commande i                                  */
+/*                                                                            */
+/*   Paramètre :                                                              */
+/*   - data : structure contenant le tableau de pipes                         */
 /*                                                                            */
 /* ************************************************************************** */
 void	close_all_pipes(t_pipex *data)
@@ -121,16 +154,21 @@ void	close_all_pipes(t_pipex *data)
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   Fonction de libération des tableaux de descripteurs de pipes.            */
+/*   Fonction de libération des tableaux de descripteurs.                     */
 /*                                                                            */
-/*   Cette fonction :                                                         */
-/*   1. Libère chaque sous-tableau de descripteurs                            */
-/*   2. Met les pointeurs à NULL après libération                             */
-/*   3. Libère le tableau principal                                           */
+/*   Processus de libération :                                                */
+/*   1. Libération des sous-tableaux :                                        */
+/*      - Parcours descendant des indices                                     */
+/*      - Vérifie la validité de chaque pointeur                              */
+/*      - Met à NULL après libération                                         */
+/*                                                                            */
+/*   2. Libération du tableau principal :                                     */
+/*      - Après libération de tous les sous-tableaux                          */
+/*      - Évite les fuites de mémoire                                         */
 /*                                                                            */
 /*   Paramètres :                                                             */
-/*   - pipe_fds : tableau de tableaux de descripteurs à libérer               */
-/*   - i : index jusqu'où libérer                                             */
+/*   - pipe_fds : tableau principal des pipes                                 */
+/*   - i : indice maximum (nombre de pipes - 1)                               */
 /*                                                                            */
 /* ************************************************************************** */
 void	free_pipe_fds(int **pipe_fds, int i)
