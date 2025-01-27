@@ -84,7 +84,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
   - Développement d'une stratégie de tri optimale
 
 - **Premier choix:**
-  - [**minitalk**](https://github.com/42School/minitalk)
+  - [**minitalk**](https://github.com/404)
     - Communication entre processus via signaux Unix
     - Utilisation précise de SIGUSR1 et SIGUSR2
     - Gestion bit à bit des données
@@ -92,7 +92,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
     - Gestion des erreurs de transmission
     - Support Unicode et caractères spéciaux
   - *ou*
-  - [**pipex**](https://github.com/42School/pipex)
+  - [**pipex**](https://github.com/Xxzer042xX/42-Common-Core/tree/main/pipex)
     
     - Reproduction du comportement des pipes shell
     - Gestion des processus fils et père
@@ -102,7 +102,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
     - Manipulation avancée des file descriptors
 
 - **Second choix:**
-  - [**so_long**](https://github.com/42School/so_long)
+  - [**so_long**](https://github.com/404)
     
     - Création d'un jeu 2D avec MinilibX
     - Gestion complète des événements
@@ -121,7 +121,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
     - Rotation et zoom du modèle
     - Gestion des couleurs et du gradient
   - *ou*
-  - [**fractol**](https://github.com/42School/fractol)
+  - [**fractol**](https://github.com/404)
     - Création de différentes fractales (Mandelbrot, Julia...)
     - Optimisation graphique poussée
     - Gestion avancée des couleurs et palettes
@@ -145,7 +145,7 @@ Le Common Core constitue le tronc commun obligatoire de 42. C'est un parcours in
   - Monitoring de l'état des philosophes
   - Gestion du temps précise
 
-- [**minishell**](https://github.com/42School/minishell)
+- [**minishell**](https://github.com/Xxzer042xX/minishell)
   - Création d'un shell complet style bash
   - Gestion du prompt et historique
   - Parsing complexe des commandes
