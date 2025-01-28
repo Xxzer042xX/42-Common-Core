@@ -52,6 +52,8 @@ BONUS_FILE = $(SRC_DIR)/bonus/pipex_bonus.c \
 			 $(SRC_DIR)/bonus/clean_up_bonus.c \
 			 $(SRC_DIR)/bonus/files_utils_bonus.c \
 			 $(SRC_DIR)/bonus/heredoc_bonus.c \
+			 $(SRC_DIR)/bonus/extract_token_bonus.c \
+			 $(SRC_DIR)/bonus/token_utils_bonus.c \
 
 BONUS_SRC = $(BONUS_FILE)
 

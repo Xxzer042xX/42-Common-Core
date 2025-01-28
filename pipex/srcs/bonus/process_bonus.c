@@ -52,10 +52,7 @@ void	create_processes(t_pipex *data, char **av)
 	{
 		data->cpids[i] = fork();
 		if (data->cpids[i] == -1)
-		{
-			perror("Error: Fork failed");
-			exit(ERR_FORK);
-		}
+			ft_exit("Fork failed", data, ERR_FORK);
 		if (data->cpids[i] == 0)
 			child_process(data, av, i);
 		i++;

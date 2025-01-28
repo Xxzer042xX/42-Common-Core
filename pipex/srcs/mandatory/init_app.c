@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/pipex_bonus.h"
+#include "../../include/pipex.h"
 
 static void	create_pipes(t_pipex *data);
 static void	init_pipe_fds(t_pipex *data);

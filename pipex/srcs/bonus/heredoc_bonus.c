@@ -13,6 +13,7 @@
 #include "../../include/pipex_bonus.h"
 
 static void	read_heredoc_input(t_pipex *data, int temp_fd);
+static int	islimiter(const char *line, const char *limiter);
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -29,18 +30,16 @@ static void	read_heredoc_input(t_pipex *data, int temp_fd);
 /*      - Fermeture du fichier temporaire                                     */
 /*      - Réouverture en lecture pour le pipeline                             */
 /*                                                                            */
-/*   3. Nettoyage en cas d'erreur :                                           */
-/*      - Suppression du fichier temporaire (unlink)                          */
-/*      - Libération des ressources                                           */
-/*                                                                            */
-/*   Exemple shell équivalent :                                               */
-/*   cmd1 << EOF | cmd2                                                       */
-/*   ligne1                                                                   */
-/*   ligne2                                                                   */
-/*   EOF                                                                      */
+/*   3. Nettoyage :                                                           */
+/*      - En cas d'erreur immédiate : unlink + ft_exit                        */
+/*      - Nettoyage final via free_parent dans tous les cas                   */
 /*                                                                            */
 /*   Paramètre :                                                              */
 /*   - data : structure contenant le délimiteur et les descripteurs           */
+/*                                                                            */
+/*   Gestion d'erreurs :                                                      */
+/*   - Erreur création fichier temporaire : ERR_NO_SUCH_FILE                  */
+/*   - Erreur réouverture fichier : ERR_NO_SUCH_FILE                          */
 /*                                                                            */
 /* ************************************************************************** */
 void	handle_heredoc(t_pipex *data)
@@ -67,20 +66,17 @@ void	handle_heredoc(t_pipex *data)
 /*   Processus de lecture :                                                   */
 /*   1. Affichage du prompt "heredoc> "                                       */
 /*   2. Lecture ligne par ligne (get_next_line)                               */
-/*   3. Comparaison avec le délimiteur :                                      */
-/*      - Si ligne == délimiteur + '\n' : fin de lecture                      */
-/*      - Si ligne == NULL (Ctrl+D) : fin de lecture                          */
-/*      - Sinon : écriture dans le fichier temporaire                         */
+/*   3. Trois cas possibles :                                                 */
+/*      - Si EOF (Ctrl+D) : ft_exit avec ERR_NO_SUCH_FILE                     */
+/*      - Si délimiteur trouvé : ft_exit avec ERR_NO_SUCH_FILE                */
+/*      - Sinon : écriture dans fichier temporaire                            */
 /*                                                                            */
-/*   Gestion des entrées :                                                    */
-/*   - Conserve les retours à la ligne (\n)                                   */
-/*   - Pas d'interprétation des caractères spéciaux                           */
-/*   - Support de Ctrl+D pour terminer l'entrée                               */
+/*   Nettoyage des ressources :                                               */
+/*   - Toute sortie passe par ft_exit qui nettoie via free_parent             */
+/*   - Le fichier temporaire est supprimé par unlink dans free_parent         */
 /*                                                                            */
-/*   Exemple d'utilisation :                                                  */
-/*   heredoc> Première ligne                                                  */
-/*   heredoc> Deuxième ligne                                                  */
-/*   heredoc> EOF (délimiteur)                                                */
+/*   Gestion des erreurs :                                                    */
+/*   - Sortie systématique via ft_exit pour nettoyage cohérent                */
 /*                                                                            */
 /*   Paramètres :                                                             */
 /*   - data : structure contenant le délimiteur (data->limiter)               */
@@ -96,14 +92,39 @@ static void	read_heredoc_input(t_pipex *data, int temp_fd)
 		write(1, "heredoc> ", 9);
 		line = get_next_line(0);
 		if (!line)
-			break ;
-		if (!ft_strncmp(line, data->limiter, ft_strlen(data->limiter)) && \
-			line[ft_strlen(data->limiter)] == '\n')
+			ft_exit("Heredoc input failed", data, ERR_NO_SUCH_FILE);
+		if (islimiter(line, data->limiter))
 		{
 			free(line);
-			break ;
+			ft_exit("Heredoc input failed", data, ERR_NO_SUCH_FILE);
 		}
 		write(temp_fd, line, ft_strlen(line));
 		free(line);
 	}
+}
+
+
+/* ************************************************************************** */
+/*                                                                            */
+/*   Vérifie si une ligne correspond au délimiteur.                           */
+/*                                                                            */
+/*   La ligne correspond au délimiteur si :                                   */
+/*   1. Elle commence exactement par le délimiteur                            */
+/*   2. Est suivie immédiatement par un retour à la ligne (\n)                */
+/*                                                                            */
+/*   Paramètres :                                                             */
+/*   - line : ligne à vérifier                                                */
+/*   - limiter : délimiteur à comparer                                        */
+/*                                                                            */
+/*   Retour :                                                                 */
+/*   - 1 si la ligne correspond au délimiteur                                 */
+/*   - 0 sinon                                                                */
+/*                                                                            */
+/* ************************************************************************** */
+static int	islimiter(const char *line, const char *limiter)
+{
+	size_t	len;
+
+	len = ft_strlen(limiter);
+	return (!ft_strncmp(line, limiter, len) && line[len] == '\n');
 }

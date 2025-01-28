@@ -57,6 +57,14 @@ typedef struct s_pipex
 	int		here_doc;//here_doc mode
 }	t_pipex;
 
+typedef struct s_token
+{
+	char	*str;
+	int		index;
+	int		qtype;
+	int		esc;
+}	t_token;
+
 /* ************************************************************************** */
 /*                              CORE FUNCTIONS                                */
 /* ************************************************************************** */
@@ -79,6 +87,14 @@ void	handle_heredoc(t_pipex *data);
 /* ************************************************************************** */
 char	*find_path(char *cmd, char **env);
 void	execute_cmd(t_pipex *data, char *cmd, char **env);
+
+/* ************************************************************************** */
+/*                              PARSING FUNCTIONS                             */
+/* ************************************************************************** */
+char	*extract_token(const char *cmd, int *i, int *qtype);
+int		handle_quotes(const char *cmd, int *i, int *qtype, int *escaped);
+int		handle_escape(const char *cmd, int *i, int qtype);
+void	handle_esc_token(t_token *token, const char *cmd, int *i);
 
 /* ************************************************************************** */
 /*                              CLEAN UP FUNCTIONS                            */

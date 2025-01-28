@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/pipex_bonus.h"
+#include "../../include/pipex.h"
 
 static void	check_files_access(t_pipex *data, char **av);
 
@@ -63,7 +63,6 @@ void	open_files(t_pipex *data, int ac, char **av)
 
 /* ************************************************************************** */
 /*                                                                            */
-/*   check_files_access:                                                      */
 /*   Fonction de vérification des permissions des fichiers.                   */
 /*                                                                            */
 /*   Cette fonction vérifie deux conditions pour le fichier d'entrée :        */

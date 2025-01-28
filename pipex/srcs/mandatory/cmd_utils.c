@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/pipex_bonus.h"
+#include "../../include/pipex.h"
 
 static char	**parse_command(const char *cmd);
 static char	*extract_token(const char *cmd, int *i, int *qtype);

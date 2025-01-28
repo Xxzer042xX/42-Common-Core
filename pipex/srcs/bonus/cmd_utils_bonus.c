@@ -13,8 +13,6 @@
 #include "../../include/pipex_bonus.h"
 
 static char	**parse_command(const char *cmd);
-static char	*extract_token(const char *cmd, int *i, int *qtype);
-static int	handle_quote_esc(const char *cmd, int *i, int *qtype, int *esc);
 static int	parse_token(const char *cmd, char **args, int *qtype);
 
 /* ************************************************************************** */
@@ -62,104 +60,6 @@ void	execute_cmd(t_pipex *data, char *cmd, char **env)
 	free(path);
 	ft_free_split(args);
 	ft_exit("Command execution failed", data, ERR_CMD_NOT_FOUND);
-}
-
-/* ************************************************************************** */
-/*                                                                            */
-/*   Gestionnaire de guillemets et caractères d'échappement.                  */
-/*                                                                            */
-/*   Cette fonction détermine le traitement de chaque caractère :             */
-/*   1. Guillemets (' ou ") :                                                 */
-/*      - Active/désactive le mode guillemet approprié                        */
-/*      - Ignore le caractère guillemet lui-même                              */
-/*                                                                            */
-/*   2. Caractère d'échappement (\) :                                         */
-/*      - Active le mode échappement pour le prochain caractère               */
-/*      - Permet d'inclure guillemets et espaces dans les arguments           */
-/*                                                                            */
-/*   Comportement selon contexte :                                            */
-/*   - Hors guillemets : \ et guillemets sont spéciaux                        */
-/*   - Dans guillemets : seul le guillemet correspondant est spécial          */
-/*                                                                            */
-/*   Paramètres :                                                             */
-/*   - cmd : chaîne en cours d'analyse                                        */
-/*   - i : position actuelle                                                  */
-/*   - qtype : type de guillemet actif (0, ' ou ")                            */
-/*   - esc : état d'échappement                                               */
-/*                                                                            */
-/*   Retourne :                                                               */
-/*   1 si caractère spécial (à ignorer), 0 sinon (à conserver)                */
-/*                                                                            */
-/* ************************************************************************** */
-static int	handle_quote_esc(const char *cmd, int *i, int *qtype, int *esc)
-{
-	if (!*esc && ft_isquote(cmd[*i]) && (!*qtype || cmd[*i] == *qtype))
-	{
-		if (!*qtype)
-			*qtype = cmd[*i];
-		else
-			*qtype = 0;
-		return (1);
-	}
-	if (!*esc && cmd[*i] == '\\')
-	{
-		*esc = 1;
-		return (1);
-	}
-	*esc = 0;
-	return (0);
-}
-
-/* ************************************************************************** */
-/*                                                                            */
-/*   Extracteur d'arguments individuels d'une commande.                       */
-/*                                                                            */
-/*   Cette fonction isole un argument en :                                    */
-/*   1. Allouant un buffer de 1024 caractères pour l'argument                 */
-/*      - Taille fixe pour éviter les débordements                            */
-/*      - Limite la taille maximum d'un argument                              */
-/*                                                                            */
-/*   2. Extrayant les caractères jusqu'à :                                    */
-/*      - Un espace (hors guillemets)                                         */
-/*      - La fin de la commande                                               */
-/*      Tout en gérant :                                                      */
-/*      - Les guillemets via handle_quote_esc                                 */
-/*      - Les caractères échappés                                             */
-/*                                                                            */
-/*   Exemples d'extraction :                                                  */
-/*   Dans "echo 'Hello World'" :                                              */
-/*   - Premier appel : extrait "echo"                                         */
-/*   - Second appel  : extrait "Hello World"                                  */
-/*                                                                            */
-/*   Paramètres :                                                             */
-/*   - cmd : commande source                                                  */
-/*   - i : position actuelle (mise à jour après extraction)                   */
-/*   - qtype : type de guillemet actif                                        */
-/*                                                                            */
-/*   Retourne :                                                               */
-/*   - L'argument extrait (chaîne allouée)                                    */
-/*   - NULL si échec d'allocation                                             */
-/*                                                                            */
-/* ************************************************************************** */
-static char	*extract_token(const char *cmd, int *i, int *qtype)
-{
-	char	*token;
-	int		j;
-	int		escaped;
-
-	token = malloc(sizeof(char) * 1024);
-	if (!token)
-		return (NULL);
-	j = 0;
-	escaped = 0;
-	while (cmd[*i] && (cmd[*i] != ' ' || *qtype || escaped))
-	{
-		if (!handle_quote_esc(cmd, i, qtype, &escaped))
-			token[j++] = cmd[*i];
-		(*i)++;
-	}
-	token[j] = '\0';
-	return (token);
 }
 
 /* ************************************************************************** */
